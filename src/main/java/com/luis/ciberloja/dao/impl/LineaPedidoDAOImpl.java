@@ -34,9 +34,9 @@ public class LineaPedidoDAOImpl implements LineaPedidoDAO {
 		
 		try {
 			
-			StringBuilder query = new StringBuilder(" SELECT LP.ID, LP.PRECIO, LP.UNIDADES, LP.PEDIDO_ID, LP.LIBRO_ID, L.nombre ")
+			StringBuilder query = new StringBuilder(" SELECT LP.ID, LP.PRECIO, LP.UNIDADES, LP.PEDIDO_ID, LP.PRODUCTO_ID, PRO.NOMBRE ")
 					.append(" FROM LINEA_PEDIDO LP ")
-					.append(" INNER JOIN LIBRO L ON L.ID = LP.LIBRO_ID ")
+					.append(" INNER JOIN PRODUCTO PRO ON PRO.ID = LP.PRODUCTO_ID ")
 					.append(" INNER JOIN PEDIDO p ON LP.PEDIDO_ID = p.ID  ")
 					.append(" WHERE PEDIDO_ID = ? ")
 					.append(" ORDER BY LP.ID DESC ");
@@ -73,9 +73,9 @@ public class LineaPedidoDAOImpl implements LineaPedidoDAO {
 		try {
 					
 			
-			StringBuilder query = new StringBuilder(" SELECT lp.ID, lp.PRECIO, lp.UNIDADES, lp.PEDIDO_ID, lp.LIBRO_ID, l.nombre ")
+			StringBuilder query = new StringBuilder(" SELECT lp.ID, lp.PRECIO, lp.UNIDADES, lp.PEDIDO_ID, lp.PRODUCTO_ID, PRO.NOMBRE ")
 					.append(" FROM LINEA_PEDIDO LP ")
-					.append(" INNER JOIN LIBRO L ON L.ID = LP.LIBRO_ID ")
+					.append(" INNER JOIN PRODUCTO PRO ON PRO.ID = LP.PRODUCTO_ID ")
 					.append(" WHERE LP.ID = ? ");
 			
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -110,7 +110,7 @@ public class LineaPedidoDAOImpl implements LineaPedidoDAO {
 		try {
 			
 			StringBuilder query = new StringBuilder(
-					 " INSERT INTO LINEA_PEDIDO(PRECIO, UNIDADES, PEDIDO_ID, LIBRO_ID) "
+					 " INSERT INTO LINEA_PEDIDO(PRECIO, UNIDADES, PEDIDO_ID, PRODUCTO_ID) "
 					+" VALUES ");
 			
 			query = JDBCUtils.appendMultipleInsertParameters(query, "(?,?,?,?)", lineas.size());
@@ -123,9 +123,8 @@ public class LineaPedidoDAOImpl implements LineaPedidoDAO {
 			for (LineaPedido linea: lineas) {
 				ps.setDouble(i++, linea.getPrecio());
 				ps.setInt(i++, linea.getUnidades());
-				linea.setPedidoId(idPedido);
-				ps.setLong(i++, idPedido);
-				ps.setLong(i++, linea.getPedidoId());				
+				ps.setLong(i++, idPedido);  // Set pedido_id
+				ps.setLong(i++, linea.getProductoId());  // Set producto_id (this was missing)	
 			};
 			
 			int insertedRows = ps.executeUpdate();

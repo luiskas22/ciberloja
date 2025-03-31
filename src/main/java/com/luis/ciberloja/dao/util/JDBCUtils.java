@@ -26,71 +26,75 @@ public class JDBCUtils {
 
 	static {
 		try {
-			cpds.setDriverClass(ConfigurationParametersManager.getParameterValue(DRIVER));
-			cpds.setJdbcUrl(ConfigurationParametersManager.getParameterValue(DB_URL));
-			cpds.setUser(ConfigurationParametersManager.getParameterValue(USER));
-			cpds.setPassword(ConfigurationParametersManager.getParameterValue(PASS));
+			String driver = ConfigurationParametersManager.getParameterValue(DRIVER);
+			String url = ConfigurationParametersManager.getParameterValue(DB_URL);
+			String user = ConfigurationParametersManager.getParameterValue(USER);
+			String password = ConfigurationParametersManager.getParameterValue(PASS);
 
-			logger.debug("Configurando pool con: driver={}, url={}, user={}", DRIVER, DB_URL, USER);
-			
-			// Configuración del pool
+			if (driver == null || url == null || user == null || password == null) {
+				logger.fatal("Faltan parámetros de configuración: driver={}, url={}, user={}, password={}", driver, url,
+						user, password);
+				throw new RuntimeException("Configuración de base de datos incompleta");
+			}
+
+			cpds = new ComboPooledDataSource();
+			Class.forName(driver); // Carga manual del driver
+			logger.debug("Driver {} cargado manualmente", driver);
+
+			cpds.setDriverClass(driver);
+			cpds.setJdbcUrl(url);
+			cpds.setUser(user);
+			cpds.setPassword(password);
+
+			logger.debug("Configurando pool con: driver={}, url={}, user={}", driver, url, user);
+
 			cpds.setMinPoolSize(5);
 			cpds.setAcquireIncrement(5);
 			cpds.setMaxPoolSize(20);
-			cpds.setInitialPoolSize(5); // Alinea con minPoolSize para evitar el warning
+			cpds.setInitialPoolSize(5);
 
-			// Validación de conexiones
 			cpds.setTestConnectionOnCheckout(false);
 			cpds.setTestConnectionOnCheckin(true);
 			cpds.setPreferredTestQuery("SELECT 1");
 			cpds.setIdleConnectionTestPeriod(300);
 			cpds.setMaxIdleTime(600);
 
-			// Tiempos de espera y reintentos
 			cpds.setCheckoutTimeout(10000);
 			cpds.setAcquireRetryAttempts(3);
 			cpds.setAcquireRetryDelay(1000);
 
-			// Depuración
-			cpds.setUnreturnedConnectionTimeout(1800); // Cierra conexiones no devueltas tras 30 min
-			cpds.setDebugUnreturnedConnectionStackTraces(true); // Muestra stack traces si hay fugas
+			cpds.setUnreturnedConnectionTimeout(1800);
+			cpds.setDebugUnreturnedConnectionStackTraces(true);
+
+		} catch (ClassNotFoundException e) {
+			logger.fatal("No se pudo cargar el driver JDBC", e);
+			throw new RuntimeException("Driver JDBC no encontrado", e);
 		} catch (PropertyVetoException e) {
-			logger.fatal(e);
+			logger.fatal("Error al configurar el driver en C3P0", e);
+			throw new RuntimeException("Error de configuración de C3P0", e);
 		}
 	}
 
-//
-//	public static Connection getConnection() throws SQLException {
-//		try {
-//			Class.forName(DRIVER);
-//		} catch (ClassNotFoundException cnfe) {
-//			logger.fatal("Imposible cargar driver JDBC: " + DRIVER);
-//		}
-//		// Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-//		Connection conn = cpds.getConnection();
-//		return conn;
-//
-//	}
 	public static Connection getConnection() throws SQLException {
-
+		if (cpds == null) {
+			throw new SQLException("El pool de conexiones no se inicializó correctamente");
+		}
 		Connection conn = cpds.getConnection();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Conexión obtenida del pool C3P0");
+		}
 		return conn;
+	}
 
-	}
-	
-	
-	public static final Long getNullableLong(ResultSet rs, int pos) 
-			throws SQLException {
+	public static final Long getNullableLong(ResultSet rs, int pos) throws SQLException {
 		Long value = rs.getLong(pos);
-		return rs.wasNull()?null:value;
+		return rs.wasNull() ? null : value;
 	}
-	
-	public static final Double getNullableDouble (ResultSet rs, int pos)
-			throws SQLException{
+
+	public static final Double getNullableDouble(ResultSet rs, int pos) throws SQLException {
 		Double value = rs.getDouble(pos);
-		return rs.wasNull()?null:value;
+		return rs.wasNull() ? null : value;
 	}
-	
 
 	public static final void setNullable(PreparedStatement ps, int i, Integer value) throws SQLException {
 		if (value == null) {

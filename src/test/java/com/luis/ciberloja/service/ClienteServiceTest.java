@@ -58,13 +58,13 @@ public class ClienteServiceTest {
 
 		ClienteDTO c = new ClienteDTO();
 
-		c.setNickname("yorch");
-		c.setNombre("Jorge");
-		c.setApellido1("Olea");
+		c.setNickname("sasukeu");
+		c.setNombre("Sasuke");
+		c.setApellido1("Uchiha");
 		c.setApellido2(null);
-		c.setDniNie("34567890D");
-		c.setEmail("jorgeoleacasanova@gmail.com");
-		c.setTelefono("768098654");
+		c.setDniNie("34371908H");
+		c.setEmail("sasuke@gmail.com");
+		c.setTelefono("698413307");
 		c.setPassword("abc123.");
 
 		clienteService.registrar(c);
@@ -134,13 +134,13 @@ public class ClienteServiceTest {
 	public static void main(String [] args) throws Exception{
 
 		ClienteServiceTest test = new ClienteServiceTest();
-		//test.testFindAll();
+		test.testFindAll();
 		//test.testFindById();
 		//test.testFindByNick();
 		//test.testFindByEmail();
-		//test.testRegistrar();
+//		test.testRegistrar();
 		//test.testUpdate();
-		test.testUpdatePassword();
+//		test.testUpdatePassword();
 		//test.testDelete();
 		//test.testAutenticacionOK();
 

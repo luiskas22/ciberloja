@@ -6,6 +6,7 @@ public class DireccionDTO extends AbstractValueObject{
 	private String nombreVia;
 	private String dirVia;
 	private Long clienteId;
+	private Long empleadoId;
 	private Integer localidadId;
 	private String localidadNombre;
 	private Integer provinciaId;
@@ -56,6 +57,14 @@ public class DireccionDTO extends AbstractValueObject{
 
 	public void setClienteId(Long clienteId) {
 		this.clienteId = clienteId;
+	}
+
+	public Long getEmpleadoId() {
+		return empleadoId;
+	}
+
+	public void setEmpleadoId(Long empleadoId) {
+		this.empleadoId = empleadoId;
 	}
 
 	public String getLocalidadNombre() {

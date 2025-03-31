@@ -316,8 +316,8 @@ public class ClienteDAOImpl implements ClienteDAO {
 		c.setEmail(rs.getString(i++));
 		c.setTelefono(rs.getString(i++));
 		c.setPassword(rs.getString(i++));
-		c.setDirecciones(direcciones);;
-//		c.setDirecciones(direccionDAO.findByClienteId(con, c.getId()));
+//		c.setDirecciones(direcciones);;
+		c.setDirecciones(direccionDAO.findByClienteId(con, c.getId()));
 		
 
 		return c;

@@ -27,8 +27,7 @@ public class PedidoServiceImpl implements PedidoService {
 		pedidoDAO = new PedidoDAOImpl();
 	}
 
-
-	public Pedido findBy(Long id) throws DataException{
+	public Pedido findBy(Long id) throws DataException {
 
 		Connection con = null;
 		Pedido p = null;
@@ -40,18 +39,16 @@ public class PedidoServiceImpl implements PedidoService {
 			p = pedidoDAO.findBy(con, id);
 			commit = true;
 
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return p;
 	}
 
-
-
-	public Results<Pedido> findByCriteria(PedidoCriteria pedido, int pos, int pageSize) throws DataException{
+	public Results<Pedido> findByCriteria(PedidoCriteria pedido, int pos, int pageSize) throws DataException {
 
 		Connection con = null;
 		Results<Pedido> resultados = null;
@@ -63,59 +60,54 @@ public class PedidoServiceImpl implements PedidoService {
 			resultados = pedidoDAO.findByCriteria(con, pedido, pos, pageSize);
 			commit = true;
 
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return resultados;
 	}
 
-
-
 	public Long create(Pedido p) throws DataException, MailException {
 
-	    Connection con = null;
-	    Long id = null;
-	    boolean commit = false;
+		Connection con = null;
+		Long id = null;
+		boolean commit = false;
 
-	    try {
-	        con = JDBCUtils.getConnection();
-	        con.setAutoCommit(false);
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
 
-	        PedidoCriteria criteria = new PedidoCriteria();
-	        criteria.setTipoEstadoPedidoId(7);  // Tipo de estado "carrito"
-	        criteria.setClienteId(p.getClienteId());
+			PedidoCriteria criteria = new PedidoCriteria();
+			criteria.setTipoEstadoPedidoId(7); // Tipo de estado "carrito"
+			criteria.setClienteId(p.getClienteId());
 
-	        List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
+			List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
 
-	        Pedido carrito = null;
-	        if (!pedidos.isEmpty()) {
-	            carrito = pedidos.get(0);
-	        }
+			Pedido carrito = null;
+			if (!pedidos.isEmpty()) {
+				carrito = pedidos.get(0);
+			}
 
-	        if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
-	            p.setPrecio(calcularPrecio(p));
-	            id = pedidoDAO.create(con, p);
-	            if (id != null) {
-	                commit = true;
-	            }
-	        }
+			if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
+				p.setPrecio(calcularPrecio(p));
+				id = pedidoDAO.create(con, p);
+				if (id != null) {
+					commit = true;
+				}
+			}
 
-	    } catch (SQLException e) {
-	        logger.error(e.getMessage(), e);
-	        throw new DataException(e);
-	    } finally {
-	        JDBCUtils.close(con, commit);
-	    }
-	    return id;
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+		return id;
 	}
 
-
-
-
-	public boolean update(Pedido p) throws DataException{
+	public boolean update(Pedido p) throws DataException {
 
 		Connection con = null;
 		boolean tf = false;
@@ -131,15 +123,13 @@ public class PedidoServiceImpl implements PedidoService {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return tf;
 	}
 
-
-
-	public boolean delete(Long id) throws DataException{
+	public boolean delete(Long id) throws DataException {
 
 		Connection con = null;
 		boolean tf = false;
@@ -154,26 +144,49 @@ public class PedidoServiceImpl implements PedidoService {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return tf;
 	}
 
-
-
-
-	public Double calcularPrecio(Pedido p) throws DataException{
+	public Double calcularPrecio(Pedido p) throws DataException {
 
 		double precioTotal = 0.0d;
 
-		for(LineaPedido lp:p.getLineas()) {
-			precioTotal+= lp.getPrecio()*lp.getUnidades();
+		for (LineaPedido lp : p.getLineas()) {
+			precioTotal += lp.getPrecio() * lp.getUnidades();
 		}
 
 		return precioTotal;
 
 	}
 
+	@Override
+	public Results<Pedido> findPedidosByClienteId(Long clienteId) throws DataException {
+		Connection con = null;
+		Results<Pedido> resultados = null;
+		boolean commit = false;
+
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
+
+			if (clienteId == null) {
+				throw new DataException("El ID del cliente no puede ser nulo");
+			}
+
+			resultados = pedidoDAO.findPedidosByClienteId(con, clienteId);
+			commit = true;
+
+		} catch (SQLException e) {
+			logger.error("Error al buscar pedidos para clienteId: " + clienteId, e);
+			throw new DataException("Error en la base de datos al buscar pedidos: " + e.getMessage(), e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+
+		return resultados;
+	}
 
 }

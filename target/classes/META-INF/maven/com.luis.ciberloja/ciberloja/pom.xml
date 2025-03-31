@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
+			<version>8.0.33</version> <!-- Usa la versión más reciente compatible -->
 		</dependency>
 
 		<!--https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
@@ -168,5 +168,12 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+
 	</build>
 </project>

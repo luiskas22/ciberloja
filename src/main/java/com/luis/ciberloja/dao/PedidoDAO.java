@@ -23,4 +23,6 @@ public interface PedidoDAO {
 	
 	public boolean delete(Connection c, Long id)
 			throws DataException;
+	
+	public Results<Pedido> findPedidosByClienteId(Connection c, Long clienteId) throws DataException;
 }

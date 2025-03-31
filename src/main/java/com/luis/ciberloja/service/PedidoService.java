@@ -1,5 +1,7 @@
 package com.luis.ciberloja.service;
 
+import java.sql.Connection;
+
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.model.Pedido;
 import com.luis.ciberloja.model.PedidoCriteria;
@@ -25,4 +27,6 @@ public interface PedidoService {
 	public Double calcularPrecio(Pedido p)
 			throws DataException;
 	
+	public Results<Pedido> findPedidosByClienteId(Long clienteId) throws DataException;
+
 }
