@@ -1,0 +1,170 @@
+/* Variables de color */
+:root {
+	--primary-color: #2c3e50;
+	--secondary-color: #34495e;
+	--accent-color: #3498db;
+	--light-color: #ecf0f1;
+	--dark-color: #2c3e50;
+	--success-color: #2ecc71;
+	--danger-color: #e74c3c;
+}
+
+/* Estilos generales */
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f8f9fa;
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Header */
+.header {
+	background-color: var(--primary-color);
+	color: white;
+	padding: 2rem 0;
+	text-align: center;
+	background: linear-gradient(135deg, var(--primary-color),
+		var(--secondary-color));
+}
+
+.header .subtitle {
+	font-size: 1.2rem;
+	opacity: 0.9;
+}
+
+/* Navbar */
+.navbar {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+	font-weight: 500;
+	padding: 0.5rem 1rem;
+	transition: all 0.3s ease;
+}
+
+.nav-link.active {
+	color: var(--accent-color) !important;
+}
+
+.nav-link:hover {
+	color: var(--accent-color) !important;
+}
+
+.dropdown-menu {
+	border: none;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+	padding: 0.5rem 1rem;
+	transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+	background-color: var(--light-color);
+	color: var(--dark-color);
+}
+
+/* Main content */
+.main-content {
+	flex: 1;
+	padding: 2rem 0;
+}
+
+#home-content {
+	background-color: white;
+	border-radius: 8px;
+	margin: 2rem auto;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Session buttons */
+#session-buttons {
+	padding: 2rem;
+}
+
+#session-buttons .btn {
+	margin: 0.5rem;
+	min-width: 200px;
+	padding: 0.5rem 1rem;
+	border-radius: 50px;
+	font-weight: 500;
+	transition: all 0.3s ease;
+}
+
+#session-buttons .alert {
+	border-radius: 8px;
+}
+
+/* Footer */
+.footer {
+	background-color: var(--dark-color);
+	color: white;
+	margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media ( max-width : 992px) {
+	.navbar-collapse {
+		margin-top: 1rem;
+	}
+	#authButtons {
+		margin-top: 1rem;
+		justify-content: center;
+	}
+	#home-content .row>div {
+		margin-bottom: 2rem;
+	}
+}
+
+@media ( max-width : 768px) {
+	.header {
+		padding: 1.5rem 0;
+	}
+	.header h1 {
+		font-size: 1.8rem;
+	}
+	.header .subtitle {
+		font-size: 1rem;
+	}
+	#session-buttons {
+		padding: 1rem;
+	}
+	#session-buttons .btn {
+		min-width: 100%;
+	}
+
+	/* Estilos para la sección de sesión */
+	#session-buttons-container {
+		max-width: 400px;
+		margin: 0 auto;
+	}
+	#session-buttons {
+		padding: 1.5rem;
+	}
+	#session-buttons .btn {
+		margin: 0.5rem 0;
+		min-width: 100%;
+		padding: 0.75rem;
+		font-size: 1rem;
+	}
+	#session-buttons .alert {
+		margin-bottom: 1rem;
+	}
+
+	/* Ajustes para el dropdown de cuenta */
+	#accountDropdown {
+		display: none; /* Inicialmente oculto */
+	}
+
+	/* Estilos para los botones de auth en navbar */
+	#authButtons {
+		display: flex;
+		gap: 0.5rem;
+	}
+}
