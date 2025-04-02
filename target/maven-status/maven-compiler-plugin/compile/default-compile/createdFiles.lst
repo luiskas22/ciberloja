@@ -23,10 +23,12 @@ com\luis\ciberloja\dao\CategoriaDAO.class
 com\luis\ciberloja\dao\impl\LineaPedidoDAOImpl.class
 com\luis\ciberloja\service\impl\PedidoServiceImpl.class
 com\luis\ciberloja\service\TipoEmpleadoService.class
+com\luis\ciberloja\model\Rol.class
 com\luis\ciberloja\service\impl\ClienteServiceImpl.class
 com\luis\ciberloja\dao\impl\ClienteDAOImpl.class
 com\luis\ciberloja\dao\EmpleadoDAO.class
 com\luis\ciberloja\model\EmpleadoDTO.class
+com\luis\ciberloja\dao\impl\RolDAOImpl.class
 com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.class
 com\luis\ciberloja\service\EstadoPedidoService.class
 com\luis\ciberloja\service\impl\EstadoPedidoServiceImpl.class
@@ -68,6 +70,7 @@ com\luis\ciberloja\service\StockException.class
 com\luis\ciberloja\model\LineaPedido.class
 com\luis\ciberloja\model\DireccionDTO.class
 com\luis\ciberloja\dao\ProductoDAO.class
+com\luis\ciberloja\dao\RolDAO.class
 com\luis\ciberloja\dao\LocalidadDAO.class
 com\luis\ciberloja\service\ClienteService.class
 com\luis\ciberloja\conf\TestConnection.class

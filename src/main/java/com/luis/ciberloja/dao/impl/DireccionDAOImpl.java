@@ -24,6 +24,36 @@ public class DireccionDAOImpl implements DireccionDAO {
 
 	}
 
+	@Override
+	public DireccionDTO findById(Connection con, Long id) throws DataException {
+		DireccionDTO direccion = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery(
+					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, "
+							+ " L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, "
+							+ " PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS " + " FROM DIRECCION D "
+							+ " JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID "
+							+ " JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID " + " JOIN PAIS PA ON PA.ID = PR.PAIS_ID "
+							+ " WHERE D.ID = " + id);
+
+			if (rs.next()) {
+				direccion = loadNext(rs);
+			}
+
+		} catch (SQLException e) {
+			logger.error("ID: " + id, e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(stmt, rs);
+		}
+		return direccion;
+	}
+
 	public DireccionDTO findByEmpleadoId(Connection con, Long empleadoId) throws DataException {
 
 		DireccionDTO d = null;
@@ -189,39 +219,38 @@ public class DireccionDAOImpl implements DireccionDAO {
 	}
 
 	public List<DireccionDTO> findByClienteId(Connection con, Long clienteId) throws DataException {
-	    PreparedStatement pst = null;
-	    ResultSet rs = null;
-	    List<DireccionDTO> direcciones = new ArrayList<>();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		List<DireccionDTO> direcciones = new ArrayList<>();
 
-	    try {
-	        StringBuilder query = new StringBuilder(" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
-	                .append(" FROM DIRECCION D ")
-	                .append(" INNER JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID ")
-	                .append(" INNER JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID ")
-	                .append(" INNER JOIN PAIS PA ON PA.ID = PR.PAIS_ID ")
-	                .append(" WHERE D.CLIENTE_ID = ? ");
+		try {
+			StringBuilder query = new StringBuilder(
+					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
+					.append(" FROM DIRECCION D ").append(" INNER JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID ")
+					.append(" INNER JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID ")
+					.append(" INNER JOIN PAIS PA ON PA.ID = PR.PAIS_ID ").append(" WHERE D.CLIENTE_ID = ? ");
 
-	        pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-	        int i = 1;
-	        pst.setLong(i++, clienteId);
+			int i = 1;
+			pst.setLong(i++, clienteId);
 
-	        rs = pst.executeQuery();
+			rs = pst.executeQuery();
 
-	        while (rs.next()) {
-	            DireccionDTO d = loadNext(rs);
-	            direcciones.add(d);
-	        }
+			while (rs.next()) {
+				DireccionDTO d = loadNext(rs);
+				direcciones.add(d);
+			}
 
-	    } catch (SQLException e) {
-	        logger.error("ClienteID: " + clienteId, e);
-	        throw new DataException(e);
-	    } finally {
-	        JDBCUtils.close(pst, rs);
-	    }
-	    return direcciones;
+		} catch (SQLException e) {
+			logger.error("ClienteID: " + clienteId, e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(pst, rs);
+		}
+		return direcciones;
 	}
-	
+
 	protected DireccionDTO loadNext(ResultSet rs) throws SQLException {
 
 		int i = 1;

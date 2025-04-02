@@ -190,37 +190,37 @@ public class PedidoServiceTest {
 		LineaPedido lp3 = new LineaPedido();
 
 		// Obtener los productos
-		ProductoDTO pro12 = productoService.findById(12L);
-		ProductoDTO pro14 = productoService.findById(14L);
-		ProductoDTO pro18 = productoService.findById(18L);
+		ProductoDTO pro8 = productoService.findById(8L);
+		ProductoDTO pro9 = productoService.findById(9L);
+		ProductoDTO pro10 = productoService.findById(10L);
 
 		// Verificar que los productos existan
-		if (pro12 == null || pro14 == null || pro18 == null) {
-			logger.error("Uno o más productos no encontrados: 11=" + pro12 + ", 15=" + pro14 + ", 17=" + pro18);
+		if (pro8 == null || pro9 == null || pro10 == null) {
+			logger.error("Uno o más productos no encontrados: 11=" + pro8 + ", 15=" + pro9 + ", 17=" + pro10);
 			return;
 		}
 
 		// Configurar el pedido
 		p.setFechaRealizacion(new Date()); // Fecha actual
-		p.setClienteId(2L); // Cliente con id = 1 (Luis)
+		p.setClienteId(1L); // Cliente con id = 1 (Luis)
 		p.setTipoEstadoPedidoId(2); // Estado "En proceso" (id = 2)
 
 		// Configurar la línea de pedido para producto 11
-		lp1.setProductoId(pro12.getId()); // Producto id = 11
-		lp1.setNombreProducto(pro12.getNombre()); // Nombre del producto
-		lp1.setPrecio(pro12.getPrecio()); // Precio del producto
+		lp1.setProductoId(pro8.getId()); // Producto id = 11
+		lp1.setNombreProducto(pro8.getNombre()); // Nombre del producto
+		lp1.setPrecio(pro8.getPrecio()); // Precio del producto
 		lp1.setUnidades(4); // 2 unidades
 
 		// Configurar la línea de pedido para producto 15
-		lp2.setProductoId(pro14.getId()); // Producto id = 15
-		lp2.setNombreProducto(pro14.getNombre()); // Nombre del producto
-		lp2.setPrecio(pro14.getPrecio()); // Precio del producto
+		lp2.setProductoId(pro9.getId()); // Producto id = 15
+		lp2.setNombreProducto(pro9.getNombre()); // Nombre del producto
+		lp2.setPrecio(pro9.getPrecio()); // Precio del producto
 		lp2.setUnidades(1); // 1 unidad
 
 		// Configurar la línea de pedido para producto 17
-		lp3.setProductoId(pro18.getId()); // Producto id = 17
-		lp3.setNombreProducto(pro18.getNombre()); // Nombre del producto
-		lp3.setPrecio(pro18.getPrecio()); // Precio del producto
+		lp3.setProductoId(pro10.getId()); // Producto id = 17
+		lp3.setNombreProducto(pro10.getNombre()); // Nombre del producto
+		lp3.setPrecio(pro10.getPrecio()); // Precio del producto
 		lp3.setUnidades(2); // 3 unidades
 
 		// Añadir las líneas al pedido
@@ -297,7 +297,7 @@ public class PedidoServiceTest {
 
 	public static void main(String[] args) throws Exception {
 		PedidoServiceTest test = new PedidoServiceTest();
-		test.testFindById();
+//		test.testFindById();
 		// test.testFindByCriteriaId();
 		// test.testFindByCriteriaFechaDesde();
 		// test.testFindByCriteriaFechaHasta();
@@ -307,10 +307,10 @@ public class PedidoServiceTest {
 		// test.testFindByCriteriaTipoEstadoPedidoId();
 		// test.testFindByCriteriaMultipleParameters();
 //		 test.testFindByEmptyCriteria();
-//		test.testCreate();
+		test.testCreate();
 		// test.testUpdate();
 		// test.testDelete();
-		test.testFindPedidosByClienteId();
+//		test.testFindPedidosByClienteId();
 
 	}
 

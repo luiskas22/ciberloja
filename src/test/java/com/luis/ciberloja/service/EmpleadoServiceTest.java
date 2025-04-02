@@ -101,14 +101,15 @@ public class EmpleadoServiceTest {
 			d.setLocalidadId(6);		
 
 			EmpleadoDTO e = new EmpleadoDTO();
-			e.setNombre("Jorge");
-			e.setApellido1("Olea");
-			e.setApellido2("Casanova");
-			e.setDniNie("99888777M");
-			e.setEmail("joroleacasanova@gmail.com");
+			e.setNombre("test");
+			e.setApellido1("user");
+			e.setApellido2("test");
+			e.setDniNie("99888737M");
+			e.setEmail("test@gmail.com");
 			e.setTelefono("654321123");
 			e.setPassword("abc123.");
 			e.setTipo_empleado_id(1);
+			e.setRol_id(2l);
 			e.setDireccion(d);
 
 			empleadoService.registrar(e);
@@ -127,7 +128,7 @@ public class EmpleadoServiceTest {
 		logger.traceEntry("Testing delete...");
 		
 			EmpleadoDTO e = new EmpleadoDTO();
-			e.setId(15l);
+			e.setId(4l);
 			if(empleadoService.delete(e.getId())) {
 				logger.trace("Eliminado el empleado: "+e);
 			}else {
@@ -170,7 +171,7 @@ public class EmpleadoServiceTest {
 		//test.testAutenticacionOK();
 		//test.testAutenticacionUsuarioNoExistente();
 		//test.testAutenticacionPasswordIncorrecta();
-		//test.testDelete();
+//		test.testDelete();
 		//test.testUpdate();
 //		test.testUpdatePassword();
 		

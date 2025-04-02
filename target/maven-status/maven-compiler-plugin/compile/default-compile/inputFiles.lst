@@ -17,6 +17,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\i
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\PedidoDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\ProductoDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\ProvinciaDAOImpl.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\RolDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\UnidadMedidaDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\LineaPedidoDAO.java
@@ -26,6 +27,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\P
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\PedidoDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\ProductoDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\ProvinciaDAO.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\RolDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\TipoEmpleadoDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\UnidadMedidaDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\util\DateUtils.java
@@ -49,6 +51,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\ProductoDTO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Provincia.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Results.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Rol.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\TipoEmpleado.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\UnidadMedida.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\ValueObject.java

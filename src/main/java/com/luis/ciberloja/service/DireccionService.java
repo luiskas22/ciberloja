@@ -5,8 +5,12 @@ import com.luis.ciberloja.model.DireccionDTO;
 
 public interface DireccionService {
 
-	public boolean delete (Long id) throws DataException;
-	public boolean update (DireccionDTO d) throws DataException;
-	public Long create (DireccionDTO d) throws DataException;
-	
+	public DireccionDTO findById(Long id) throws DataException;
+
+	public boolean delete(Long id) throws DataException;
+
+	public boolean update(DireccionDTO d) throws DataException;
+
+	public Long create(DireccionDTO d) throws DataException;
+
 }

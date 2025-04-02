@@ -2,8 +2,8 @@ package com.luis.ciberloja.model;
 
 import java.util.List;
 
-public class ClienteDTO extends AbstractValueObject{
-	
+public class ClienteDTO extends AbstractValueObject {
+
 	private Long id;
 	private String nickname;
 	private String nombre;
@@ -13,10 +13,11 @@ public class ClienteDTO extends AbstractValueObject{
 	private String email;
 	private String telefono;
 	private String password;
+	private Long rol_id;
 	private List<DireccionDTO> direcciones;
-	
+
 	public ClienteDTO() {
-		
+
 	}
 
 	public Long getId() {
@@ -83,13 +84,20 @@ public class ClienteDTO extends AbstractValueObject{
 		this.telefono = telefono;
 	}
 
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Long getRol_id() {
+		return rol_id;
+	}
+
+	public void setRol_id(Long rol_id) {
+		this.rol_id = rol_id;
 	}
 
 	public List<DireccionDTO> getDirecciones() {
@@ -99,6 +107,5 @@ public class ClienteDTO extends AbstractValueObject{
 	public void setDirecciones(List<DireccionDTO> direcciones) {
 		this.direcciones = direcciones;
 	}
-	
-	
+
 }
