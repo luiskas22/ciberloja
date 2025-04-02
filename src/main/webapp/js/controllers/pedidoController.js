@@ -91,6 +91,7 @@ const PedidoController = {
 		const clienteData = sessionStorage.getItem("cliente");
 		return clienteData ? JSON.parse(clienteData) : null;
 	},
+
 };
 
 export default PedidoController;

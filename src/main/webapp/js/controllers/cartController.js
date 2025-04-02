@@ -9,11 +9,20 @@ const CartController = {
 		console.log("CartController.init()...");
 		this.loadCart();
 		this.setupEvents();
+		// Flag to prevent multiple checkout submissions
+		this.isProcessingCheckout = false;
 	},
 
 	setupEvents() {
 		console.log("CartController.setupEvents()...");
-		document.addEventListener("click", async (event) => {
+		// Remove any existing event listeners to prevent duplicates
+		const existingListener = document.getElementById('cart-event-listener');
+		if (existingListener) {
+			document.removeEventListener("click", existingListener);
+		}
+
+		// Create a named event handler function so we can reference it
+		const handleCartEvents = async (event) => {
 			const target = event.target;
 
 			// Add to cart from product details or search results
@@ -56,12 +65,42 @@ const CartController = {
 				await this.clearCart();
 			}
 
-			// Checkout
+			// Checkout - Added debounce logic
 			if (target.id === "checkout-btn") {
 				event.preventDefault();
-				await this.checkout();
+				// Prevent multiple clicks
+				if (this.isProcessingCheckout) {
+					console.log("Checkout already in progress, ignoring click");
+					return;
+				}
+
+				// Disable the button visually
+				target.disabled = true;
+				target.innerHTML = "Processing...";
+
+				// Set processing flag
+				this.isProcessingCheckout = true;
+
+				try {
+					await this.checkout();
+				} finally {
+					// Reset processing flag even if there's an error
+					this.isProcessingCheckout = false;
+
+					// Re-enable the button (though it might be gone after checkout)
+					if (document.getElementById("checkout-btn")) {
+						document.getElementById("checkout-btn").disabled = false;
+						document.getElementById("checkout-btn").innerHTML = "Checkout";
+					}
+				}
 			}
-		});
+		};
+
+		// Store the handler reference
+		handleCartEvents.id = 'cart-event-listener';
+
+		// Attach the new event listener
+		document.addEventListener("click", handleCartEvents);
 	},
 
 	async loadCart() {
@@ -150,26 +189,31 @@ const CartController = {
 		console.log("Processing checkout...");
 		try {
 			const clienteData = this.getStoredClienteData();
+			if (!clienteData || !clienteData.id) {
+				throw new Error("Please log in to complete your purchase.");
+			}
 			const cart = await CartService.getCart(clienteData.id);
-
-			if (cart.items.length === 0) {
+			if (!cart || cart.items.length === 0) {
 				throw new Error("Cart is empty. Add items before checking out.");
 			}
 
 			const pedidoData = {
 				clienteId: clienteData.id,
-				items: cart.items.map(item => ({
+				lineas: cart.items.map(item => ({
 					productoId: item.product.id,
-					cantidad: item.quantity,
-					precioUnitario: item.product.precio
+					unidades: item.quantity,
+					precio: item.product.precio
 				})),
-				total: cart.total
+				precio: cart.total,
+				fechaRealizacion: new Date().toISOString(),
+				tipoEstadoPedidoId: 1
 			};
 
-			const pedido = await PedidoService.createPedido(pedidoData); // Assuming this method exists
+			console.log("Datos enviados al backend:", JSON.stringify(pedidoData, null, 2));
+			const pedido = await PedidoService.createPedido(pedidoData);
 			await CartService.clearCart(clienteData.id);
 			CartView.renderCheckoutSuccess("pro-inventario", pedido);
-			alert("✅ Order placed successfully!");
+			alert("✅ Order placed successfully! Order ID: " + pedido.id);
 		} catch (error) {
 			console.error("Error during checkout:", error);
 			CartView.renderError(error.message || "Error processing checkout.");

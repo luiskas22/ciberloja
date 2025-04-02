@@ -87,13 +87,13 @@ const CartView = {
 		if (!container) return;
 
 		container.innerHTML = `
-            <div class="alert alert-success">
-                <h3>Order Placed Successfully!</h3>
-                <p>Order ID: ${pedido.id}</p>
-                <p>Total: $${pedido.total.toFixed(2)}</p>
-                <p>Thank you for your purchase!</p>
-            </div>
-        `;
+	        <div class="alert alert-success">
+	            <h3>Order Placed Successfully!</h3>
+	            <p>Order ID: ${pedido.id}</p>
+	            <p>Total: $${pedido.precio.toFixed(2)}</p>
+	            <p>Thank you for your purchase!</p>
+	        </div>
+	    `;
 	}
 };
 
