@@ -34,6 +34,13 @@ const PedidoView = {
         `;
     },
 
+    getProductImageSrc(productId) {
+        if (!productId) {
+            return './img/placeholder.png';
+        }
+        return `./img/${productId}.jpg`; // Ajusta esta lógica según cómo almacenes las imágenes
+    },
+
     getPedidoDetalheView(pedido) {
         return `
             <div class="container mt-4">
@@ -44,9 +51,17 @@ const PedidoView = {
                         <p><strong>Estado:</strong> ${pedido.tipoEstadoPedidoNombre || 'N/A'}</p>
                         <p><strong>Total:</strong> ${pedido.precio != null ? pedido.precio.toFixed(2) : '0.00'} €</p>
                         <h5>Itens do Pedido</h5>
-                        <ul>
+                        <ul class="list-unstyled">
                             ${pedido.lineas && pedido.lineas.length > 0 ? pedido.lineas.map(item => `
-                                <li>${item.nombreProducto || 'N/A'} - ${item.unidades || 0} x ${item.precio != null ? item.precio.toFixed(2) : '0.00'} €</li>
+                                <li class="media mb-3">
+                                    <img src="${this.getProductImageSrc(item.productoId)}" alt="Imagen de ${item.nombreProducto || 'N/A'}" class="mr-3" style="width: 80px; height: 80px; object-fit: contain;" onerror="this.onerror=null; this.src='./img/placeholder.png';">
+                                    <div class="media-body">
+                                        <h6 class="mt-0 mb-1">
+                                            <a href="#" class="producto-link" data-producto-id="${item.productoId}">${item.nombreProducto || 'N/A'}</a>
+                                        </h6>
+                                        <p>${item.unidades || 0} x ${item.precio != null ? item.precio.toFixed(2) : '0.00'} €</p>
+                                    </div>
+                                </li>
                             `).join('') : '<li>Nenhum item encontrado.</li>'}
                         </ul>
                         <div class="text-center mt-3">
@@ -67,14 +82,14 @@ const PedidoView = {
         container.innerHTML = this.getPedidosView(pedidos);
     },
 
-	renderPedidoDetalhe(containerId, pedido) {
-	    const container = document.getElementById(containerId);
-	    if (!container) {
-	        console.error(`Contêiner não encontrado com ID: ${containerId}`);
-	        return;
-	    }
-	    container.innerHTML = this.getPedidoDetalheView(pedido);
-	},
+    renderPedidoDetalhe(containerId, pedido) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Contêiner não encontrado com ID: ${containerId}`);
+            return;
+        }
+        container.innerHTML = this.getPedidoDetalheView(pedido);
+    },
 
     renderError(message) {
         const container = document.getElementById("pro-inventario");

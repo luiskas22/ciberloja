@@ -7,7 +7,7 @@ const SessionView = {
                 <div class="row g-3">
                     <div class="col-md-12">
                         <label for="loginEmail" class="form-label">Email:</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="Ingrese su email" required>
+                        <input type="text" id="loginEmail" class="form-control" placeholder="Ingrese su email" required>
                     </div>
                     <div class="col-md-12">
                         <label for="loginPassword" class="form-label">Contraseña:</label>
