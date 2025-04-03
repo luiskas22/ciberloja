@@ -58,13 +58,13 @@ public class ClienteServiceTest {
 
 		ClienteDTO c = new ClienteDTO();
 
-		c.setNickname("brunog");
-		c.setNombre("bruno");
-		c.setApellido1("gomes");
+		c.setNickname("test");
+		c.setNombre("test");
+		c.setApellido1("test");
 		c.setApellido2(null);
-		c.setDniNie("34756528F");
-		c.setEmail("bruno.gomes@ciberloja.pt");
-		c.setTelefono("6982123307");
+		c.setDniNie("347565323F");
+		c.setEmail("luiskaspoty@gmail.com");
+		c.setTelefono("698212323");
 		c.setPassword("abc123.");
 
 		clienteService.registrar(c);

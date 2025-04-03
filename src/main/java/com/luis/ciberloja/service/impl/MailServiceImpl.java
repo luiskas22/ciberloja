@@ -12,6 +12,7 @@ import jakarta.mail.Multipart;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
+import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
@@ -72,43 +73,74 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendBienvenida(String to, ClienteDTO cliente) throws MailException {
-		String subject = "Bem-vindo à Ciberloja!";
+		// Validaciones iniciales
+		if (to == null || to.trim().isEmpty()) {
+			throw new MailException("O endereço de email do destinatário não pode ser nulo ou vazio");
+		}
 
-		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<meta charset=\"UTF-8\">")
-				.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">").append("<style>")
-				.append("body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #F5F6F5; color: #4A4A4A; padding: 20px; }")
-				.append("h2 { color: #2E8B57; }").append("p { color: #4A4A4A; }")
-				.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #2E8B57; }")
-				.append(".header { text-align: center; margin-bottom: 20px; }")
-				.append(".logo { max-width: 100px; margin-bottom: 10px; }").append("</style>").append("</head>")
-				.append("<body>").append("<div class=\"container\">").append("<div class=\"header\">")
-				.append("<img src=\"cid:logo\" alt=\"Ciberloja Logo\" class=\"logo\">")
-				.append("<h2>Bem-vindo à Ciberloja! 💻</h2>").append("</div>")
-				.append("<p>Olá " + cliente.getNombre() + "!</p>")
-				.append("<p>Bem-vindo à Ciberloja, a tua loja online de informática de confiança. Estamos entusiasmados por te ter como parte da nossa comunidade de apaixonados por tecnologia.</p>")
-				.append("<p>Na Ciberloja, encontrarás tudo o que precisas para potenciar a tua experiência digital: desde computadores e acessórios até aos mais recentes gadgets. Explora o nosso catálogo e descobre produtos de alta qualidade ao melhor preço.</p>")
-				.append("<p>Se tiveres alguma dúvida ou precisares de ajuda para escolher o equipamento perfeito, a nossa equipa de suporte está pronta para te ajudar a qualquer momento.</p>")
-				.append("<p>Obrigado por nos escolheres. Esperamos que desfrutes das tuas compras e que a Ciberloja seja o teu aliado no mundo tecnológico!</p>")
-				.append("<p>Saudações tecnológicas,</p>").append("<p>A equipa da Ciberloja</p>").append("</div>")
-				.append("</body>").append("</html>");
+		if (cliente == null) {
+			throw new MailException("O objeto cliente não pode ser nulo");
+		}
 
-		Properties props = new Properties();
-		props.put("mail.smtp.host", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.port", ConfigurationParametersManager.getParameterValue(SERVER_PORT));
+		// Validar formato do email
+		if (!isValidEmail(to)) {
+			throw new MailException("O endereço de email fornecido não é válido: " + to);
+		}
 
-		Session session = Session.getInstance(props, new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(ConfigurationParametersManager.getParameterValue(USER),
-						ConfigurationParametersManager.getParameterValue(PASSWORD));
-			}
-		});
+		// Validar configuración del remitente
+		String from = ConfigurationParametersManager.getParameterValue(USER);
+		if (from == null || from.trim().isEmpty()) {
+			throw new MailException("O endereço de email do remetente não está configurado corretamente");
+		}
 
-		try {
+		try { 
+			String subject = "Bem-vindo à Ciberloja!";
+
+			// Construir el cuerpo del mensaje
+			StringBuilder body = new StringBuilder().append("<html>").append("<head>")
+					.append("<meta charset=\"UTF-8\">")
+					.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
+					.append("<style>")
+					.append("body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #F5F6F5; color: #4A4A4A; padding: 20px; }")
+					.append("h2 { color: #2E8B57; }").append("p { color: #4A4A4A; }")
+					.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #2E8B57; }")
+					.append(".header { text-align: center; margin-bottom: 20px; }")
+					.append(".logo { max-width: 100px; margin-bottom: 10px; }").append("</style>").append("</head>")
+					.append("<body>").append("<div class=\"container\">").append("<div class=\"header\">")
+					.append("<img src=\"cid:logo\" alt=\"Ciberloja Logo\" class=\"logo\">")
+					.append("<h2>Bem-vindo à Ciberloja! 💻</h2>").append("</div>").append("<p>Olá ")
+					.append(cliente.getNombre() != null ? cliente.getNombre() : "").append("!</p>")
+					.append("<p>Bem-vindo à Ciberloja, a tua loja online de informática de confiança. Estamos entusiasmados por te ter como parte da nossa comunidade de apaixonados por tecnologia.</p>")
+					.append("<p>Na Ciberloja, encontrarás tudo o que precisas para potenciar a tua experiência digital: desde computadores e acessórios até aos mais recentes gadgets. Explora o nosso catálogo e descobre produtos de alta qualidade ao melhor preço.</p>")
+					.append("<p>Se tiveres alguma dúvida ou precisares de ajuda para escolher o equipamento perfeito, a nossa equipa de suporte está pronta para te ajudar a qualquer momento.</p>")
+					.append("<p>Obrigado por nos escolheres. Esperamos que desfrutes das tuas compras e que a Ciberloja seja o teu aliado no mundo tecnológico!</p>")
+					.append("<p>Saudações tecnológicas,</p>").append("<p>A equipa da Ciberloja</p>").append("</div>")
+					.append("</body>").append("</html>");
+
+			// Configuración SMTP
+			Properties props = new Properties();
+			props.put("mail.smtp.host", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.port", ConfigurationParametersManager.getParameterValue(SERVER_PORT));
+			props.put("mail.smtp.ssl.trust", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
+
+			// Crear sesión
+			Session session = Session.getInstance(props, new Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() {
+					String user = ConfigurationParametersManager.getParameterValue(USER);
+					String password = ConfigurationParametersManager.getParameterValue(PASSWORD);
+					if (user == null || password == null) {
+						throw new RuntimeException("Credenciais SMTP não configuradas corretamente");
+					}
+					return new PasswordAuthentication(user, password);
+				}
+			});
+
+			// Crear y enviar mensaje
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(ConfigurationParametersManager.getParameterValue(USER)));
+			message.setFrom(new InternetAddress(from));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 			message.setSubject(subject);
 
@@ -120,9 +152,22 @@ public class MailServiceImpl implements MailService {
 
 			message.setContent(multipart);
 			Transport.send(message);
+
+		} catch (AddressException e) {
+			throw new MailException("Endereço de email inválido: " + to, e);
 		} catch (MessagingException e) {
 			throw new MailException("Erro ao enviar o email de boas-vindas", e);
+		} catch (Exception e) {
+			throw new MailException("Erro inesperado ao enviar email", e);
 		}
+	}
+
+	// Método auxiliar para validar formato de email
+	private boolean isValidEmail(String email) {
+		if (email == null)
+			return false;
+		String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+		return email.matches(regex);
 	}
 
 	@Override
