@@ -201,12 +201,14 @@ const CartController = {
 				clienteId: clienteData.id,
 				lineas: cart.items.map(item => ({
 					productoId: item.product.id,
+					nombreProducto: item.product.nombre, // Añadir esta línea
 					unidades: item.quantity,
 					precio: item.product.precio
 				})),
 				precio: cart.total,
 				fechaRealizacion: new Date().toISOString(),
-				tipoEstadoPedidoId: 1
+				tipoEstadoPedidoId: 1,
+				tipoEstadoPedidoNombre: "Pendiente"
 			};
 
 			console.log("Datos enviados al backend:", JSON.stringify(pedidoData, null, 2));

@@ -3,7 +3,7 @@ import SesionController from './controllers/sessionController.js';
 import ClienteController from './controllers/clienteController.js';
 import PedidoController from './controllers/pedidoController.js';
 import CartController from './controllers/cartController.js';
-
+import FooterController from './controllers/footerController.js'; // Nueva importación
 const App = {
 	cliente: null,
 	previousResults: [],
@@ -18,6 +18,7 @@ const App = {
 		if (this.cliente) {
 			CartController.init(); // Inicializar el carrito solo si hay sesión
 		}
+		FooterController.init(); // Inicializar el footer
 	},
 
 	setupSessionState() {
