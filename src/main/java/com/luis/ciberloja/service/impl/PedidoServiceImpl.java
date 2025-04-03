@@ -11,24 +11,30 @@ import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.PedidoDAO;
 import com.luis.ciberloja.dao.impl.PedidoDAOImpl;
 import com.luis.ciberloja.dao.util.JDBCUtils;
+import com.luis.ciberloja.model.ClienteDTO;
 import com.luis.ciberloja.model.LineaPedido;
 import com.luis.ciberloja.model.Pedido;
 import com.luis.ciberloja.model.PedidoCriteria;
 import com.luis.ciberloja.model.Results;
+import com.luis.ciberloja.service.ClienteService;
 import com.luis.ciberloja.service.MailException;
+import com.luis.ciberloja.service.MailService;
 import com.luis.ciberloja.service.PedidoService;
 
 public class PedidoServiceImpl implements PedidoService {
 
 	private static Logger logger = LogManager.getLogger(PedidoServiceImpl.class);
 	private PedidoDAO pedidoDAO = null;
+	private ClienteService clienteService=null;
+	private MailService mailService = null; // Instância do MailService
 
 	public PedidoServiceImpl() {
 		pedidoDAO = new PedidoDAOImpl();
+		mailService = new MailServiceImpl(); // Inicialização do MailService
+		clienteService=new ClienteServiceImpl();
 	}
 
 	public Pedido findBy(Long id) throws DataException {
-
 		Connection con = null;
 		Pedido p = null;
 		boolean commit = false;
@@ -49,7 +55,6 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	public Results<Pedido> findByCriteria(PedidoCriteria pedido, int pos, int pageSize) throws DataException {
-
 		Connection con = null;
 		Results<Pedido> resultados = null;
 		boolean commit = false;
@@ -70,41 +75,45 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	public Long create(Pedido p) throws DataException, MailException {
+	    Connection con = null;
+	    Long id = null;
+	    boolean commit = false;
 
-		Connection con = null;
-		Long id = null;
-		boolean commit = false;
+	    try {
+	        con = JDBCUtils.getConnection();
+	        con.setAutoCommit(false);
 
-		try {
-			con = JDBCUtils.getConnection();
-			con.setAutoCommit(false);
+	        PedidoCriteria criteria = new PedidoCriteria();
+	        criteria.setTipoEstadoPedidoId(6); // Tipo de estado "carrinho"
+	        criteria.setClienteId(p.getClienteId());
 
-			PedidoCriteria criteria = new PedidoCriteria();
-			criteria.setTipoEstadoPedidoId(7); // Tipo de estado "carrito"
-			criteria.setClienteId(p.getClienteId());
+	        List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
 
-			List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
+	        Pedido carrito = null;
+	        if (!pedidos.isEmpty()) {
+	            carrito = pedidos.get(0);
+	        }
 
-			Pedido carrito = null;
-			if (!pedidos.isEmpty()) {
-				carrito = pedidos.get(0);
-			}
+	        if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
+	            p.setPrecio(calcularPrecio(p));
+	            id = pedidoDAO.create(con, p);
+	            if (id != null) {
+	                commit = true;
+	                // Obter dados do cliente (exemplo fictício)
+	                ClienteService clienteService = new ClienteServiceImpl(); // Substituir por tua implementação
+	                ClienteDTO cliente = clienteService.findById(p.getClienteId());
+	                String emailCliente = cliente.getEmail(); // Assumindo que ClienteDTO tem getEmail()
+	                mailService.sendPedidoRealizado(emailCliente, cliente, p);
+	            }
+	        }
 
-			if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
-				p.setPrecio(calcularPrecio(p));
-				id = pedidoDAO.create(con, p);
-				if (id != null) {
-					commit = true;
-				}
-			}
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new DataException(e);
-		} finally {
-			JDBCUtils.close(con, commit);
-		}
-		return id;
+	    } catch (SQLException e) {
+	        logger.error(e.getMessage(), e);
+	        throw new DataException(e);
+	    } finally {
+	        JDBCUtils.close(con, commit);
+	    }
+	    return id;
 	}
 
 	public boolean update(Pedido p) throws DataException {
@@ -130,7 +139,6 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	public boolean delete(Long id) throws DataException {
-
 		Connection con = null;
 		boolean tf = false;
 		boolean commit = false;
@@ -151,7 +159,6 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	public Double calcularPrecio(Pedido p) throws DataException {
-
 		double precioTotal = 0.0d;
 
 		for (LineaPedido lp : p.getLineas()) {
@@ -159,7 +166,6 @@ public class PedidoServiceImpl implements PedidoService {
 		}
 
 		return precioTotal;
-
 	}
 
 	@Override
@@ -188,5 +194,4 @@ public class PedidoServiceImpl implements PedidoService {
 
 		return resultados;
 	}
-
 }

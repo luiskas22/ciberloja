@@ -66,6 +66,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\servi
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\EstadoPedidoServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\LineaPedidoServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\LocalidadServiceImpl.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\MailServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\PaisServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\PedidoServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\ProductoServiceImpl.java
@@ -74,6 +75,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\servi
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\LineaPedidoService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\LocalidadService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\MailException.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\MailService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\PaisService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\PedidoService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\ProductoService.java

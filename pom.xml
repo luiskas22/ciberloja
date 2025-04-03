@@ -13,6 +13,7 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -26,112 +27,95 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- JUnit -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Optionally: parameterized tests support -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Apache Commons -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.17.0</version>
 		</dependency>
 
+		<!-- Pool de conexiones C3P0 -->
 		<dependency>
 			<groupId>com.mchange</groupId>
 			<artifactId>c3p0</artifactId>
 			<version>0.10.0</version>
 		</dependency>
 
+		<!-- Jakarta Mail API -->
 		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+			<version>2.1.3</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email -->
+		<!-- Implementación de Jakarta Mail (Angus) -->
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-email</artifactId>
-			<version>1.6.0</version>
+			<groupId>org.eclipse.angus</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+		<!-- Jakarta Activation API -->
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.1.3</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/javax.mail/mailapi -->
+		<!-- Implementación de JAF (compatible con javax.activation y
+		jakarta.activation) -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mailapi</artifactId>
-			<version>1.4.3</version>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>jakarta.activation</artifactId>
+			<version>2.0.1</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.sun.mail/smtp -->
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>smtp</artifactId>
-			<version>1.4.5</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.jasypt/jasypt -->
+		<!-- Jasypt para cifrado -->
 		<dependency>
 			<groupId>org.jasypt</groupId>
 			<artifactId>jasypt</artifactId>
 			<version>1.9.3</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
+		<!-- MySQL Connector -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version> <!-- Usa la versión más reciente compatible -->
+			<version>8.0.33</version>
 		</dependency>
 
-		<!--https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+		<!-- Log4j -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>2.24.3</version>
 		</dependency>
-
-		<!--
-		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.24.3</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>com.luis.ciberloja</groupId>
-			<artifactId>ciberLoja</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency> -->
 	</dependencies>
 
 	<build>
-		<pluginManagement><!-- lock down plugins versions to avoid using Maven
-			defaults (may be moved to parent pom) -->
+		<pluginManagement>
 			<plugins>
-				<!-- clean lifecycle, see
-				https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.4.0</version>
 				</plugin>
-				<!-- default lifecycle, jar packaging: see
-				https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.3.1</version>
@@ -156,8 +140,6 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>3.1.2</version>
 				</plugin>
-				<!-- site lifecycle, see
-				https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.12.1</version>
@@ -174,6 +156,5 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
-
 	</build>
 </project>

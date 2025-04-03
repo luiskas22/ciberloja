@@ -5,6 +5,7 @@ com\luis\ciberloja\service\impl\ProductoServiceImpl.class
 com\luis\ciberloja\dao\impl\PaisDAOImpl.class
 com\luis\ciberloja\service\ProvinciaService.class
 com\luis\ciberloja\dao\DireccionDAO.class
+com\luis\ciberloja\service\MailService.class
 com\luis\ciberloja\dao\impl\EmpleadoDAOImpl.class
 com\luis\ciberloja\dao\impl\CategoriaDAOImpl.class
 com\luis\ciberloja\model\AbstractCriteria.class
@@ -22,6 +23,7 @@ com\luis\ciberloja\service\impl\LocalidadServiceImpl.class
 com\luis\ciberloja\dao\CategoriaDAO.class
 com\luis\ciberloja\dao\impl\LineaPedidoDAOImpl.class
 com\luis\ciberloja\service\impl\PedidoServiceImpl.class
+com\luis\ciberloja\service\impl\MailServiceImpl$1.class
 com\luis\ciberloja\service\TipoEmpleadoService.class
 com\luis\ciberloja\model\Rol.class
 com\luis\ciberloja\service\impl\ClienteServiceImpl.class
@@ -44,6 +46,7 @@ com\luis\ciberloja\service\ProductoService.class
 com\luis\ciberloja\dao\TipoEmpleadoDAO.class
 com\luis\ciberloja\service\PedidoService.class
 com\luis\ciberloja\dao\LineaPedidoDAO.class
+com\luis\ciberloja\service\impl\MailServiceImpl$2.class
 com\luis\ciberloja\dao\impl\PedidoDAOImpl.class
 com\luis\ciberloja\model\Pedido.class
 com\luis\ciberloja\model\Results.class
@@ -61,11 +64,13 @@ com\luis\ciberloja\service\PaisService.class
 com\luis\ciberloja\service\impl\EmpleadoServiceImpl.class
 com\luis\ciberloja\dao\util\JDBCUtils.class
 com\luis\ciberloja\dao\EstadoPedidoDAO.class
+com\luis\ciberloja\service\impl\MailServiceImpl.class
 com\luis\ciberloja\service\impl\TipoEmpleadoServiceImpl.class
 com\luis\ciberloja\model\UnidadMedida.class
 com\luis\ciberloja\model\ProductoDTO.class
 com\luis\ciberloja\service\impl\ProvinciaServiceImpl.class
 com\luis\ciberloja\service\impl\DireccionServiceImpl.class
+com\luis\ciberloja\service\impl\MailServiceImpl$3.class
 com\luis\ciberloja\service\StockException.class
 com\luis\ciberloja\model\LineaPedido.class
 com\luis\ciberloja\model\DireccionDTO.class

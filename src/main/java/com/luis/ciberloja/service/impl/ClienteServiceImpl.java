@@ -14,24 +14,25 @@ import com.luis.ciberloja.dao.util.JDBCUtils;
 import com.luis.ciberloja.model.ClienteDTO;
 import com.luis.ciberloja.model.Results;
 import com.luis.ciberloja.service.ClienteService;
+import com.luis.ciberloja.service.MailService;
 import com.luis.ciberloja.service.ServiceException;
 
 public class ClienteServiceImpl implements ClienteService {
 
 	/**
-	 * Es un objeto stateless, no tiene sentido instanciarlo multiples veces.
-	 * (NOTA: Para segundo curso de DAW: Será un atributo, no una constante,
-	 * para que podamos inyectarlo, y si queremos, cambiar el Encryptor). 
+	 * Es un objeto stateless, no tiene sentido instanciarlo multiples veces. (NOTA:
+	 * Para segundo curso de DAW: Será un atributo, no una constante, para que
+	 * podamos inyectarlo, y si queremos, cambiar el Encryptor).
 	 */
-	public static final StrongPasswordEncryptor PASSWORD_ENCRYPTOR 
-	= new StrongPasswordEncryptor();
+	public static final StrongPasswordEncryptor PASSWORD_ENCRYPTOR = new StrongPasswordEncryptor();
 
 	private ClienteDAO clienteDAO = null;
+	private MailService mailService = null;
 	private static Logger logger = LogManager.getLogger(ClienteServiceImpl.class);
 
-
 	public ClienteServiceImpl() {
-		clienteDAO= new ClienteDAOImpl();
+		clienteDAO = new ClienteDAOImpl();
+		mailService = new MailServiceImpl();
 	}
 
 	public ClienteDTO findById(Long id) throws DataException {
@@ -46,10 +47,10 @@ public class ClienteServiceImpl implements ClienteService {
 			cliente = clienteDAO.findById(con, id);
 			commit = true;
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException();
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return cliente;
@@ -68,17 +69,14 @@ public class ClienteServiceImpl implements ClienteService {
 			cliente = clienteDAO.findByNick(con, nick);
 			commit = true;
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return cliente;
 	}
-
-
-
 
 	public ClienteDTO findByEmail(String mail) throws DataException {
 
@@ -92,10 +90,10 @@ public class ClienteServiceImpl implements ClienteService {
 			cliente = clienteDAO.findByEmail(con, mail);
 			commit = true;
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException();
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return cliente;
@@ -113,20 +111,18 @@ public class ClienteServiceImpl implements ClienteService {
 			resultados = clienteDAO.findAll(con, pos, pageSize);
 			commit = true;
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return resultados;
 	}
 
-	public Long registrar(ClienteDTO c) 
-			throws DataException, ServiceException{
-		
-		c.setPassword(PASSWORD_ENCRYPTOR.
-				encryptPassword(c.getPassword()));
+	public Long registrar(ClienteDTO c) throws DataException, ServiceException {
+
+		c.setPassword(PASSWORD_ENCRYPTOR.encryptPassword(c.getPassword()));
 
 		Long id = null;
 		Connection con = null;
@@ -136,23 +132,20 @@ public class ClienteServiceImpl implements ClienteService {
 			con = JDBCUtils.getConnection();
 			con.setAutoCommit(false);
 			id = clienteDAO.create(con, c);
-			//mailService.sendBienvenida(c.getEmail(), c);
+			mailService.sendBienvenida(c.getEmail(), c);
 
 			commit = true;
 
-
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return id;
 	}
 
-
-	public boolean delete(Long id) 
-			throws DataException, ServiceException{
+	public boolean delete(Long id) throws DataException, ServiceException {
 
 		Connection con = null;
 		boolean c = false;
@@ -166,43 +159,39 @@ public class ClienteServiceImpl implements ClienteService {
 			c = clienteDAO.delete(con, id);
 			commit = true;
 
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
 
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return c;
 
 	}
 
-	public boolean updatePassword(String password, Long id) throws DataException{
+	public boolean updatePassword(String password, Long id) throws DataException {
 		Connection con = null;
 		boolean cliente = false;
 		boolean commit = false;
 		try {
 
-
 			con = JDBCUtils.getConnection();
 			con.setAutoCommit(false);
-			
-			
+
 			cliente = clienteDAO.updatePassword(con, PASSWORD_ENCRYPTOR.encryptPassword(password), id);
 			commit = true;
 
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return cliente;
 	}
 
-
-	public boolean update(ClienteDTO c) 
-			throws DataException{
+	public boolean update(ClienteDTO c) throws DataException {
 
 		Connection con = null;
 		boolean cliente = false;
@@ -215,10 +204,10 @@ public class ClienteServiceImpl implements ClienteService {
 			cliente = clienteDAO.update(con, c);
 			commit = true;
 
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
 		return cliente;
@@ -226,34 +215,33 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public ClienteDTO autenticar(String mail, String password) throws DataException {
-		
+
 		Connection con = null;
 		boolean commit = false;
 		ClienteDTO cliente = null;
-		
+
 		try {
 			con = JDBCUtils.getConnection();
 			con.setAutoCommit(false);
-			
+
 			cliente = clienteDAO.findByEmail(con, mail);
-			if(cliente == null) {
+			if (cliente == null) {
 				return null;
 			}
-			if(!PASSWORD_ENCRYPTOR.checkPassword(password, cliente.getPassword())) {
+			if (!PASSWORD_ENCRYPTOR.checkPassword(password, cliente.getPassword())) {
 				cliente = null;
 			}
-			
+
 			commit = true;
-			
-		}catch(SQLException e) {
+
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataException(e);
-		}finally {
+		} finally {
 			JDBCUtils.close(con, commit);
 		}
-		
+
 		return cliente;
 	}
-
 
 }
