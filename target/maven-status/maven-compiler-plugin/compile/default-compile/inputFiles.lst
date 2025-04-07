@@ -60,10 +60,12 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\servi
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\DireccionService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\EmpleadoService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\EstadoPedidoService.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\FileService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\ClienteServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\DireccionServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\EmpleadoServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\EstadoPedidoServiceImpl.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\FileServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\LineaPedidoServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\LocalidadServiceImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\impl\MailServiceImpl.java

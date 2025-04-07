@@ -7,6 +7,7 @@ com\luis\ciberloja\service\ProvinciaService.class
 com\luis\ciberloja\dao\DireccionDAO.class
 com\luis\ciberloja\service\MailService.class
 com\luis\ciberloja\dao\impl\EmpleadoDAOImpl.class
+com\luis\ciberloja\service\FileService.class
 com\luis\ciberloja\dao\impl\CategoriaDAOImpl.class
 com\luis\ciberloja\model\AbstractCriteria.class
 com\luis\ciberloja\service\LocalidadService.class
@@ -27,6 +28,7 @@ com\luis\ciberloja\service\impl\MailServiceImpl$1.class
 com\luis\ciberloja\service\TipoEmpleadoService.class
 com\luis\ciberloja\model\Rol.class
 com\luis\ciberloja\service\impl\ClienteServiceImpl.class
+com\luis\ciberloja\service\impl\FileServiceImpl.class
 com\luis\ciberloja\dao\impl\ClienteDAOImpl.class
 com\luis\ciberloja\dao\EmpleadoDAO.class
 com\luis\ciberloja\model\EmpleadoDTO.class

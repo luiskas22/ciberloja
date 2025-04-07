@@ -3,6 +3,7 @@ com\luis\ciberloja\service\PaisServiceTest.class
 com\luis\ciberloja\service\ProductoServiceTest.class
 com\luis\ciberloja\service\TipoEmpleadoServiceTest.class
 com\luis\ciberloja\service\EstadoPedidoServiceTest.class
+com\luis\ciberloja\service\FileServiceTest.class
 com\luis\ciberloja\service\EmpleadoServiceTest.class
 com\luis\ciberloja\service\LocalidadServiceTest.class
 com\luis\ciberloja\service\DireccionServiceTest.class

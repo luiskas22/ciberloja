@@ -44,8 +44,8 @@ public class DireccionServiceTest {
 		d.setNombreVia("Plaza de la Concepción");
 		d.setDirVia("nº7");
 		d.setLocalidadId(24);
-		d.setClienteId(null);
-		d.setEmpleadoId(7l);
+		d.setClienteId(39l);
+		d.setEmpleadoId(null);
 		direccionService.create(d);
 		logger.trace("Creada la dirección con ID: "+d.getId());
 		

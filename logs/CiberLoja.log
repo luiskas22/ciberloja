@@ -2680,3 +2680,98 @@ java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '99888777M' f
 [WARN ] 2025-04-03 12:02:52.732 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
 [WARN ] 2025-04-03 15:01:51.660 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
 [WARN ] 2025-04-03 15:03:52.990 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-04 15:06:35.758 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[ERROR] 2025-04-04 15:06:36.296 [main] DireccionDAOImpl - DireccionDTO: com.luis.ciberloja.model.DireccionDTO@413f69cc[clienteId=<null>,dirVia=nº7,empleadoId=7,id=<null>,localidadId=24,localidadNombre=<null>,nombreVia=Plaza de la Concepción,paisId=<null>,paisNombre=<null>,provinciaId=<null>,provinciaNombre=<null>]
+java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails (`ciberloja`.`direccion`, CONSTRAINT `direccion_ibfk_3` FOREIGN KEY (`empleado_id`) REFERENCES `empleado` (`id`))
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:118) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mchange.v2.c3p0.impl.NewProxyPreparedStatement.executeUpdate(NewProxyPreparedStatement.java:1164) ~[c3p0-0.10.0.jar:?]
+	at com.luis.ciberloja.dao.impl.DireccionDAOImpl.create(DireccionDAOImpl.java:170) [classes/:?]
+	at com.luis.ciberloja.service.impl.DireccionServiceImpl.create(DireccionServiceImpl.java:78) [classes/:?]
+	at com.luis.ciberloja.service.DireccionServiceTest.testCreate(DireccionServiceTest.java:49) [test-classes/:?]
+	at com.luis.ciberloja.service.DireccionServiceTest.main(DireccionServiceTest.java:87) [test-classes/:?]
+[WARN ] 2025-04-04 15:07:24.537 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:15:45.158 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:15:45.707 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:16:24.001 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:16:24.485 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:17:02.237 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:17:02.711 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:19:27.146 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:19:27.649 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:19:55.124 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:19:55.606 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:20:08.848 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:20:09.461 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:23:06.756 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:23:07.252 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:24:10.231 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:24:10.806 [main] FileServiceTest - No se encontraron imágenes para producto ID: 33
+[WARN ] 2025-04-07 15:28:29.372 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:28:44.724 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:29:11.732 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:30:31.426 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:37:26.947 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[ERROR] 2025-04-07 15:39:40.506 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:39:40.508 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:39:57.348 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:39:57.351 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:40:10.537 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:40:10.538 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:41:15.315 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:41:15.317 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:42:54.241 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:42:54.243 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:43:16.213 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:43:16.214 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:43:51.998 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:43:51.999 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:46:03.739 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:46:03.742 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[ERROR] 2025-04-07 15:49:55.624 [main] FileServiceTest - El archivo de prueba no existe: src/test/resources/test-images/basra.jpg
+[ERROR] 2025-04-07 15:49:55.626 [main] FileServiceTest - Error en las pruebas de FileService
+java.io.FileNotFoundException: Archivo de prueba no encontrado: src/test/resources/test-images/basra.jpg
+	at com.luis.ciberloja.service.FileServiceTest.subirImagenEjemplo(FileServiceTest.java:77) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.testUploadImageToNewProduct(FileServiceTest.java:40) ~[test-classes/:?]
+	at com.luis.ciberloja.service.FileServiceTest.main(FileServiceTest.java:24) [test-classes/:?]
+[WARN ] 2025-04-07 15:51:47.853 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:52:26.712 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:55:40.387 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
+[WARN ] 2025-04-07 15:55:55.366 [main] C3P0PooledConnectionPool - Although no ConnectionTester is set, preferredTestQuery (or automaticTestTable) is also set, which can only be supported by a ConnectionTester. Reverting to use of ConnectionTester com.mchange.v2.c3p0.impl.DefaultConnectionTester.
