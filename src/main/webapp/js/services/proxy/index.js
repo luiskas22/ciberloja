@@ -18,10 +18,13 @@ import ClienteDTO from './model/ClienteDTO.js';
 import ClienteRegistrarBody from './model/ClienteRegistrarBody.js';
 import DireccionDTO from './model/DireccionDTO.js';
 import EmpleadoDTO from './model/EmpleadoDTO.js';
+import FormDataContentDisposition from './model/FormDataContentDisposition.js';
 import LineaPedido from './model/LineaPedido.js';
+import Localidad from './model/Localidad.js';
 import Pedido from './model/Pedido.js';
 import ProductoCreateBody from './model/ProductoCreateBody.js';
 import ProductoDTO from './model/ProductoDTO.js';
+import ProductoProductoIdBody from './model/ProductoProductoIdBody.js';
 import Results from './model/Results.js';
 import DefaultApi from './api/DefaultApi.js';
 
@@ -57,69 +60,87 @@ import DefaultApi from './api/DefaultApi.js';
 * @version 1.0
 */
 export {
-	/**
-	 * The ApiClient constructor.
-	 * @property {module:ApiClient}
-	 */
-	ApiClient,
+    /**
+     * The ApiClient constructor.
+     * @property {module:ApiClient}
+     */
+    ApiClient,
 
-	/**
-	 * The ClienteDTO model constructor.
-	 * @property {module:model/ClienteDTO}
-	 */
-	ClienteDTO,
+    /**
+     * The ClienteDTO model constructor.
+     * @property {module:model/ClienteDTO}
+     */
+    ClienteDTO,
 
-	/**
-	 * The ClienteRegistrarBody model constructor.
-	 * @property {module:model/ClienteRegistrarBody}
-	 */
-	ClienteRegistrarBody,
+    /**
+     * The ClienteRegistrarBody model constructor.
+     * @property {module:model/ClienteRegistrarBody}
+     */
+    ClienteRegistrarBody,
 
-	/**
-	 * The DireccionDTO model constructor.
-	 * @property {module:model/DireccionDTO}
-	 */
-	DireccionDTO,
+    /**
+     * The DireccionDTO model constructor.
+     * @property {module:model/DireccionDTO}
+     */
+    DireccionDTO,
 
-	/**
-	 * The EmpleadoDTO model constructor.
-	 * @property {module:model/EmpleadoDTO}
-	 */
-	EmpleadoDTO,
+    /**
+     * The EmpleadoDTO model constructor.
+     * @property {module:model/EmpleadoDTO}
+     */
+    EmpleadoDTO,
 
-	/**
-	 * The LineaPedido model constructor.
-	 * @property {module:model/LineaPedido}
-	 */
-	LineaPedido,
+    /**
+     * The FormDataContentDisposition model constructor.
+     * @property {module:model/FormDataContentDisposition}
+     */
+    FormDataContentDisposition,
 
-	/**
-	 * The Pedido model constructor.
-	 * @property {module:model/Pedido}
-	 */
-	Pedido,
+    /**
+     * The LineaPedido model constructor.
+     * @property {module:model/LineaPedido}
+     */
+    LineaPedido,
 
-	/**
-	 * The ProductoCreateBody model constructor.
-	 * @property {module:model/ProductoCreateBody}
-	 */
-	ProductoCreateBody,
+    /**
+     * The Localidad model constructor.
+     * @property {module:model/Localidad}
+     */
+    Localidad,
 
-	/**
-	 * The ProductoDTO model constructor.
-	 * @property {module:model/ProductoDTO}
-	 */
-	ProductoDTO,
+    /**
+     * The Pedido model constructor.
+     * @property {module:model/Pedido}
+     */
+    Pedido,
 
-	/**
-	 * The Results model constructor.
-	 * @property {module:model/Results}
-	 */
-	Results,
+    /**
+     * The ProductoCreateBody model constructor.
+     * @property {module:model/ProductoCreateBody}
+     */
+    ProductoCreateBody,
 
-	/**
-	* The DefaultApi service constructor.
-	* @property {module:api/DefaultApi}
-	*/
-	DefaultApi
+    /**
+     * The ProductoDTO model constructor.
+     * @property {module:model/ProductoDTO}
+     */
+    ProductoDTO,
+
+    /**
+     * The ProductoProductoIdBody model constructor.
+     * @property {module:model/ProductoProductoIdBody}
+     */
+    ProductoProductoIdBody,
+
+    /**
+     * The Results model constructor.
+     * @property {module:model/Results}
+     */
+    Results,
+
+    /**
+    * The DefaultApi service constructor.
+    * @property {module:api/DefaultApi}
+    */
+    DefaultApi
 };

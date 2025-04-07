@@ -3,7 +3,9 @@ import SesionController from './controllers/sessionController.js';
 import ClienteController from './controllers/clienteController.js';
 import PedidoController from './controllers/pedidoController.js';
 import CartController from './controllers/cartController.js';
+import DireccionController from './controllers/direccionController.js'
 import FooterController from './controllers/footerController.js'; // Nueva importación
+
 const App = {
 	cliente: null,
 	previousResults: [],
@@ -86,7 +88,7 @@ const App = {
 		const btnDirecciones = document.querySelector('a[href="#mis-direcciones"]');
 		if (btnDirecciones) {
 			btnDirecciones.addEventListener("click", () => {
-				ClienteController.init("direcciones");
+				DireccionController.init("direcciones");
 				this.hideHomeContent();
 			});
 		}

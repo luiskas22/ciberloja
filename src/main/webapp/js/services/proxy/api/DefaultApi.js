@@ -17,6 +17,8 @@ import ApiClient from "../ApiClient.js";
 import ClienteDTO from '../model/ClienteDTO.js';
 import DireccionDTO from '../model/DireccionDTO.js';
 import EmpleadoDTO from '../model/EmpleadoDTO.js';
+import FormDataContentDisposition from '../model/FormDataContentDisposition.js';
+import Localidad from '../model/Localidad.js';
 import Pedido from '../model/Pedido.js';
 import ProductoDTO from '../model/ProductoDTO.js';
 import Results from '../model/Results.js';
@@ -28,1123 +30,1308 @@ import Results from '../model/Results.js';
 */
 export default class DefaultApi {
 
-    /**
-    * Constructs a new DefaultApi. 
-    * @alias module:api/DefaultApi
-    * @class
-    * @param {module:ApiClient} [apiClient] Optional API client implementation to use,
-    * default to {@link module:ApiClient#instanc
-    e} if unspecified.
-    */
-    constructor(apiClient) {
-        this.apiClient = apiClient || ApiClient.instance;
-    }
-
-    /**
-     * Callback function to receive the result of the autenticarCliente operation.
-     * @callback moduleapi/DefaultApi~autenticarClienteCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ClienteDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Autenticación de un cliente
-     * Autenticación de un cliente introduciendo su corre electrónico y su contraseña
-     * @param {Object} opts Optional parameters
-     * @param {module:model/ClienteDTO} opts.body 
-     * @param {module:api/DefaultApi~autenticarClienteCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    autenticarCliente(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = ClienteDTO;
-
-      return this.apiClient.callApi(
-        '/api/cliente/autenticar', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the autenticarEmpleado operation.
-     * @callback moduleapi/DefaultApi~autenticarEmpleadoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/EmpleadoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Autenticación de un empleado
-     * Autenticación de un empleado mediante su ID y contraseña
-     * @param {Object} opts Optional parameters
-     * @param {module:model/EmpleadoDTO} opts.body 
-     * @param {module:api/DefaultApi~autenticarEmpleadoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    autenticarEmpleado(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = EmpleadoDTO;
-
-      return this.apiClient.callApi(
-        '/api/empleado/autenticar', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the createDireccion operation.
-     * @callback moduleapi/DefaultApi~createDireccionCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/DireccionDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Creación de una dirección
-     * Crea una nueva dirección con los datos proporcionados
-     * @param {Object} opts Optional parameters
-     * @param {module:model/DireccionDTO} opts.body 
-     * @param {module:api/DefaultApi~createDireccionCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    createDireccion(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = DireccionDTO;
-
-      return this.apiClient.callApi(
-        '/api/direccion/create', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the createPedido operation.
-     * @callback moduleapi/DefaultApi~createPedidoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/Pedido{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Creación de un pedido
-     * Crea un pedido introduciendo todos los datos del mismo
-     * @param {Object} opts Optional parameters
-     * @param {module:model/Pedido} opts.body 
-     * @param {module:api/DefaultApi~createPedidoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    createPedido(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = Pedido;
-
-      return this.apiClient.callApi(
-        '/api/pedido/create', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the createProducto operation.
-     * @callback moduleapi/DefaultApi~createProductoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ProductoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Crear un nuevo producto
-     * Este endpoint permite crear un nuevo producto en el sistema.
-     * @param {Object} opts Optional parameters
-     * @param {String} opts.nombre 
-     * @param {String} opts.descripcion 
-     * @param {Number} opts.precio 
-     * @param {Number} opts.stockDisponible 
-     * @param {Number} opts.idCategoria 
-     * @param {Number} opts.idMarca 
-     * @param {Number} opts.idUnidadMedida 
-     * @param {module:api/DefaultApi~createProductoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    createProducto(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        'nombre': opts['nombre'],'descripcion': opts['descripcion'],'precio': opts['precio'],'stockDisponible': opts['stockDisponible'],'idCategoria': opts['idCategoria'],'idMarca': opts['idMarca'],'idUnidadMedida': opts['idUnidadMedida']
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/x-www-form-urlencoded'];
-      let accepts = ['application/json'];
-      let returnType = ProductoDTO;
-
-      return this.apiClient.callApi(
-        '/api/producto/create', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the deleteCliente operation.
-     * @callback moduleapi/DefaultApi~deleteClienteCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ClienteDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Eliminación de cliente
-     * Eliminación de un cliente a partir del id que tiene en base de datos
-     * @param {Object} opts Optional parameters
-     * @param {Number} opts.id 
-     * @param {module:api/DefaultApi~deleteClienteCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    deleteCliente(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        'id': opts['id']
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = ClienteDTO;
-
-      return this.apiClient.callApi(
-        '/api/cliente/delete', 'DELETE',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the deleteDireccion operation.
-     * @callback moduleapi/DefaultApi~deleteDireccionCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Eliminación de una dirección
-     * Elimina una dirección a partir de su ID
-     * @param {Object} opts Optional parameters
-     * @param {Number} opts.id 
-     * @param {module:api/DefaultApi~deleteDireccionCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    deleteDireccion(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        'id': opts['id']
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = null;
-
-      return this.apiClient.callApi(
-        '/api/direccion/delete', 'DELETE',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the deletePedido operation.
-     * @callback moduleapi/DefaultApi~deletePedidoCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Eliminación de un pedido
-     * Elimina un pedido a partir del identificador introducido
-     * @param {Object} opts Optional parameters
-     * @param {Number} opts.id 
-     * @param {module:api/DefaultApi~deletePedidoCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    deletePedido(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        'id': opts['id']
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = [];
-      let returnType = null;
-
-      return this.apiClient.callApi(
-        '/api/pedido/delete', 'DELETE',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the deleteProducto operation.
-     * @callback moduleapi/DefaultApi~deleteProductoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ProductoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Eliminar un producto
-     * Este endpoint permite eliminar un producto del sistema por su ID.
-     * @param {Number} id ID del producto a eliminar
-     * @param {module:api/DefaultApi~deleteProductoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    deleteProducto(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling deleteProducto");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = ProductoDTO;
-
-      return this.apiClient.callApi(
-        '/api/producto/delete/{id}', 'DELETE',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findClienteById operation.
-     * @callback moduleapi/DefaultApi~findClienteByIdCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ClienteDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Busqueda por id de cliente
-     * Recupera todos los datos de un cliente por su id
-     * @param {Number} id 
-     * @param {module:api/DefaultApi~findClienteByIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findClienteById(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling findClienteById");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = ClienteDTO;
-
-      return this.apiClient.callApi(
-        '/api/cliente/find/{id}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findDireccionById operation.
-     * @callback moduleapi/DefaultApi~findDireccionByIdCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/DireccionDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Búsqueda por ID de dirección
-     * Recupera todos los datos de una dirección por su ID
-     * @param {Number} id 
-     * @param {module:api/DefaultApi~findDireccionByIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findDireccionById(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling findDireccionById");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = DireccionDTO;
-
-      return this.apiClient.callApi(
-        '/api/direccion/find/{id}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findEmpleadoById operation.
-     * @callback moduleapi/DefaultApi~findEmpleadoByIdCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/EmpleadoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Búsqueda por id de empleado
-     * Recupera todos los datos de un empleado por su id
-     * @param {Number} id 
-     * @param {module:api/DefaultApi~findEmpleadoByIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findEmpleadoById(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling findEmpleadoById");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = EmpleadoDTO;
-
-      return this.apiClient.callApi(
-        '/api/empleado/find/{id}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findPedidoById operation.
-     * @callback moduleapi/DefaultApi~findPedidoByIdCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/Pedido{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Obtener un pedido por ID
-     * Este endpoint permite obtener un pedido del sistema por su ID.
-     * @param {Number} id ID del pedido a buscar
-     * @param {module:api/DefaultApi~findPedidoByIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findPedidoById(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling findPedidoById");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = Pedido;
-
-      return this.apiClient.callApi(
-        '/api/pedido/{id}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findPedidosByClienteId operation.
-     * @callback moduleapi/DefaultApi~findPedidosByClienteIdCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/Pedido>{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Obtener pedidos por ID de cliente
-     * Este endpoint permite obtener todos los pedidos asociados a un cliente por su ID.
-     * @param {Number} clienteId ID del cliente para buscar sus pedidos
-     * @param {module:api/DefaultApi~findPedidosByClienteIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findPedidosByClienteId(clienteId, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'clienteId' is set
-      if (clienteId === undefined || clienteId === null) {
-        throw new Error("Missing the required parameter 'clienteId' when calling findPedidosByClienteId");
-      }
-
-      let pathParams = {
-        'clienteId': clienteId
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = [Pedido];
-
-      return this.apiClient.callApi(
-        '/api/pedido/cliente/{clienteId}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findPedidosByCriteria operation.
-     * @callback moduleapi/DefaultApi~findPedidosByCriteriaCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/Pedido>{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Búsqueda de pedidos por criteria
-     * Búsqueda de pedidos a partir de varios parámetros introducidos
-     * @param {Object} opts Optional parameters
-     * @param {Number} opts.id 
-     * @param {String} opts.fechaDesde 
-     * @param {String} opts.fechaHasta 
-     * @param {Number} opts.precioDesde 
-     * @param {Number} opts.precioHasta 
-     * @param {Number} opts.clienteId 
-     * @param {Number} opts.tipoEstadoPedidoId 
-     * @param {module:api/DefaultApi~findPedidosByCriteriaCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findPedidosByCriteria(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        'id': opts['id'],'fechaDesde': opts['fechaDesde'],'fechaHasta': opts['fechaHasta'],'precioDesde': opts['precioDesde'],'precioHasta': opts['precioHasta'],'clienteId': opts['clienteId'],'tipoEstadoPedidoId': opts['tipoEstadoPedidoId']
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = [Pedido];
-
-      return this.apiClient.callApi(
-        '/api/pedido', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findProductoById operation.
-     * @callback moduleapi/DefaultApi~findProductoByIdCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ProductoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Obtener una producto por ID
-     * Este endpoint permite obtener un producto del sistema por su ID.
-     * @param {Number} id ID del producto a buscar
-     * @param {module:api/DefaultApi~findProductoByIdCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findProductoById(id, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling findProductoById");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = ProductoDTO;
-
-      return this.apiClient.callApi(
-        '/api/producto/{id}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the findProductosByCriteria operation.
-     * @callback moduleapi/DefaultApi~findProductosByCriteriaCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/Results{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Buscar productos por criterios
-     * Este endpoint permite buscar productos aplicando filtros opcionales como ID, nombre, rango de precios, cantidad de unidades, y localización.
-     * @param {Object} opts Optional parameters
-     * @param {Number} opts.id 
-     * @param {String} opts.nombre 
-     * @param {String} opts.descripcion 
-     * @param {Number} opts.precioMin 
-     * @param {Number} opts.precioMax 
-     * @param {Number} opts.stockMin 
-     * @param {Number} opts.stockMax 
-     * @param {String} opts.nombreCategoria 
-     * @param {String} opts.nombreMarca 
-     * @param {String} opts.nombreUnidadMedida 
-     * @param {module:api/DefaultApi~findProductosByCriteriaCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    findProductosByCriteria(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        'id': opts['id'],'nombre': opts['nombre'],'descripcion': opts['descripcion'],'precioMin': opts['precioMin'],'precioMax': opts['precioMax'],'stockMin': opts['stockMin'],'stockMax': opts['stockMax'],'nombreCategoria': opts['nombreCategoria'],'nombreMarca': opts['nombreMarca'],'nombreUnidadMedida': opts['nombreUnidadMedida']
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = Results;
-
-      return this.apiClient.callApi(
-        '/api/producto/search', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the getExternalGrammar operation.
-     * @callback moduleapi/DefaultApi~getExternalGrammarCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * @param {String} path 
-     * @param {module:api/DefaultApi~getExternalGrammarCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    getExternalGrammar(path, callback) {
-      
-      let postBody = null;
-      // verify the required parameter 'path' is set
-      if (path === undefined || path === null) {
-        throw new Error("Missing the required parameter 'path' when calling getExternalGrammar");
-      }
-
-      let pathParams = {
-        'path': path
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/xml'];
-      let returnType = null;
-
-      return this.apiClient.callApi(
-        '/api/application.wadl/{path}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the getWadl operation.
-     * @callback moduleapi/DefaultApi~getWadlCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * @param {module:api/DefaultApi~getWadlCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    getWadl(callback) {
-      
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = [];
-      let accepts = ['application/vnd.sun.wadl+xml', 'application/xml'];
-      let returnType = null;
-
-      return this.apiClient.callApi(
-        '/api/application.wadl', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the registrarCliente operation.
-     * @callback moduleapi/DefaultApi~registrarClienteCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ClienteDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Registro de cliente
-     * Registro de un cliente introduciendo todos los datos del mismo
-     * @param {Object} opts Optional parameters
-     * @param {String} opts.nombre 
-     * @param {String} opts.nickname 
-     * @param {String} opts.primerApellido 
-     * @param {String} opts.segundoApellido 
-     * @param {String} opts.dni 
-     * @param {String} opts.email 
-     * @param {String} opts.telefono 
-     * @param {String} opts.password 
-     * @param {module:api/DefaultApi~registrarClienteCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    registrarCliente(opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        'nombre': opts['nombre'],'nickname': opts['nickname'],'primerApellido': opts['primerApellido'],'segundoApellido': opts['segundoApellido'],'dni': opts['dni'],'email': opts['email'],'telefono': opts['telefono'],'password': opts['password']
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/x-www-form-urlencoded'];
-      let accepts = ['application/json'];
-      let returnType = ClienteDTO;
-
-      return this.apiClient.callApi(
-        '/api/cliente/registrar', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the updateCliente operation.
-     * @callback moduleapi/DefaultApi~updateClienteCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ClienteDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Actualización de un cliente
-     * Actualiza un cliente introduciendo todos los datos del mismo
-     * @param {Object} opts Optional parameters
-     * @param {module:model/ClienteDTO} opts.body 
-     * @param {module:api/DefaultApi~updateClienteCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    updateCliente(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = ClienteDTO;
-
-      return this.apiClient.callApi(
-        '/api/cliente/update', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the updateDireccion operation.
-     * @callback moduleapi/DefaultApi~updateDireccionCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/DireccionDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Actualización de una dirección
-     * Actualiza los datos de una dirección existente
-     * @param {Object} opts Optional parameters
-     * @param {module:model/DireccionDTO} opts.body 
-     * @param {module:api/DefaultApi~updateDireccionCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    updateDireccion(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = DireccionDTO;
-
-      return this.apiClient.callApi(
-        '/api/direccion/update', 'PUT',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the updatePedido operation.
-     * @callback moduleapi/DefaultApi~updatePedidoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/Pedido{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Actualización de un pedido
-     * Actualiza todos los datos pertenecientes al pedido
-     * @param {Object} opts Optional parameters
-     * @param {module:model/Pedido} opts.body 
-     * @param {module:api/DefaultApi~updatePedidoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    updatePedido(opts, callback) {
-      opts = opts || {};
-      let postBody = opts['body'];
-
-      let pathParams = {
-        
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = Pedido;
-
-      return this.apiClient.callApi(
-        '/api/pedido/update', 'PUT',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
-    /**
-     * Callback function to receive the result of the updateProducto operation.
-     * @callback moduleapi/DefaultApi~updateProductoCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ProductoDTO{ data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Actualizar un producto
-     * Este endpoint permite actualizar los detalles de un producto existente en el sistema.
-     * @param {module:model/ProductoDTO} body Objeto ProductoDTO con los nuevos datos
-     * @param {Number} id ID del producto a actualizar
-     * @param {module:api/DefaultApi~updateProductoCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
-     */
-    updateProducto(body, id, callback) {
-      
-      let postBody = body;
-      // verify the required parameter 'body' is set
-      if (body === undefined || body === null) {
-        throw new Error("Missing the required parameter 'body' when calling updateProducto");
-      }
-      // verify the required parameter 'id' is set
-      if (id === undefined || id === null) {
-        throw new Error("Missing the required parameter 'id' when calling updateProducto");
-      }
-
-      let pathParams = {
-        'id': id
-      };
-      let queryParams = {
-        
-      };
-      let headerParams = {
-        
-      };
-      let formParams = {
-        
-      };
-
-      let authNames = [];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = ProductoDTO;
-
-      return this.apiClient.callApi(
-        '/api/producto/update/{id}', 'PUT',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, callback
-      );
-    }
+	/**
+	* Constructs a new DefaultApi. 
+	* @alias module:api/DefaultApi
+	* @class
+	* @param {module:ApiClient} [apiClient] Optional API client implementation to use,
+	* default to {@link module:ApiClient#instanc
+	e} if unspecified.
+	*/
+	constructor(apiClient) {
+		this.apiClient = apiClient || ApiClient.instance;
+	}
+
+	/**
+	 * Callback function to receive the result of the autenticarCliente operation.
+	 * @callback moduleapi/DefaultApi~autenticarClienteCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ClienteDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Autenticación de un cliente
+	 * Autenticación de un cliente introduciendo su corre electrónico y su contraseña
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/ClienteDTO} opts.body 
+	 * @param {module:api/DefaultApi~autenticarClienteCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	autenticarCliente(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = ClienteDTO;
+
+		return this.apiClient.callApi(
+			'/api/cliente/autenticar', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the autenticarEmpleado operation.
+	 * @callback moduleapi/DefaultApi~autenticarEmpleadoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/EmpleadoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Autenticación de un empleado
+	 * Autenticación de un empleado mediante su ID y contraseña
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/EmpleadoDTO} opts.body 
+	 * @param {module:api/DefaultApi~autenticarEmpleadoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	autenticarEmpleado(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = EmpleadoDTO;
+
+		return this.apiClient.callApi(
+			'/api/empleado/autenticar', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the createDireccion operation.
+	 * @callback moduleapi/DefaultApi~createDireccionCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/DireccionDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Creación de una dirección
+	 * Crea una nueva dirección con los datos proporcionados
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/DireccionDTO} opts.body 
+	 * @param {module:api/DefaultApi~createDireccionCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	createDireccion(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = DireccionDTO;
+
+		return this.apiClient.callApi(
+			'/api/direccion/create', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the createPedido operation.
+	 * @callback moduleapi/DefaultApi~createPedidoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Pedido{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Creación de un pedido
+	 * Crea un pedido introduciendo todos los datos del mismo
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/Pedido} opts.body 
+	 * @param {module:api/DefaultApi~createPedidoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	createPedido(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = Pedido;
+
+		return this.apiClient.callApi(
+			'/api/pedido/create', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the createProducto operation.
+	 * @callback moduleapi/DefaultApi~createProductoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ProductoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Crear un nuevo producto
+	 * Este endpoint permite crear un nuevo producto en el sistema.
+	 * @param {Object} opts Optional parameters
+	 * @param {String} opts.nombre 
+	 * @param {String} opts.descripcion 
+	 * @param {Number} opts.precio 
+	 * @param {Number} opts.stockDisponible 
+	 * @param {Number} opts.idCategoria 
+	 * @param {Number} opts.idMarca 
+	 * @param {Number} opts.idUnidadMedida 
+	 * @param {module:api/DefaultApi~createProductoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	createProducto(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+			'nombre': opts['nombre'], 'descripcion': opts['descripcion'], 'precio': opts['precio'], 'stockDisponible': opts['stockDisponible'], 'idCategoria': opts['idCategoria'], 'idMarca': opts['idMarca'], 'idUnidadMedida': opts['idUnidadMedida']
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/x-www-form-urlencoded'];
+		let accepts = ['application/json'];
+		let returnType = ProductoDTO;
+
+		return this.apiClient.callApi(
+			'/api/producto/create', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the deleteCliente operation.
+	 * @callback moduleapi/DefaultApi~deleteClienteCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ClienteDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Eliminación de cliente
+	 * Eliminación de un cliente a partir del id que tiene en base de datos
+	 * @param {Object} opts Optional parameters
+	 * @param {Number} opts.id 
+	 * @param {module:api/DefaultApi~deleteClienteCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	deleteCliente(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+			'id': opts['id']
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = ClienteDTO;
+
+		return this.apiClient.callApi(
+			'/api/cliente/delete', 'DELETE',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the deleteDireccion operation.
+	 * @callback moduleapi/DefaultApi~deleteDireccionCallback
+	 * @param {String} error Error message, if any.
+	 * @param data This operation does not return a value.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Eliminación de una dirección
+	 * Elimina una dirección a partir de su ID
+	 * @param {Object} opts Optional parameters
+	 * @param {Number} opts.id 
+	 * @param {module:api/DefaultApi~deleteDireccionCallback} callback The callback function, accepting three arguments: error, data, response
+	 */
+	deleteDireccion(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+			'id': opts['id']
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = null;
+
+		return this.apiClient.callApi(
+			'/api/direccion/delete', 'DELETE',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the deletePedido operation.
+	 * @callback moduleapi/DefaultApi~deletePedidoCallback
+	 * @param {String} error Error message, if any.
+	 * @param data This operation does not return a value.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Eliminación de un pedido
+	 * Elimina un pedido a partir del identificador introducido
+	 * @param {Object} opts Optional parameters
+	 * @param {Number} opts.id 
+	 * @param {module:api/DefaultApi~deletePedidoCallback} callback The callback function, accepting three arguments: error, data, response
+	 */
+	deletePedido(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+			'id': opts['id']
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = [];
+		let returnType = null;
+
+		return this.apiClient.callApi(
+			'/api/pedido/delete', 'DELETE',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the deleteProducto operation.
+	 * @callback moduleapi/DefaultApi~deleteProductoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ProductoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Eliminar un producto
+	 * Este endpoint permite eliminar un producto del sistema por su ID.
+	 * @param {Number} id ID del producto a eliminar
+	 * @param {module:api/DefaultApi~deleteProductoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	deleteProducto(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling deleteProducto");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = ProductoDTO;
+
+		return this.apiClient.callApi(
+			'/api/producto/delete/{id}', 'DELETE',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findAllLocalidades operation.
+	 * @callback moduleapi/DefaultApi~findAllLocalidadesCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Localidad{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Obtener todas las localidades
+	 * Recupera una lista de todas las localidades disponibles en la base de datos
+	 * @param {module:api/DefaultApi~findAllLocalidadesCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findAllLocalidades(callback) {
+
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = Localidad;
+
+		return this.apiClient.callApi(
+			'/api/localidad/findAll', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findClienteById operation.
+	 * @callback moduleapi/DefaultApi~findClienteByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ClienteDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Busqueda por id de cliente
+	 * Recupera todos los datos de un cliente por su id
+	 * @param {Number} id 
+	 * @param {module:api/DefaultApi~findClienteByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findClienteById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findClienteById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = ClienteDTO;
+
+		return this.apiClient.callApi(
+			'/api/cliente/find/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findDireccionById operation.
+	 * @callback moduleapi/DefaultApi~findDireccionByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/DireccionDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Búsqueda por ID de dirección
+	 * Recupera todos los datos de una dirección por su ID
+	 * @param {Number} id 
+	 * @param {module:api/DefaultApi~findDireccionByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findDireccionById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findDireccionById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = DireccionDTO;
+
+		return this.apiClient.callApi(
+			'/api/direccion/find/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findEmpleadoById operation.
+	 * @callback moduleapi/DefaultApi~findEmpleadoByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/EmpleadoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Búsqueda por id de empleado
+	 * Recupera todos los datos de un empleado por su id
+	 * @param {Number} id 
+	 * @param {module:api/DefaultApi~findEmpleadoByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findEmpleadoById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findEmpleadoById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = EmpleadoDTO;
+
+		return this.apiClient.callApi(
+			'/api/empleado/find/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findLocalidadById operation.
+	 * @callback moduleapi/DefaultApi~findLocalidadByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Localidad{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Búsqueda por ID de localidad
+	 * Recupera todos los datos de una localidad específica por su ID
+	 * @param {Number} id 
+	 * @param {module:api/DefaultApi~findLocalidadByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findLocalidadById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findLocalidadById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = Localidad;
+
+		return this.apiClient.callApi(
+			'/api/localidad/find/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findPedidoById operation.
+	 * @callback moduleapi/DefaultApi~findPedidoByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Pedido{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Obtener un pedido por ID
+	 * Este endpoint permite obtener un pedido del sistema por su ID.
+	 * @param {Number} id ID del pedido a buscar
+	 * @param {module:api/DefaultApi~findPedidoByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findPedidoById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findPedidoById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = Pedido;
+
+		return this.apiClient.callApi(
+			'/api/pedido/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findPedidosByClienteId operation.
+	 * @callback moduleapi/DefaultApi~findPedidosByClienteIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {Array.<module:model/Pedido>{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Obtener pedidos por ID de cliente
+	 * Este endpoint permite obtener todos los pedidos asociados a un cliente por su ID.
+	 * @param {Number} clienteId ID del cliente para buscar sus pedidos
+	 * @param {module:api/DefaultApi~findPedidosByClienteIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findPedidosByClienteId(clienteId, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'clienteId' is set
+		if (clienteId === undefined || clienteId === null) {
+			throw new Error("Missing the required parameter 'clienteId' when calling findPedidosByClienteId");
+		}
+
+		let pathParams = {
+			'clienteId': clienteId
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = [Pedido];
+
+		return this.apiClient.callApi(
+			'/api/pedido/cliente/{clienteId}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findPedidosByCriteria operation.
+	 * @callback moduleapi/DefaultApi~findPedidosByCriteriaCallback
+	 * @param {String} error Error message, if any.
+	 * @param {Array.<module:model/Pedido>{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Búsqueda de pedidos por criteria
+	 * Búsqueda de pedidos a partir de varios parámetros introducidos
+	 * @param {Object} opts Optional parameters
+	 * @param {Number} opts.id 
+	 * @param {String} opts.fechaDesde 
+	 * @param {String} opts.fechaHasta 
+	 * @param {Number} opts.precioDesde 
+	 * @param {Number} opts.precioHasta 
+	 * @param {Number} opts.clienteId 
+	 * @param {Number} opts.tipoEstadoPedidoId 
+	 * @param {module:api/DefaultApi~findPedidosByCriteriaCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findPedidosByCriteria(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+			'id': opts['id'], 'fechaDesde': opts['fechaDesde'], 'fechaHasta': opts['fechaHasta'], 'precioDesde': opts['precioDesde'], 'precioHasta': opts['precioHasta'], 'clienteId': opts['clienteId'], 'tipoEstadoPedidoId': opts['tipoEstadoPedidoId']
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = [Pedido];
+
+		return this.apiClient.callApi(
+			'/api/pedido', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findProductoById operation.
+	 * @callback moduleapi/DefaultApi~findProductoByIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ProductoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Obtener una producto por ID
+	 * Este endpoint permite obtener un producto del sistema por su ID.
+	 * @param {Number} id ID del producto a buscar
+	 * @param {module:api/DefaultApi~findProductoByIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findProductoById(id, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling findProductoById");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = ProductoDTO;
+
+		return this.apiClient.callApi(
+			'/api/producto/{id}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the findProductosByCriteria operation.
+	 * @callback moduleapi/DefaultApi~findProductosByCriteriaCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Results{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Buscar productos por criterios
+	 * Este endpoint permite buscar productos aplicando filtros opcionales como ID, nombre, rango de precios, cantidad de unidades, y localización.
+	 * @param {Object} opts Optional parameters
+	 * @param {Number} opts.id 
+	 * @param {String} opts.nombre 
+	 * @param {String} opts.descripcion 
+	 * @param {Number} opts.precioMin 
+	 * @param {Number} opts.precioMax 
+	 * @param {Number} opts.stockMin 
+	 * @param {Number} opts.stockMax 
+	 * @param {String} opts.nombreCategoria 
+	 * @param {String} opts.nombreMarca 
+	 * @param {String} opts.nombreUnidadMedida 
+	 * @param {module:api/DefaultApi~findProductosByCriteriaCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	findProductosByCriteria(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+			'id': opts['id'], 'nombre': opts['nombre'], 'descripcion': opts['descripcion'], 'precioMin': opts['precioMin'], 'precioMax': opts['precioMax'], 'stockMin': opts['stockMin'], 'stockMax': opts['stockMax'], 'nombreCategoria': opts['nombreCategoria'], 'nombreMarca': opts['nombreMarca'], 'nombreUnidadMedida': opts['nombreUnidadMedida']
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = Results;
+
+		return this.apiClient.callApi(
+			'/api/producto/search', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the getExternalGrammar operation.
+	 * @callback moduleapi/DefaultApi~getExternalGrammarCallback
+	 * @param {String} error Error message, if any.
+	 * @param data This operation does not return a value.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * @param {String} path 
+	 * @param {module:api/DefaultApi~getExternalGrammarCallback} callback The callback function, accepting three arguments: error, data, response
+	 */
+	getExternalGrammar(path, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'path' is set
+		if (path === undefined || path === null) {
+			throw new Error("Missing the required parameter 'path' when calling getExternalGrammar");
+		}
+
+		let pathParams = {
+			'path': path
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/xml'];
+		let returnType = null;
+
+		return this.apiClient.callApi(
+			'/api/application.wadl/{path}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the getImagesByProductoId operation.
+	 * @callback moduleapi/DefaultApi~getImagesByProductoIdCallback
+	 * @param {String} error Error message, if any.
+	 * @param {Array.<'Blob'>{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Obtener imágenes por ID de producto
+	 * Recupera la lista de imágenes asociadas a un producto por su ID.
+	 * @param {Number} productoId ID del producto para buscar sus imágenes
+	 * @param {module:api/DefaultApi~getImagesByProductoIdCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	getImagesByProductoId(productoId, callback) {
+
+		let postBody = null;
+		// verify the required parameter 'productoId' is set
+		if (productoId === undefined || productoId === null) {
+			throw new Error("Missing the required parameter 'productoId' when calling getImagesByProductoId");
+		}
+
+		let pathParams = {
+			'productoId': productoId
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/json'];
+		let returnType = ['Blob'];
+
+		return this.apiClient.callApi(
+			'/api/file/producto/{productoId}', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the getWadl operation.
+	 * @callback moduleapi/DefaultApi~getWadlCallback
+	 * @param {String} error Error message, if any.
+	 * @param data This operation does not return a value.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * @param {module:api/DefaultApi~getWadlCallback} callback The callback function, accepting three arguments: error, data, response
+	 */
+	getWadl(callback) {
+
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = [];
+		let accepts = ['application/vnd.sun.wadl+xml', 'application/xml'];
+		let returnType = null;
+
+		return this.apiClient.callApi(
+			'/api/application.wadl', 'GET',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the registrarCliente operation.
+	 * @callback moduleapi/DefaultApi~registrarClienteCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ClienteDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Registro de cliente
+	 * Registro de un cliente introduciendo todos los datos del mismo
+	 * @param {Object} opts Optional parameters
+	 * @param {String} opts.nombre 
+	 * @param {String} opts.nickname 
+	 * @param {String} opts.primerApellido 
+	 * @param {String} opts.segundoApellido 
+	 * @param {String} opts.dni 
+	 * @param {String} opts.email 
+	 * @param {String} opts.telefono 
+	 * @param {String} opts.password 
+	 * @param {module:api/DefaultApi~registrarClienteCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	registrarCliente(opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+			'nombre': opts['nombre'], 'nickname': opts['nickname'], 'primerApellido': opts['primerApellido'], 'segundoApellido': opts['segundoApellido'], 'dni': opts['dni'], 'email': opts['email'], 'telefono': opts['telefono'], 'password': opts['password']
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/x-www-form-urlencoded'];
+		let accepts = ['application/json'];
+		let returnType = ClienteDTO;
+
+		return this.apiClient.callApi(
+			'/api/cliente/registrar', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the updateCliente operation.
+	 * @callback moduleapi/DefaultApi~updateClienteCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ClienteDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Actualización de un cliente
+	 * Actualiza un cliente introduciendo todos los datos del mismo
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/ClienteDTO} opts.body 
+	 * @param {module:api/DefaultApi~updateClienteCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	updateCliente(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = ClienteDTO;
+
+		return this.apiClient.callApi(
+			'/api/cliente/update', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the updateDireccion operation.
+	 * @callback moduleapi/DefaultApi~updateDireccionCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/DireccionDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Actualización de una dirección
+	 * Actualiza los datos de una dirección existente
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/DireccionDTO} opts.body 
+	 * @param {module:api/DefaultApi~updateDireccionCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	updateDireccion(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = DireccionDTO;
+
+		return this.apiClient.callApi(
+			'/api/direccion/update', 'PUT',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the updatePedido operation.
+	 * @callback moduleapi/DefaultApi~updatePedidoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/Pedido{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Actualización de un pedido
+	 * Actualiza todos los datos pertenecientes al pedido
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/Pedido} opts.body 
+	 * @param {module:api/DefaultApi~updatePedidoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	updatePedido(opts, callback) {
+		opts = opts || {};
+		let postBody = opts['body'];
+
+		let pathParams = {
+
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = Pedido;
+
+		return this.apiClient.callApi(
+			'/api/pedido/update', 'PUT',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the updateProducto operation.
+	 * @callback moduleapi/DefaultApi~updateProductoCallback
+	 * @param {String} error Error message, if any.
+	 * @param {module:model/ProductoDTO{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Actualizar un producto
+	 * Este endpoint permite actualizar los detalles de un producto existente en el sistema.
+	 * @param {module:model/ProductoDTO} body Objeto ProductoDTO con los nuevos datos
+	 * @param {Number} id ID del producto a actualizar
+	 * @param {module:api/DefaultApi~updateProductoCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	updateProducto(body, id, callback) {
+
+		let postBody = body;
+		// verify the required parameter 'body' is set
+		if (body === undefined || body === null) {
+			throw new Error("Missing the required parameter 'body' when calling updateProducto");
+		}
+		// verify the required parameter 'id' is set
+		if (id === undefined || id === null) {
+			throw new Error("Missing the required parameter 'id' when calling updateProducto");
+		}
+
+		let pathParams = {
+			'id': id
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+
+		};
+
+		let authNames = [];
+		let contentTypes = ['application/json'];
+		let accepts = ['application/json'];
+		let returnType = ProductoDTO;
+
+		return this.apiClient.callApi(
+			'/api/producto/update/{id}', 'PUT',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
+	/**
+	 * Callback function to receive the result of the uploadImage operation.
+	 * @callback moduleapi/DefaultApi~uploadImageCallback
+	 * @param {String} error Error message, if any.
+	 * @param {'String'{ data The data returned by the service call.
+	 * @param {String} response The complete HTTP response.
+	 */
+
+	/**
+	 * Subir una imagen para un producto
+	 * Sube una imagen asociada a un producto específico usando su ID.
+	 * @param {Number} productoId ID del producto al que se subirá la imagen
+	 * @param {Object} opts Optional parameters
+	 * @param {module:model/FormDataContentDisposition} opts.file 
+	 * @param {module:api/DefaultApi~uploadImageCallback} callback The callback function, accepting three arguments: error, data, response
+	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+	 */
+	uploadImage(productoId, opts, callback) {
+		opts = opts || {};
+		let postBody = null;
+		// verify the required parameter 'productoId' is set
+		if (productoId === undefined || productoId === null) {
+			throw new Error("Missing the required parameter 'productoId' when calling uploadImage");
+		}
+
+		let pathParams = {
+			'productoId': productoId
+		};
+		let queryParams = {
+
+		};
+		let headerParams = {
+
+		};
+		let formParams = {
+			'file': opts['file']
+		};
+
+		let authNames = [];
+		let contentTypes = ['multipart/form-data'];
+		let accepts = ['application/json'];
+		let returnType = 'String';
+
+		return this.apiClient.callApi(
+			'/api/file/upload/producto/{productoId}', 'POST',
+			pathParams, queryParams, headerParams, formParams, postBody,
+			authNames, contentTypes, accepts, returnType, callback
+		);
+	}
 
 }
