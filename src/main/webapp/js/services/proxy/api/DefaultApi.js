@@ -967,16 +967,15 @@ export default class DefaultApi {
 	 * Callback function to receive the result of the getImagesByProductoId operation.
 	 * @callback moduleapi/DefaultApi~getImagesByProductoIdCallback
 	 * @param {String} error Error message, if any.
-	 * @param {Array.<'Blob'>{ data The data returned by the service call.
+	 * @param data This operation does not return a value.
 	 * @param {String} response The complete HTTP response.
 	 */
 
 	/**
 	 * Obtener imágenes por ID de producto
-	 * Recupera la lista de imágenes asociadas a un producto por su ID.
+	 * Recupera la lista de URLs de imágenes asociadas a un producto por su ID.
 	 * @param {Number} productoId ID del producto para buscar sus imágenes
 	 * @param {module:api/DefaultApi~getImagesByProductoIdCallback} callback The callback function, accepting three arguments: error, data, response
-	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
 	 */
 	getImagesByProductoId(productoId, callback) {
 
@@ -1002,7 +1001,7 @@ export default class DefaultApi {
 		let authNames = [];
 		let contentTypes = [];
 		let accepts = ['application/json'];
-		let returnType = ['Blob'];
+		let returnType = null;
 
 		return this.apiClient.callApi(
 			'/api/file/producto/{productoId}', 'GET',
@@ -1288,7 +1287,7 @@ export default class DefaultApi {
 	 * Callback function to receive the result of the uploadImage operation.
 	 * @callback moduleapi/DefaultApi~uploadImageCallback
 	 * @param {String} error Error message, if any.
-	 * @param {'String'{ data The data returned by the service call.
+	 * @param data This operation does not return a value.
 	 * @param {String} response The complete HTTP response.
 	 */
 
@@ -1299,7 +1298,6 @@ export default class DefaultApi {
 	 * @param {Object} opts Optional parameters
 	 * @param {module:model/FormDataContentDisposition} opts.file 
 	 * @param {module:api/DefaultApi~uploadImageCallback} callback The callback function, accepting three arguments: error, data, response
-	 * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
 	 */
 	uploadImage(productoId, opts, callback) {
 		opts = opts || {};
@@ -1325,7 +1323,7 @@ export default class DefaultApi {
 		let authNames = [];
 		let contentTypes = ['multipart/form-data'];
 		let accepts = ['application/json'];
-		let returnType = 'String';
+		let returnType = null;
 
 		return this.apiClient.callApi(
 			'/api/file/upload/producto/{productoId}', 'POST',
