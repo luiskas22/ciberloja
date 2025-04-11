@@ -306,8 +306,8 @@ public class PedidoServiceTest {
 		// test.testFindByCriteriaClienteId();
 		// test.testFindByCriteriaTipoEstadoPedidoId();
 		// test.testFindByCriteriaMultipleParameters();
-//		 test.testFindByEmptyCriteria();
-		test.testCreate();
+		 test.testFindByEmptyCriteria();
+//		test.testCreate();
 		// test.testUpdate();
 		// test.testDelete();
 //		test.testFindPedidosByClienteId();

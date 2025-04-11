@@ -38,9 +38,11 @@ public class PedidoDAOImpl implements PedidoDAO {
 
 		try {
 			StringBuilder query = new StringBuilder(
-					" SELECT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE ")
+					" SELECT DISTINCT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE ")
 					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID")
-					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID");
+					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID")
+					.append(" LEFT JOIN LINEA_PEDIDO LP ON LP.PEDIDO_ID = P.ID") // Join with linea_pedido
+					.append(" LEFT JOIN PRODUCTO PR ON PR.ID = LP.PRODUCTO_ID"); // Join with producto
 
 			if (p.getId() != null) {
 				condiciones.add(" P.ID = ? ");
@@ -62,6 +64,12 @@ public class PedidoDAOImpl implements PedidoDAO {
 				}
 				if (p.getTipoEstadoPedidoId() != null) {
 					condiciones.add(" P.TIPO_ESTADO_PEDIDO_ID = ? ");
+				}
+				if (p.getProductoId() != null) {
+					condiciones.add(" LP.PRODUCTO_ID = ? "); // Filter by product ID
+				}
+				if (p.getDescripcionProducto() != null && !p.getDescripcionProducto().trim().isEmpty()) {
+					condiciones.add(" PR.DESCRIPCION LIKE ? "); // Filter by product description
 				}
 			}
 
@@ -93,6 +101,13 @@ public class PedidoDAOImpl implements PedidoDAO {
 				}
 				if (p.getTipoEstadoPedidoId() != null) {
 					pst.setInt(i++, p.getTipoEstadoPedidoId());
+				}
+				if (p.getProductoId() != null) {
+					pst.setLong(i++, p.getProductoId()); // Set product ID parameter
+				}
+				if (p.getDescripcionProducto() != null && !p.getDescripcionProducto().trim().isEmpty()) {
+					pst.setString(i++, "%" + p.getDescripcionProducto().trim() + "%"); // Set description parameter with
+																						// wildcards
 				}
 			}
 

@@ -11,6 +11,8 @@ public class PedidoCriteria extends AbstractCriteria {
 	private Double precioHasta;
 	private Long clienteId;
 	private Integer tipoEstadoPedidoId;
+	private Long productoId;
+	private String descripcionProducto;
 
 	public PedidoCriteria() {
 
@@ -70,6 +72,22 @@ public class PedidoCriteria extends AbstractCriteria {
 
 	public void setTipoEstadoPedidoId(Integer tipoEstadoPedidoId) {
 		this.tipoEstadoPedidoId = tipoEstadoPedidoId;
+	}
+
+	public Long getProductoId() {
+		return productoId;
+	}
+
+	public void setProductoId(Long productoId) {
+		this.productoId = productoId;
+	}
+
+	public String getDescripcionProducto() {
+		return descripcionProducto;
+	}
+
+	public void setDescripcionProducto(String descripcionProducto) {
+		this.descripcionProducto = descripcionProducto;
 	}
 
 }
