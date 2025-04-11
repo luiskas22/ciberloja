@@ -83,6 +83,30 @@ const PedidoService = {
 			throw new Error(`Error al crear el pedido: ${error.message}`);
 		}
 	},
+
+	async findByCriteria(criteria) {
+		const queryParams = new URLSearchParams();
+		if (criteria.id) queryParams.append("id", criteria.id);
+		if (criteria.fechaDesde) queryParams.append("fechaDesde", criteria.fechaDesde);
+		if (criteria.fechaHasta) queryParams.append("fechaHasta", criteria.fechaHasta);
+		if (criteria.precioDesde) queryParams.append("precioDesde", criteria.precioDesde);
+		if (criteria.precioHasta) queryParams.append("precioHasta", criteria.precioHasta);
+		if (criteria.clienteId) queryParams.append("clienteId", criteria.clienteId);
+		if (criteria.tipoEstadoPedidoId) queryParams.append("tipoEstadoPedidoId", criteria.tipoEstadoPedidoId);
+		if (criteria.productoId) queryParams.append("productoId", criteria.productoId);
+		if (criteria.descripcion) queryParams.append("descripcion", criteria.descripcion);
+
+		// Use the full URL to your backend server
+		const response = await fetch(`http://localhost:8080/ciberloja-rest-api/api/pedido/pedidos?${queryParams.toString()}`, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+		});
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Erro ao buscar pedidos por critérios: ${response.status} - ${errorText}`);
+		}
+		return await response.json();
+	}
 };
 
 export default PedidoService;

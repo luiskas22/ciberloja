@@ -2,6 +2,7 @@ import ProductoView from "../views/productoView.js";
 import ProductoService from "../services/productoService.js";
 import FileService from "../services/fileService.js";
 import App from "../app.js";
+import Translations from '../resources/translations.js';
 
 function debounce(func, delay) {
 	let timeoutId;
@@ -17,19 +18,30 @@ const ProductoController = {
 	itemsPerPage: 10,
 	totalItems: 0,
 	totalPages: 0,
+	currentLang: 'pt', // Idioma por defecto
 
-	init(action) {
-		console.log(`ProductoController.init(${action})...`);
+	init(action, lang = 'pt') {
+		console.log(`ProductoController.init(${action}, ${lang})...`);
+		this.currentLang = lang; // Guardar idioma actual
 		if (action === "search") {
 			this.loadProductoSearchForm();
 		} else if (action === "create") {
 			if (App.isEmpleado()) {
 				this.loadProductoAddForm();
 			} else {
-				alert("Solo los empleados pueden crear productos.");
+				alert(Translations[lang].alerts.employeeOnlyCreate);
 				this.loadProductoSearchForm();
 			}
 		}
+		// Escuchar cambios de idioma
+		document.addEventListener('languageChange', (e) => {
+			this.currentLang = e.detail.lang;
+			if (action === "search") {
+				this.loadProductoSearchForm();
+			} else if (action === "create" && App.isEmpleado()) {
+				this.loadProductoAddForm();
+			}
+		});
 	},
 
 	setupEvents() {
@@ -123,7 +135,7 @@ const ProductoController = {
 		if (!container) return;
 
 		if (!document.getElementById('searchResults')) {
-			ProductoView.render("pro-inventario", "search");
+			ProductoView.render("pro-inventario", "search", this.currentLang);
 			const inputs = [
 				"idCriteria", "nombreCriteria", "descripcionCriteria",
 				"precioMinCriteria", "precioMaxCriteria", "stockMinCriteria",
@@ -140,7 +152,7 @@ const ProductoController = {
 		}
 
 		if (this.previousResults && this.previousResults.length > 0) {
-			ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems);
+			ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
 		} else {
 			this.handleSearch();
 		}
@@ -148,14 +160,14 @@ const ProductoController = {
 
 	loadProductoSearchForm() {
 		console.log("Cargando formulario de búsqueda de productos...");
-		ProductoView.render("pro-inventario", "search");
+		ProductoView.render("pro-inventario", "search", this.currentLang);
 		this.setupEvents();
 		this.handleSearch();
 	},
 
 	loadProductoAddForm() {
 		console.log("Cargando formulario de creación de productos...");
-		ProductoView.render("pro-inventario", "create");
+		ProductoView.render("pro-inventario", "create", this.currentLang);
 		this.setupEvents();
 	},
 
@@ -201,19 +213,19 @@ const ProductoController = {
 				const endIndex = startIndex + this.itemsPerPage;
 				const paginatedResults = this.previousResults.slice(startIndex, endIndex);
 
-				ProductoView.renderResults(paginatedResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems);
+				ProductoView.renderResults(paginatedResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
 			} else {
 				this.previousResults = [];
 				this.totalItems = 0;
 				this.totalPages = 0;
-				ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems);
+				ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
 			}
 		} catch (error) {
 			console.error("Error al buscar productos:", error);
 			this.previousResults = [];
 			this.totalItems = 0;
 			this.totalPages = 0;
-			ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems);
+			ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
 		}
 	},
 
@@ -228,7 +240,7 @@ const ProductoController = {
 	async handleAddProducto(event) {
 		event.preventDefault();
 		if (!App.isEmpleado()) {
-			alert("Solo los empleados pueden agregar productos.");
+			alert(Translations[this.currentLang].alerts.employeeOnlyCreate);
 			return;
 		}
 		console.log("ProductoController.handleAddProducto()...");
@@ -247,13 +259,7 @@ const ProductoController = {
 			const imageFile = formData.get("productImage");
 
 			console.log("Form values:", {
-				nombre,
-				descripcion,
-				precio,
-				stockDisponible,
-				nombreCategoria,
-				nombreMarca,
-				nombreUnidadMedida,
+				nombre, descripcion, precio, stockDisponible, nombreCategoria, nombreMarca, nombreUnidadMedida,
 				imageFile: imageFile ? imageFile.name : "No file"
 			});
 
@@ -268,7 +274,7 @@ const ProductoController = {
 			console.log("Mapped values:", { idCategoria, idMarca, idUnidadMedida });
 
 			if (!nombre || precio <= 0 || stockDisponible <= 0 || !idCategoria || !idMarca || !idUnidadMedida) {
-				throw new Error("Todos los campos son obligatorios y los valores numéricos deben ser mayores a 0.");
+				throw new Error(Translations[this.currentLang].alerts.invalidFields);
 			}
 
 			const productoData = { nombre, descripcion, precio, stockDisponible, idCategoria, idMarca, idUnidadMedida };
@@ -278,20 +284,20 @@ const ProductoController = {
 				await FileService.uploadImageToProducto(response.id, imageFile);
 			}
 
-			const message = "Producto agregado correctamente.";
-			ProductoView.renderCompraSuccess(message);
+			const message = Translations[this.currentLang].alerts.productAdded;
+			ProductoView.renderCompraSuccess(message, this.currentLang);
 			form.reset();
 			this.loadProductoSearchForm();
 		} catch (error) {
 			console.error("Error al agregar el producto:", error);
-			ProductoView.renderCompraError(error.message || "Error al agregar el producto.");
+			ProductoView.renderCompraError(error.message || Translations[this.currentLang].alerts.addProductError, this.currentLang);
 		}
 	},
 
 	async handleUpdateProducto(event) {
 		event.preventDefault();
 		if (!App.isEmpleado()) {
-			alert("Solo los empleados pueden actualizar productos.");
+			alert(Translations[this.currentLang].alerts.employeeOnlyUpdate);
 			return;
 		}
 		console.log("ProductoController.handleUpdateProducto()...");
@@ -319,7 +325,7 @@ const ProductoController = {
 			const idUnidadMedida = unidadMedidaMap[nombreUnidadMedida];
 
 			if (!nombre || precio <= 0 || stockDisponible <= 0 || !idCategoria || !idMarca || !idUnidadMedida) {
-				throw new Error("Todos los campos son obligatorios y los valores numéricos deben ser mayores a 0.");
+				throw new Error(Translations[this.currentLang].alerts.invalidFields);
 			}
 
 			const productoData = { id, nombre, descripcion, precio, stockDisponible, idCategoria, idMarca, idUnidadMedida };
@@ -329,12 +335,11 @@ const ProductoController = {
 				await FileService.uploadImageToProducto(id, imageFile);
 			}
 
-			// Refresh product details to display the latest image
 			await this.fetchProductoInfo(id);
-			alert("✅ Producto actualizado exitosamente!");
+			alert(Translations[this.currentLang].alerts.productUpdated);
 		} catch (error) {
 			console.error("Error al actualizar el producto:", error);
-			alert("❌ Error al actualizar el producto: " + (error.message || "Inténtalo de nuevo."));
+			alert(Translations[this.currentLang].alerts.updateProductError + (error.message || ""));
 		}
 	},
 
@@ -342,7 +347,7 @@ const ProductoController = {
 		try {
 			const producto = await ProductoService.findById(productId);
 			if (!producto) {
-				throw new Error("Producto no encontrado");
+				throw new Error(Translations[this.currentLang].alerts.productNotFound);
 			}
 
 			let images = [];
@@ -351,9 +356,9 @@ const ProductoController = {
 			} catch (imageError) {
 				console.warn(`No se pudieron cargar las imágenes para el producto ${productId}:`, imageError);
 			}
-			producto.images = images; // Latest image is first in the list
+			producto.images = images;
 
-			ProductoView.renderProductoDetails(producto, "pro-inventario", App.isEmpleado());
+			ProductoView.renderProductoDetails(producto, "pro-inventario", App.isEmpleado(), this.currentLang);
 
 			const updateForm = document.getElementById("updateProductoForm");
 			if (updateForm && !updateForm.hasListener && App.isEmpleado()) {
@@ -365,24 +370,24 @@ const ProductoController = {
 			}
 		} catch (error) {
 			console.error("Error al obtener la información del producto:", error);
-			alert("❌ Error al cargar los detalles del producto.");
+			alert(Translations[this.currentLang].alerts.loadProductError);
 			this.showPreviousResults();
 		}
 	},
 
 	async handleDeleteProduct(productId) {
 		if (!App.isEmpleado()) {
-			alert("Solo los empleados pueden eliminar productos.");
+			alert(Translations[this.currentLang].alerts.employeeOnlyDelete);
 			return;
 		}
-		if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+		if (confirm(Translations[this.currentLang].alerts.confirmDelete)) {
 			try {
 				await ProductoService.deleteProducto(productId);
-				alert("✅ Producto eliminado exitosamente!");
+				alert(Translations[this.currentLang].alerts.productDeleted);
 				await this.handleSearch(this.currentPage);
 			} catch (error) {
 				console.error("Error al eliminar el producto:", error);
-				alert("❌ Error al eliminar el producto. Inténtalo de nuevo.");
+				alert(Translations[this.currentLang].alerts.deleteProductError);
 			}
 		}
 	}
