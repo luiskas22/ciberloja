@@ -21,10 +21,12 @@ import EmpleadoDTO from './model/EmpleadoDTO.js';
 import FormDataContentDisposition from './model/FormDataContentDisposition.js';
 import LineaPedido from './model/LineaPedido.js';
 import Localidad from './model/Localidad.js';
+import Pais from './model/Pais.js';
 import Pedido from './model/Pedido.js';
 import ProductoCreateBody from './model/ProductoCreateBody.js';
 import ProductoDTO from './model/ProductoDTO.js';
 import ProductoProductoIdBody from './model/ProductoProductoIdBody.js';
+import Provincia from './model/Provincia.js';
 import Results from './model/Results.js';
 import DefaultApi from './api/DefaultApi.js';
 
@@ -109,6 +111,12 @@ export {
     Localidad,
 
     /**
+     * The Pais model constructor.
+     * @property {module:model/Pais}
+     */
+    Pais,
+
+    /**
      * The Pedido model constructor.
      * @property {module:model/Pedido}
      */
@@ -131,6 +139,12 @@ export {
      * @property {module:model/ProductoProductoIdBody}
      */
     ProductoProductoIdBody,
+
+    /**
+     * The Provincia model constructor.
+     * @property {module:model/Provincia}
+     */
+    Provincia,
 
     /**
      * The Results model constructor.

@@ -1,6 +1,6 @@
 const DireccionView = {
-	getAddressesView(direcciones) {
-		return `
+    getAddressesView(direcciones) {
+        return `
         <div class="container mt-4">
             <h2 class="mb-4 text-center">Minhas Direções</h2>
             ${direcciones.length > 0 ? `
@@ -37,51 +37,59 @@ const DireccionView = {
             `}
         </div>
         `;
-	},
+    },
 
-	getCreateAddressModal(localidades = []) {
-		return `
-	        <div class="modal fade" id="createAddressModal" tabindex="-1" aria-labelledby="createAddressModalLabel" aria-hidden="true">
-	            <div class="modal-dialog">
-	                <div class="modal-content">
-	                    <div class="modal-header">
-	                        <h5 class="modal-title" id="createAddressModalLabel">Adicionar Nova Direção</h5>
-	                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	                    </div>
-	                    <div class="modal-body">
-	                        <form id="createAddressForm">
-	                            <div class="mb-3">
-	                                <label for="nombreVia" class="form-label">Rua</label>
-	                                <input type="text" class="form-control" id="nombreVia" name="nombreVia" required>
-	                            </div>
-	                            <div class="mb-3">
-	                                <label for="dirVia" class="form-label">Número</label>
-	                                <input type="text" class="form-control" id="dirVia" name="dirVia" required>
-	                            </div>
-	                            <div class="mb-3">
-	                                <label for="localidadId" class="form-label">Cidade</label>
-	                                <input type="text" class="form-control" id="localidadInput" name="localidadInput" list="localidadesList" required placeholder="Escriba para buscar una ciudad">
-	                                <datalist id="localidadesList">
-	                                    ${localidades.map(loc => `
-	                                        <option value="${loc.nombre}" data-id="${loc.id}">
-	                                    `).join('')}
-	                                </datalist>
-	                                <input type="hidden" id="localidadId" name="localidadId">
-	                            </div>
-	                        </form>
-	                    </div>
-	                    <div class="modal-footer">
-	                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-	                        <button type="button" class="btn btn-primary" id="saveNewAddress">Salvar</button>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	        `;
-	},
-	
-	getEditAddressModal(direccion) {
-		return `
+    getCreateAddressModal(localidades = [], provincias = []) {
+        return `
+        <div class="modal fade" id="createAddressModal" tabindex="-1" aria-labelledby="createAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createAddressModalLabel">Adicionar Nova Direção</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createAddressForm">
+                            <div class="mb-3">
+                                <label for="nombreVia" class="form-label">Rua</label>
+                                < травня type="text" class="form-control" id="nombreVia" name="nombreVia" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dirVia" class="form-label">Número</label>
+                                <input type="text" class="form-control" id="dirVia" name="dirVia" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="provinciaSelect" class="form-label">Provincia</label>
+                                <select class="form-select" id="provinciaSelect" name="provinciaId" required>
+                                    <option value="">Seleccione una provincia</option>
+                                    ${provincias.map(prov => `
+                                        <option value="${prov.id}">${prov.nombre}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="localidadSelect" class="form-label">Localidad</label>
+                                <select class="form-select" id="localidadSelect" name="localidadId" required>
+                                    <option value="">Seleccione una localidad</option>
+                                    ${localidades.map(loc => `
+                                        <option value="${loc.id}" data-provincia-id="${loc.provinciaId}">${loc.nombre}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="saveNewAddress">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    },
+
+    getEditAddressModal(direccion, { localidades = [], provincias = [], paises = [] }) {
+        return `
         <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -101,8 +109,31 @@ const DireccionView = {
                                 <input type="text" class="form-control" id="dirVia" name="dirVia" value="${direccion.dirVia || ''}" required>
                             </div>
                             <div class="mb-3">
-                                <label for="localidadId" class="form-label">Cidade (ID)</label>
-                                <input type="number" class="form-control" id="localidadId" name="localidadId" value="${direccion.localidadId || ''}" required>
+                                <label for="paisSelect" class="form-label">País</label>
+                                <select class="form-select" id="paisSelect" name="paisId" required>
+                                    <option value="">Seleccione un país</option>
+                                    ${paises.map(pais => `
+                                        <option value="${pais.id}" ${direccion.paisId == pais.id ? 'selected' : ''}>${pais.nombre}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="provinciaSelect" class="form-label">Provincia</label>
+                                <select class="form-select" id="provinciaSelect" name="provinciaId" required>
+                                    <option value="">Seleccione una provincia</option>
+                                    ${provincias.map(prov => `
+                                        <option value="${prov.id}" ${direccion.provinciaId == prov.id ? 'selected' : ''}>${prov.nombre}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="localidadSelect" class="form-label">Localidad</label>
+                                <select class="form-select" id="localidadSelect" name="localidadId" required>
+                                    <option value="">Seleccione una localidad</option>
+                                    ${localidades.map(loc => `
+                                        <option value="${loc.id}" ${direccion.localidadId == loc.id ? 'selected' : ''}>${loc.nombre}</option>
+                                    `).join('')}
+                                </select>
                             </div>
                         </form>
                     </div>
@@ -114,51 +145,77 @@ const DireccionView = {
             </div>
         </div>
         `;
-	},
+    },
 
-	renderAddresses(containerId, direcciones) {
-		const container = document.getElementById(containerId);
-		if (!container) {
-			console.error(`Contêiner não encontrado con ID: ${containerId}`);
-			return;
-		}
-		container.innerHTML = this.getAddressesView(direcciones);
-	},
+    renderAddresses(containerId, direcciones) {
+        console.log("Renderizando direcciones:", JSON.stringify(direcciones, null, 2));
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Contêiner não encontrado con ID: ${containerId}`);
+            return;
+        }
+        try {
+            let addressesContainer = container.querySelector('#addresses-list');
+            if (!addressesContainer) {
+                addressesContainer = document.createElement('div');
+                addressesContainer.id = 'addresses-list';
+                container.appendChild(addressesContainer);
+            }
+            const html = this.getAddressesView(direcciones);
+            console.log("HTML generado para direcciones:", html);
+            addressesContainer.innerHTML = html;
+        } catch (error) {
+            console.error("Error al renderizar direcciones:", error);
+            this.renderError("Error al mostrar las direcciones. Por favor, intenta de nuevo.");
+        }
+    },
 
-	renderModal(containerId, modalHtml) {
-		const container = document.getElementById(containerId);
-		if (!container) {
-			console.error(`Contêiner não encontrado com ID: ${containerId}`);
-			return;
-		}
-		container.innerHTML += modalHtml;
-	},
+    renderModal(containerId, modalHtml) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Contêiner não encontrado com ID: ${containerId}`);
+            return;
+        }
+        container.innerHTML += modalHtml;
+    },
 
-	renderProfileUpdateSuccess(message) {
-		const container = document.getElementById("pro-inventario");
-		if (container) {
-			container.innerHTML = `
-	                <div class="alert alert-success" role="alert">
-	                    ${message}
-	                </div>
-	            ` + container.innerHTML; // Preserva el contenido existente
-		} else {
-			console.error("Contêiner 'pro-inventario' não encontrado");
-		}
-	},
+    renderProfileUpdateSuccess(message) {
+        const container = document.getElementById("pro-inventario");
+        if (!container) {
+            console.error("Contêiner 'pro-inventario' não encontrado");
+            return;
+        }
+        let messagesContainer = container.querySelector('#messages');
+        if (!messagesContainer) {
+            messagesContainer = document.createElement('div');
+            messagesContainer.id = 'messages';
+            container.prepend(messagesContainer);
+        }
+        messagesContainer.innerHTML = `
+            <div class="alert alert-success" role="alert">
+                ${message}
+            </div>
+        `;
+    },
 
-	renderError(message) {
-		const container = document.getElementById("pro-inventario");
-		if (container) {
-			container.innerHTML = `
-	                <div class="alert alert-danger" role="alert">
-	                    ${message}
-	                </div>
-	            `;
-		} else {
-			console.error("Contêiner 'pro-inventario' não encontrado");
-		}
-	},
+    renderError(message) {
+        const container = document.getElementById("pro-inventario");
+        if (!container) {
+            console.error("Contêiner 'pro-inventario' não encontrado");
+            return;
+        }
+        let messagesContainer = container.querySelector('#messages');
+        if (!messagesContainer) {
+            messagesContainer = document.createElement('div');
+            messagesContainer.id = 'messages';
+            container.prepend(messagesContainer);
+        }
+        messagesContainer.innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                ${message}
+            </div>
+        `;
+    },
 };
 
 export default DireccionView;

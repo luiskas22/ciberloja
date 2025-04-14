@@ -88,26 +88,41 @@ const DireccionController = {
 	async showCreateAddressForm() {
 		console.log("Mostrando formulario para crear nueva dirección...");
 		try {
-			const localidades = await DireccionService.getLocalidades();
-			console.log("Localidades cargadas:", localidades);
-			if (!Array.isArray(localidades)) {
-				console.error("Respuesta inválida de getLocalidades:", localidades);
-				throw new Error("A lista de localidades não é válida");
-			}
+			const [localidades, provincias] = await Promise.all([
+				DireccionService.getLocalidades(),
+				DireccionService.getProvincias()
+			]);
 
-			DireccionView.renderModal("pro-inventario", DireccionView.getCreateAddressModal(localidades));
+			DireccionView.renderModal("pro-inventario",
+				DireccionView.getCreateAddressModal(localidades, provincias));
+
 			const modal = new bootstrap.Modal(document.getElementById("createAddressModal"));
 			modal.show();
 
-			const localidadInput = document.getElementById("localidadInput");
-			const localidadIdInput = document.getElementById("localidadId");
-			localidadInput.addEventListener("input", () => {
-				const selectedOption = Array.from(document.querySelectorAll("#localidadesList option"))
-					.find(option => option.value === localidadInput.value);
-				if (selectedOption) {
-					localidadIdInput.value = selectedOption.getAttribute("data-id");
+			// Filtrar localidades según provincia seleccionada
+			const provinciaSelect = document.getElementById("provinciaSelect");
+			const localidadSelect = document.getElementById("localidadSelect");
+
+			provinciaSelect.addEventListener("change", () => {
+				const provinciaId = provinciaSelect.value;
+				localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+
+				if (provinciaId) {
+					const filteredLocalidades = localidades.filter(loc => loc.provinciaId == provinciaId);
+					filteredLocalidades.forEach(loc => {
+						const option = document.createElement("option");
+						option.value = loc.id;
+						option.textContent = loc.nombre;
+						localidadSelect.appendChild(option);
+					});
 				} else {
-					localidadIdInput.value = "";
+					// Mostrar todas las localidades si no se selecciona provincia
+					localidades.forEach(loc => {
+						const option = document.createElement("option");
+						option.value = loc.id;
+						option.textContent = loc.nombre;
+						localidadSelect.appendChild(option);
+					});
 				}
 			});
 		} catch (error) {
@@ -118,61 +133,188 @@ const DireccionController = {
 
 	async handleCreateAddressSubmit() {
 		const form = document.getElementById("createAddressForm");
-		const formData = new FormData(form);
-		const localidadId = parseInt(formData.get("localidadId"), 10);
-
-		// Validate localidadId
-		if (isNaN(localidadId)) {
-			console.error("Invalid localidadId:", formData.get("localidadId"));
-			DireccionView.renderError("Por favor, seleccione una localidad válida.");
+		if (!form) {
+			DireccionView.renderError("Formulario no encontrado");
 			return;
 		}
 
-		// Construct the full payload expected by the backend
+		const formData = new FormData(form);
+		const provinciaSelect = document.getElementById("provinciaSelect");
+		const localidadSelect = document.getElementById("localidadSelect");
+
+		// Validar selecciones
+		if (!provinciaSelect.value || !localidadSelect.value) {
+			DireccionView.renderError("Por favor, seleccione provincia y localidad");
+			return;
+		}
+
+		// Obtener textos de las opciones seleccionadas
+		const provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
+		const localidadNombre = localidadSelect.options[localidadSelect.selectedIndex].text;
+
 		const direccionData = {
 			nombreVia: formData.get("nombreVia"),
 			dirVia: formData.get("dirVia"),
 			clienteId: this.getStoredClienteData().id,
-			empleadoId: null, // Assuming null is allowed
-			localidadId: localidadId,
-			localidadNombre: formData.get("localidadInput") || "", // Use the selected locality name or fetch it
-			provinciaId: 8, // Default or fetch from locality data
-			provinciaNombre: "Barcelona", // Default or fetch
-			paisId: 1, // Default or fetch
-			paisNombre: "España" // Default or fetch
+			localidadId: parseInt(localidadSelect.value, 10),
+			localidadNombre: localidadNombre,
+			provinciaId: parseInt(provinciaSelect.value, 10),
+			provinciaNombre: provinciaNombre,
+			paisId: 1, // Valor por defecto o puedes añadir select para país
+			paisNombre: "España" // Valor por defecto
 		};
 
-		console.log("Datos enviados al servicio:", direccionData);
-		await this.createAddress(direccionData);
-		const modal = bootstrap.Modal.getInstance(document.getElementById("createAddressModal"));
-		if (modal) modal.hide();
-	},
-
-	async showEditAddressForm(direccionId) {
-		console.log(`Mostrando formulario para editar dirección ${direccionId}...`);
-		const clienteData = this.getStoredClienteData();
-		const direccion = clienteData.direcciones.find(dir => dir.id == direccionId);
-		if (direccion) {
-			DireccionView.renderModal("pro-inventario", DireccionView.getEditAddressModal(direccion));
-			const modal = new bootstrap.Modal(document.getElementById("editAddressModal"));
-			modal.show();
-		} else {
-			DireccionView.renderError("Dirección no encontrada.");
+		try {
+			await this.createAddress(direccionData);
+			const modal = bootstrap.Modal.getInstance(document.getElementById("createAddressModal"));
+			if (modal) modal.hide();
+		} catch (error) {
+			console.error("Error al crear dirección:", error);
+			DireccionView.renderError(error.message || "Error al crear dirección");
 		}
 	},
 
 	async handleEditAddressSubmit() {
 		const form = document.getElementById("editAddressForm");
 		const formData = new FormData(form);
+		const clienteData = this.getStoredClienteData();
+
+		// Validaciones
+		const id = parseInt(formData.get("id"), 10);
+		const nombreVia = formData.get("nombreVia");
+		const dirVia = formData.get("dirVia");
+		const localidadId = parseInt(formData.get("localidadId"), 10);
+		const provinciaId = parseInt(formData.get("provinciaId"), 10);
+		const paisId = parseInt(formData.get("paisId"), 10);
+
+		// Obtener nombres desde los selects
+		const localidadSelect = document.getElementById("localidadSelect");
+		const provinciaSelect = document.getElementById("provinciaSelect");
+		const paisSelect = document.getElementById("paisSelect");
+
+		// Validaciones
+		if (!clienteData || !clienteData.id) {
+			DireccionView.renderError("Usuario no identificado. Por favor, inicia sesión.");
+			return;
+		}
+		if (isNaN(id)) {
+			DireccionView.renderError("El ID de la dirección es inválido.");
+			return;
+		}
+		if (!nombreVia || nombreVia.trim() === "") {
+			DireccionView.renderError("El nombre de la vía es obligatorio.");
+			return;
+		}
+		if (!dirVia || dirVia.trim() === "") {
+			DireccionView.renderError("El número de la vía es obligatorio.");
+			return;
+		}
+		if (isNaN(localidadId) || !localidadSelect.value) {
+			DireccionView.renderError("Por favor, selecciona una localidad válida.");
+			return;
+		}
+		if (isNaN(provinciaId) || !provinciaSelect.value) {
+			DireccionView.renderError("Por favor, selecciona una provincia válida.");
+			return;
+		}
+		if (isNaN(paisId) || !paisSelect.value) {
+			DireccionView.renderError("Por favor, selecciona un país válido.");
+			return;
+		}
+
+		// Obtener nombres desde los selects
+		const localidadNombre = localidadSelect.options[localidadSelect.selectedIndex].text;
+		const provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
+		const paisNombre = paisSelect.options[paisSelect.selectedIndex].text;
+
+		// Construir el objeto direccionData
 		const direccionData = {
-			id: parseInt(formData.get("id"), 10),
-			nombreVia: formData.get("nombreVia"),
-			dirVia: formData.get("dirVia"),
-			localidadId: parseInt(formData.get("localidadId"), 10)
+			id: id,
+			nombreVia: nombreVia,
+			dirVia: dirVia,
+			localidadId: localidadId,
+			localidadNombre: localidadNombre,
+			clienteId: clienteData.id,
+			empleadoId: null,
+			provinciaId: provinciaId,
+			provinciaNombre: provinciaNombre,
+			paisId: paisId,
+			paisNombre: paisNombre
 		};
-		await this.updateAddress(direccionData);
-		const modal = bootstrap.Modal.getInstance(document.getElementById("editAddressModal"));
-		modal.hide();
+
+		try {
+			console.log("Enviando datos para actualizar dirección:", JSON.stringify(direccionData, null, 2));
+			await this.updateAddress(direccionData);
+			const modalElement = document.getElementById("editAddressModal");
+			if (modalElement) {
+				const modal = bootstrap.Modal.getInstance(modalElement);
+				if (modal) {
+					modal.hide();
+					document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+					document.body.classList.remove('modal-open');
+					document.body.style.overflow = '';
+					document.body.style.paddingRight = '';
+					modalElement.remove();
+				} else {
+					console.warn("No se pudo obtener la instancia del modal");
+				}
+			} else {
+				console.warn("No se encontró el elemento #editAddressModal");
+			}
+			DireccionView.renderProfileUpdateSuccess("Dirección actualizada correctamente.");
+		} catch (error) {
+			console.error("Error al actualizar la dirección:", error);
+			DireccionView.renderError(error.message || "No se pudo actualizar la dirección. Por favor, verifica los datos.");
+		}
+	},
+
+	async showEditAddressForm(direccionId) {
+		console.log(`Mostrando formulario para editar dirección ${direccionId}...`);
+		const clienteData = this.getStoredClienteData();
+		const direccion = clienteData.direcciones.find(dir => dir.id == direccionId);
+
+		if (direccion) {
+			try {
+				const [localidades, provincias, paises] = await Promise.all([
+					DireccionService.getLocalidades(),
+					DireccionService.getProvincias(),
+					DireccionService.getPaises()
+				]);
+
+				DireccionView.renderModal(
+					"pro-inventario",
+					DireccionView.getEditAddressModal(direccion, { localidades, provincias, paises })
+				);
+
+				const modal = new bootstrap.Modal(document.getElementById("editAddressModal"));
+				modal.show();
+
+				// Manejar cambios en los selects (opcional, si quieres filtrado en edición)
+				const provinciaSelect = document.getElementById("provinciaSelect");
+				const localidadSelect = document.getElementById("localidadSelect");
+
+				provinciaSelect.addEventListener("change", () => {
+					const provinciaId = provinciaSelect.value;
+					const currentLocalidadId = localidadSelect.value;
+
+					localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+
+					const filteredLocalidades = localidades.filter(loc => loc.provinciaId == provinciaId);
+					filteredLocalidades.forEach(loc => {
+						const option = document.createElement("option");
+						option.value = loc.id;
+						option.textContent = loc.nombre;
+						option.selected = (loc.id == currentLocalidadId);
+						localidadSelect.appendChild(option);
+					});
+				});
+			} catch (error) {
+				console.error("Error al mostrar el formulario de edición:", error);
+				DireccionView.renderError("No se pudo cargar el formulario de edición.");
+			}
+		} else {
+			DireccionView.renderError("Dirección no encontrada.");
+		}
 	},
 
 	async updateAddress(direccionData) {
@@ -182,14 +324,18 @@ const DireccionController = {
 				throw new Error("Usuário não identificado. Por favor, faça login.");
 			}
 			const updatedDireccion = await DireccionService.updateDireccion(direccionData);
+			console.log("Dirección actualizada recibida:", JSON.stringify(updatedDireccion, null, 2));
+			if (!updatedDireccion || !updatedDireccion.id) {
+				throw new Error("Respuesta inválida del servicio al actualizar la dirección");
+			}
 			clienteData.direcciones = clienteData.direcciones.map(dir =>
 				dir.id == updatedDireccion.id ? updatedDireccion : dir);
 			sessionStorage.setItem("cliente", JSON.stringify(clienteData));
 			DireccionView.renderAddresses("pro-inventario", clienteData.direcciones);
-			DireccionView.renderProfileUpdateSuccess("Dirección actualizada correctamente.");
 		} catch (error) {
 			console.error("Erro ao atualizar dirección:", error);
 			DireccionView.renderError("Erro ao atualizar dirección. Por favor, tente novamente.");
+			throw error;
 		}
 	},
 

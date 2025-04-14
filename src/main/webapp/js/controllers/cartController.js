@@ -7,6 +7,11 @@ import PedidoService from "../services/pedidoService.js"; // Para crear el pedid
 const CartController = {
 	init() {
 		console.log("CartController.init()...");
+		const hash = window.location.hash;
+		if (hash !== "#cart") {
+			console.log("No está en la página del carrito, omitiendo inicialización.");
+			return;
+		}
 		this.loadCart();
 		this.setupEvents();
 		// Flag to prevent multiple checkout submissions

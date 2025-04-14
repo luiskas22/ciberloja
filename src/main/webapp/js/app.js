@@ -12,48 +12,46 @@ const App = {
   previousResults: [],
   languageManager: null,
 
-  init() {
+  async init() {
     console.log("App.init()...");
     this.languageManager = new LanguageManager('pt');
-    this.setupSessionState();
+    await this.setupSessionState();
     this.setEvents();
-    this.showHomeContent();
     this.setupNavigation();
-    this.updateUIForSession();
-    if (this.cliente) {
-      CartController.init();
+
+    const hash = window.location.hash;
+    console.log("Hash inicial:", hash);
+    if (hash === "#cart" && this.cliente && this.isCliente()) {
+        await CartController.init();
+        this.hideHomeContent();
+    } else if (hash === "#buscar-produtos") {
+        ProductoController.init("search", this.languageManager.currentLang);
+        this.hideHomeContent();
+    } else if (hash === "#crear-productos" && this.isEmpleado()) {
+        ProductoController.init("create", this.languageManager.currentLang);
+        this.hideHomeContent();
+    } else if (hash === "#buscar-pedidos" && this.cliente && this.isEmpleado()) {
+        PedidoController.init("search", this.languageManager.currentLang);
+        this.hideHomeContent();
+    } else if (hash === "#mis-pedidos" && this.cliente) {
+        PedidoController.init("pedidos", this.languageManager.currentLang);
+        this.hideHomeContent();
+    } else if (hash === "#mi-perfil") {
+        ClienteController.init("perfil");
+        this.hideHomeContent();
+    } else if (hash === "#mis-direcciones") {
+        DireccionController.init("direcciones");
+        this.hideHomeContent();
+    } else {
+        await this.showHomeContent();
     }
+
+    this.updateUIForSession();
     FooterController.init(this.languageManager.currentLang);
     this.languageManager.updateUI();
-
-    document.addEventListener('languageChange', (e) => {
-      const lang = e.detail.lang;
-      const currentHash = window.location.hash;
-      console.log('Language change - Current hash:', currentHash);
-      FooterController.init(lang);
-      if (currentHash === '#buscar-produtos') {
-        ProductoController.init('search', lang);
-      } else if (currentHash === '#crear-productos' && this.isEmpleado()) {
-        ProductoController.init('create', lang);
-      } else if (currentHash === '#buscar-pedidos' && this.isEmpleado()) {
-        PedidoController.init('search', lang);
-      } else if (currentHash === '#mis-pedidos') {
-        PedidoController.init('pedidos', lang);
-      } else if (currentHash === '#mi-perfil') {
-        ClienteController.init('perfil', lang);
-      } else if (currentHash === '#mis DIREcciones') {
-        DireccionController.init('direcciones', lang);
-      } else if (currentHash === '#cart' && this.isCliente()) {
-        CartController.init(lang);
-      }
-      // Prevent unintended hash reset
-      if (currentHash && currentHash !== '#') {
-        window.location.hash = currentHash; // Restore hash if changed
-      }
-    });
   },
 
-  setupSessionState() {
+  async setupSessionState() {
     this.cliente = JSON.parse(sessionStorage.getItem("cliente")) || null;
     console.log("Estado de sesión:", this.cliente ? `Usuario logueado (rol_id: ${this.cliente.rol_id})` : "Usuario no logueado");
   },
@@ -88,7 +86,7 @@ const App = {
     const btnBuscarProdutos = document.querySelector('a[href="#buscar-produtos"]');
     if (btnBuscarProdutos) {
       btnBuscarProdutos.addEventListener("click", (e) => {
-        e.preventDefault(); // Prevent default navigation
+        e.preventDefault();
         ProductoController.init("search", this.languageManager.currentLang);
         this.hideHomeContent();
       });
@@ -193,14 +191,16 @@ const App = {
     });
   },
 
-  showHomeContent() {
+  async showHomeContent() {
     console.log("Mostrando contenido home...");
     const homeContent = document.getElementById("home-content");
     const proInventario = document.getElementById("pro-inventario");
 
-    homeContent.style.display = "block";
-    proInventario.style.display = "none";
-    proInventario.innerHTML = "";
+    if (homeContent && proInventario) {
+      homeContent.style.display = "block";
+      proInventario.style.display = "none";
+      proInventario.innerHTML = "";
+    }
 
     this.updateUIForSession();
     window.location.hash = "";
@@ -211,8 +211,10 @@ const App = {
     const homeContent = document.getElementById("home-content");
     const proInventario = document.getElementById("pro-inventario");
 
-    homeContent.style.display = "none";
-    proInventario.style.display = "block";
+    if (homeContent && proInventario) {
+      homeContent.style.display = "none";
+      proInventario.style.display = "block";
+    }
   },
 
   updateUIForSession() {
@@ -291,9 +293,6 @@ const App = {
     sessionStorage.setItem("cliente", JSON.stringify(clienteData));
 
     this.updateUIForSession();
-    if (this.isCliente()) {
-      CartController.init();
-    }
 
     const sessionButtons = document.getElementById("session-buttons");
     if (sessionButtons) {
