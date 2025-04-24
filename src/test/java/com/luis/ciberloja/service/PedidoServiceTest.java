@@ -244,16 +244,16 @@ public class PedidoServiceTest {
 
 	public void testUpdate() throws Exception {
 		logger.info("Testing update...");
-		Pedido pedido = pedidoService.findBy(11l);
-		pedido.setTipoEstadoPedidoId(3);
-		pedido.setClienteId(4l);
+		Pedido pedido = pedidoService.findBy(23l);
+		pedido.setTipoEstadoPedidoId(6);
+		pedido.setClienteId(1l);
 		List<LineaPedido> pedidos = new ArrayList<LineaPedido>();
-		LineaPedido lp = new LineaPedido();
-		lp.setProductoId(3l);
-		lp.setPedidoId(3l);
-		lp.setPrecio(10.00);
-		lp.setUnidades(1);
-		pedidos.add(lp);
+//		LineaPedido lp = new LineaPedido();
+//		lp.setProductoId(3l);
+//		lp.setPedidoId(3l);
+//		lp.setPrecio(10.00);
+//		lp.setUnidades(1);
+//		pedidos.add(lp);
 		pedido.setLineas(pedidos);
 		boolean b = pedidoService.update(pedido);
 
@@ -306,9 +306,9 @@ public class PedidoServiceTest {
 		// test.testFindByCriteriaClienteId();
 		// test.testFindByCriteriaTipoEstadoPedidoId();
 		// test.testFindByCriteriaMultipleParameters();
-		 test.testFindByEmptyCriteria();
+//		 test.testFindByEmptyCriteria();
 //		test.testCreate();
-		// test.testUpdate();
+		 test.testUpdate();
 		// test.testDelete();
 //		test.testFindPedidosByClienteId();
 
