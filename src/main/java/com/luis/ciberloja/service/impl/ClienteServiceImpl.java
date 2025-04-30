@@ -2,6 +2,8 @@ package com.luis.ciberloja.service.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,13 +11,18 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.ClienteDAO;
+import com.luis.ciberloja.dao.PasswordResetTokenDAO;
 import com.luis.ciberloja.dao.impl.ClienteDAOImpl;
+import com.luis.ciberloja.dao.impl.PasswordResetTokenDAOImpl;
 import com.luis.ciberloja.dao.util.JDBCUtils;
 import com.luis.ciberloja.model.ClienteDTO;
+import com.luis.ciberloja.model.PasswordResetTokenDTO;
 import com.luis.ciberloja.model.Results;
 import com.luis.ciberloja.service.ClienteService;
+import com.luis.ciberloja.service.MailException;
 import com.luis.ciberloja.service.MailService;
 import com.luis.ciberloja.service.ServiceException;
+
 
 public class ClienteServiceImpl implements ClienteService {
 
@@ -28,11 +35,13 @@ public class ClienteServiceImpl implements ClienteService {
 
 	private ClienteDAO clienteDAO = null;
 	private MailService mailService = null;
+	private PasswordResetTokenDAO tokenDAO = null;
 	private static Logger logger = LogManager.getLogger(ClienteServiceImpl.class);
 
 	public ClienteServiceImpl() {
 		clienteDAO = new ClienteDAOImpl();
 		mailService = new MailServiceImpl();
+		tokenDAO = new PasswordResetTokenDAOImpl();
 	}
 
 	public ClienteDTO findById(Long id) throws DataException {
@@ -242,6 +251,94 @@ public class ClienteServiceImpl implements ClienteService {
 		}
 
 		return cliente;
+	}
+
+	@Override
+	public String generatePasswordResetToken(String email) throws DataException {
+		Connection con = null;
+		boolean commit = false;
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
+
+			// Verify if email exists
+			ClienteDTO cliente = clienteDAO.findByEmail(con, email);
+			if (cliente == null) {
+				throw new DataException("No user found with email: " + email);
+			}
+
+			// Generate a unique token
+			String token = UUID.randomUUID().toString();
+
+			// Store token in the database
+			PasswordResetTokenDTO resetToken = new PasswordResetTokenDTO();
+			resetToken.setEmail(email);
+			resetToken.setToken(token);
+			resetToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // Valid for 24 hours
+			resetToken.setUsed(false);
+			tokenDAO.create(con, resetToken);
+
+			// Send reset email
+			try {
+				mailService.sendPasswordResetEmail(email, token, cliente.getId());
+			} catch (MailException e) {
+				throw new DataException("Failed to send reset email: " + e.getMessage());
+			}
+
+			commit = true;
+			return token;
+		} catch (SQLException e) {
+			logger.error("Error generating password reset token: {}", e.getMessage(), e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+	}
+
+	@Override
+	public boolean validateAndUpdatePassword(String token, String newPassword) throws DataException {
+		Connection con = null;
+		boolean commit = false;
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
+
+			// Find token
+			PasswordResetTokenDTO resetToken = tokenDAO.findByToken(con, token);
+			if (resetToken == null) {
+				throw new DataException("Invalid token");
+			}
+
+			// Check if token is expired or used
+			if (resetToken.isUsed() || resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+				throw new DataException("Token is expired or already used");
+			}
+
+			// Find client by email
+			ClienteDTO cliente = clienteDAO.findByEmail(con, resetToken.getEmail());
+			if (cliente == null) {
+				throw new DataException("No user found for token");
+			}
+
+			// Update password
+			boolean updated = clienteDAO.updatePassword(con, PASSWORD_ENCRYPTOR.encryptPassword(newPassword),
+					cliente.getId());
+			if (!updated) {
+				throw new DataException("Failed to update password");
+			}
+
+			// Mark token as used
+			resetToken.setUsed(true);
+			tokenDAO.update(con, resetToken);
+
+			commit = true;
+			return true;
+		} catch (SQLException e) {
+			logger.error("Error validating and updating password: {}", e.getMessage(), e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
 	}
 
 }

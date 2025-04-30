@@ -14,6 +14,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\i
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\LocalidadDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\MarcaDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\PaisDAOImpl.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\PasswordResetTokenDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\PedidoDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\ProductoDAOImpl.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\impl\ProvinciaDAOImpl.java
@@ -24,6 +25,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\L
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\LocalidadDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\MarcaDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\PaisDAO.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\PasswordResetTokenDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\PedidoDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\ProductoDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\dao\ProvinciaDAO.java
@@ -45,6 +47,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Localidad.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Marca.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Pais.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\PasswordResetTokenDTO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Pedido.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\PedidoCriteria.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\ProductoCriteria.java

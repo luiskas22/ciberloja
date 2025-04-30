@@ -11,4 +11,6 @@ public interface MailService {
 	public void sendBienvenida(String to, ClienteDTO cliente) throws MailException;
 	
 	public void sendPedidoRealizado(String to, ClienteDTO cliente, Pedido pedido) throws MailException ;
+	
+    public void sendPasswordResetEmail(String to, String token, Long clientId) throws MailException;
 }

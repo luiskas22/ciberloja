@@ -41,6 +41,81 @@ public class MailServiceImpl implements MailService {
 	public MailServiceImpl() {
 	}
 
+	@Override
+	public void sendPasswordResetEmail(String to, String token, Long clientId) throws MailException {
+		if (to == null || to.trim().isEmpty()) {
+			throw new MailException("Recipient email cannot be null or empty");
+		}
+		if (!isValidEmail(to)) {
+			throw new MailException("Invalid email address: " + to);
+		}
+		String from = ConfigurationParametersManager.getParameterValue(USER);
+		if (from == null || from.trim().isEmpty()) {
+			throw new MailException("Sender email is not properly configured");
+		}
+
+		String subject = "Ciberloja: Redefinir sua senha"; // Translated subject
+
+		// MODIFICACIÓN: Redirigir a la página frontend de cambio de contraseña
+		// Ajusta esta URL para que coincida con la ubicación de tu formulario frontend
+		String frontendUrl = "http://192.168.99.40:8080/CiberlojaSPA/";
+		String resetUrl = frontendUrl + "#/reset-password?token=" + token + "&id=" + clientId;
+
+		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<meta charset=\"UTF-8\">")
+				.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">").append("<style>")
+				.append("body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #F5F6F5; color: #4A4A4A; padding: 20px; }")
+				.append("h2 { color: #2E8B57; }").append("p { color: #4A4A4A; }")
+				.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #2E8B57; }")
+				.append(".header { text-align: center; margin-bottom: 20px; }")
+				.append(".button { display: inline-block; padding: 10px 20px; background-color: #2E8B57; color: #FFFFFF; text-decoration: none; border-radius: 5px; }")
+				.append("</style>").append("</head>").append("<body>").append("<div class=\"container\">")
+				.append("<div class=\"header\">").append("<h2>Redefinir sua senha</h2>").append("</div>")
+				.append("<p>Recebemos uma solicitação para redefinir a senha da sua conta na Ciberloja.</p>")
+				.append("<p>Por favor, clique no botão abaixo para definir uma nova senha:</p>").append("<p><a href=\"")
+				.append(resetUrl).append("\" class=\"button\">Redefinir senha</a></p>")
+				.append("<p>Este link é válido por 24 horas. Se você não solicitou esta alteração, ignore este e-mail.</p>")
+				.append("<p>Obrigado por confiar na Ciberloja.</p>").append("<p>A equipe da Ciberloja</p>")
+				.append("</div>").append("</body>").append("</html>");
+
+		Properties props = new Properties();
+		props.put("mail.smtp.host", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.port", ConfigurationParametersManager.getParameterValue(SERVER_PORT));
+		props.put("mail.smtp.ssl.trust", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
+		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+		Session session = Session.getInstance(props, new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				String user = ConfigurationParametersManager.getParameterValue(USER);
+				String password = ConfigurationParametersManager.getParameterValue(PASSWORD);
+				if (user == null || password == null) {
+					throw new RuntimeException("SMTP credentials not properly configured");
+				}
+				return new PasswordAuthentication(user, password);
+			}
+		});
+
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+			message.setSubject(subject);
+
+			MimeBodyPart messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setContent(body.toString(), "text/html; charset=utf-8");
+
+			MimeMultipart multipart = new MimeMultipart();
+			multipart.addBodyPart(messageBodyPart);
+
+			message.setContent(multipart);
+			Transport.send(message);
+		} catch (MessagingException e) {
+			throw new MailException("Error sending password reset email", e);
+		}
+	}
+
 	public void enviar(String para, String assunto, String msg) throws MailException {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", ConfigurationParametersManager.getParameterValue(SERVER_NAME));
@@ -93,7 +168,7 @@ public class MailServiceImpl implements MailService {
 			throw new MailException("O endereço de email do remetente não está configurado corretamente");
 		}
 
-		try { 
+		try {
 			String subject = "Bem-vindo à Ciberloja!";
 
 			// Construir el cuerpo del mensaje
