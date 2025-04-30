@@ -1,8 +1,8 @@
-// PedidoController.js
 import PedidoView from "../views/pedidoView.js";
 import PedidoService from "../services/pedidoService.js";
 import ProductoView from "../views/productoView.js";
 import ProductoService from "../services/productoService.js";
+import FileService from "../services/fileService.js";
 
 function debounce(func, delay) {
     let timeoutId;
@@ -18,6 +18,22 @@ const PedidoController = {
     totalItems: 0,
     totalPages: 0,
     previousResults: [],
+    imageCache: new Map(), // Add image cache
+
+    async getProductImages(productId) {
+        if (this.imageCache.has(productId)) {
+            return this.imageCache.get(productId);
+        }
+        try {
+            const images = await FileService.getImagesByProductoId(productId);
+            this.imageCache.set(productId, images || []);
+            return images || [];
+        } catch (error) {
+            console.warn(`No se pudieron cargar las imágenes para el producto ${productId}:`, error);
+            this.imageCache.set(productId, []);
+            return [];
+        }
+    },
 
     init(action) {
         console.log(`PedidoController.init(${action})...`);
@@ -31,16 +47,10 @@ const PedidoController = {
 
     setupEvents() {
         console.log("PedidoController.setupEvents()...");
-        
-        // Remove previous event listeners to avoid duplicates
         document.removeEventListener("click", this.handleDocumentClick);
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
         document.addEventListener("click", this.handleDocumentClick);
-
-        // Set up search inputs with debounce
         this.setupSearchInputs();
-
-        // Clear button functionality
         const clearButton = document.getElementById("clear-search-form");
         if (clearButton && !clearButton.hasListener) {
             clearButton.addEventListener("click", () => this.clearSearchForm());
@@ -69,7 +79,6 @@ const PedidoController = {
             return;
         }
 
-        // Handle change status button
         const cambiarEstadoTarget = event.target.closest(".btn-cambiar-estado");
         if (cambiarEstadoTarget) {
             event.preventDefault();
@@ -81,7 +90,6 @@ const PedidoController = {
             return;
         }
 
-        // Pagination handling
         if (event.target.classList.contains("page-link") || event.target.parentElement.classList.contains("page-link")) {
             event.preventDefault();
             const pageElement = event.target.classList.contains("page-link") ? event.target : event.target.parentElement;
@@ -105,25 +113,20 @@ const PedidoController = {
                 throw new Error("Estado inválido seleccionado.");
             }
 
-            // Obtener el pedido actual para mantener los otros campos
             const pedido = await PedidoService.findById(pedidoId);
             if (!pedido) {
                 throw new Error("Pedido no encontrado");
             }
 
-            // Crear el objeto actualizado
             const updatedPedido = {
                 ...pedido,
                 tipoEstadoPedidoId: newStatusId,
-                // Actualizar el nombre del estado para la UI
                 tipoEstadoPedidoNombre: selectElement.options[selectElement.selectedIndex].text
             };
 
-            // Llamar al servicio para actualizar el pedido
             const result = await PedidoService.updatePedido(updatedPedido);
             console.log("Estado actualizado con éxito:", result);
 
-            // Mostrar mensaje de éxito
             const container = document.getElementById("pro-inventario");
             if (container) {
                 container.insertAdjacentHTML('afterbegin', `
@@ -134,17 +137,16 @@ const PedidoController = {
                 `);
             }
 
-            // Volver a renderizar la vista con el pedido actualizado
             PedidoView.renderPedidoDetalhe("pro-inventario", result);
         } catch (error) {
             console.error("Error al cambiar el estado del pedido:", error);
-            PedidoView.renderError("Error al actualizar el estado del pedido. Por favor, intente novamente.");
+            PedidoView.renderError("pro-inventario", "Error al actualizar el estado del pedido. Por favor, intente novamente.");
         }
     },
 
     setupSearchInputs() {
         const inputs = [
-            "pedido-id", "fecha-desde", "fecha-hasta", 
+            "pedido-id", "fecha-desde", "fecha-hasta",
             "precio-desde", "precio-hasta", "cliente-id",
             "tipo-estado-pedido-id", "producto-id", "descripcion"
         ];
@@ -176,11 +178,8 @@ const PedidoController = {
     loadSearchForm() {
         console.log("Cargando formulario de búsqueda de pedidos...");
         PedidoView.renderSearchForm("pro-inventario");
-        
-        // Una vez renderizado el formulario, configuramos los eventos
         setTimeout(() => {
             this.setupEvents();
-            // Cargar todos los pedidos por defecto al inicio
             this.handleSearch();
         }, 100);
     },
@@ -188,7 +187,7 @@ const PedidoController = {
     async handleSearch(page = 1) {
         console.log(`Procesando búsqueda de pedidos (página ${page})...`);
         this.currentPage = page;
-        
+
         try {
             const criteria = {
                 id: document.getElementById("pedido-id")?.value || null,
@@ -204,7 +203,6 @@ const PedidoController = {
                 size: this.itemsPerPage
             };
 
-            // Convertir valores a los tipos esperados por el backend
             const pedidoCriteria = {
                 id: criteria.id ? parseInt(criteria.id) : null,
                 fechaDesde: criteria.fechaDesde || null,
@@ -219,7 +217,6 @@ const PedidoController = {
                 size: criteria.size
             };
 
-            // Use findByCriteria with pagination
             const response = await PedidoService.findByCriteria(pedidoCriteria);
             console.log("Respuesta del servicio:", response);
 
@@ -229,27 +226,26 @@ const PedidoController = {
                 this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
 
                 PedidoView.renderSearchResults(
-                    "search-results", 
-                    this.previousResults, 
-                    this.currentPage, 
-                    this.itemsPerPage, 
+                    "search-results",
+                    this.previousResults,
+                    this.currentPage,
+                    this.itemsPerPage,
                     this.totalItems
                 );
             } else if (Array.isArray(response)) {
-                // Por si el backend no implementa paginación
                 this.previousResults = response;
                 this.totalItems = response.length;
                 this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-                
+
                 const startIndex = (this.currentPage - 1) * this.itemsPerPage;
                 const endIndex = startIndex + this.itemsPerPage;
                 const paginatedResults = this.previousResults.slice(startIndex, endIndex);
-                
+
                 PedidoView.renderSearchResults(
-                    "search-results", 
-                    paginatedResults, 
-                    this.currentPage, 
-                    this.itemsPerPage, 
+                    "search-results",
+                    paginatedResults,
+                    this.currentPage,
+                    this.itemsPerPage,
                     this.totalItems
                 );
             } else {
@@ -263,7 +259,7 @@ const PedidoController = {
             this.previousResults = [];
             this.totalItems = 0;
             this.totalPages = 0;
-            PedidoView.renderError("Error al buscar pedidos. Por favor, intente nuevamente.");
+            PedidoView.renderError("search-results", "Error al buscar pedidos. Por favor, intente nuevamente.");
         }
     },
 
@@ -288,11 +284,11 @@ const PedidoController = {
             if (pedidos && pedidos.length > 0) {
                 PedidoView.renderPedidos("pro-inventario", pedidos);
             } else {
-                PedidoView.renderError("No se encontraron pedidos para este usuario.");
+                PedidoView.renderError("pro-inventario", "No se encontraron pedidos para este usuario.");
             }
         } catch (error) {
             console.error("Error al cargar pedidos:", error);
-            PedidoView.renderError("Error al cargar pedidos. Por favor, intente nuevamente.");
+            PedidoView.renderError("pro-inventario", "Error al cargar pedidos. Por favor, intente nuevamente.");
         }
     },
 
@@ -303,12 +299,27 @@ const PedidoController = {
             if (!pedido) {
                 throw new Error("Pedido no encontrado");
             }
+
+            // Pre-cargar imágenes para cada producto en las líneas del pedido
+            if (pedido.lineas && pedido.lineas.length > 0) {
+                for (let linea of pedido.lineas) {
+                    try {
+                        const images = await this.getProductImages(linea.productoId);
+                        linea.imageSrc = images && images.length > 0
+                            ? `http://192.168.99.40:8080${images[0].url}`
+                            : './img/placeholder.png';
+                    } catch (imageError) {
+                        console.warn(`No se pudieron cargar las imágenes para el producto ${linea.productoId}:`, imageError);
+                        linea.imageSrc = './img/placeholder.png';
+                    }
+                }
+            }
+
             PedidoView.renderPedidoDetalhe("pro-inventario", pedido);
-            // Reconfigurar eventos después de renderizar la vista
             this.setupEvents();
         } catch (error) {
             console.error("Error al cargar detalles del pedido:", error);
-            PedidoView.renderError("Error al cargar detalles del pedido.");
+            PedidoView.renderError("pro-inventario", "Error al cargar detalles del pedido.");
         }
     },
 
@@ -319,10 +330,12 @@ const PedidoController = {
             if (!producto) {
                 throw new Error("Producto no encontrado");
             }
+            // Pre-cargar imágenes para el producto
+            producto.images = await this.getProductImages(productoId);
             ProductoView.renderProductoDetails(producto, "pro-inventario");
         } catch (error) {
             console.error("Error al cargar detalles del producto:", error);
-            PedidoView.renderError("Error al cargar detalles del producto.");
+            PedidoView.renderError("pro-inventario", "Error al cargar detalles del producto.");
         }
     },
 

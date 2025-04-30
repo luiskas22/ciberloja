@@ -9,7 +9,7 @@ const SessionService = {
 		try {
 			console.log("Enviando datos de login:", credentials);
 
-			const response = await fetch("http://192.168.99.41:8080/ciberloja-rest-api/api/cliente/autenticar", {
+			const response = await fetch("http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/autenticar", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -21,14 +21,12 @@ const SessionService = {
 				})
 			});
 
-			// Detailed logging
 			console.log('Login Response Details:', {
 				status: response.status,
 				statusText: response.statusText,
 				headers: Object.fromEntries(response.headers.entries())
 			});
 
-			// Handle different response scenarios
 			if (response.status === 401) {
 				const errorData = await response.json();
 				throw new Error(errorData.mensaje || "Credenciales inválidas");
@@ -49,14 +47,13 @@ const SessionService = {
 			}
 
 			const data = await response.json();
-			console.log("Datos recibidos del servidor:", data); // Verifica la estructura
-			
-			// Asegúrate de que el rol_id está presente
+			console.log("Datos recibidos del servidor:", data);
+
 			if (!data.hasOwnProperty('rol_id')) {
 				console.warn("El servidor no devolvió un rol_id, usando valor por defecto (1)");
-				data.rol_id = 1; // Valor por defecto para cliente
+				data.rol_id = 1;
 			}
-			
+
 			return data;
 		} catch (error) {
 			console.error("Error de autenticación:", {
@@ -79,7 +76,7 @@ const SessionService = {
 
 			console.log("Enviando datos al API:", formData.toString());
 
-			const response = await fetch("http://192.168.99.41:8080/ciberloja-rest-api/api/cliente/registrar", {
+			const response = await fetch("http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/registrar", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
@@ -87,14 +84,12 @@ const SessionService = {
 				body: formData.toString(),
 			});
 
-			// Log full response for debugging
 			console.log('Full response:', {
 				status: response.status,
 				statusText: response.statusText,
 				headers: Object.fromEntries(response.headers.entries())
 			});
 
-			// Try to get response text for more details
 			const responseText = await response.text();
 			console.log('Response text:', responseText);
 
@@ -102,7 +97,6 @@ const SessionService = {
 				throw new Error(`Error ${response.status}: ${responseText || 'Unknown server error'}`);
 			}
 
-			// Try to parse JSON if possible
 			let data = {};
 			try {
 				data = responseText ? JSON.parse(responseText) : {};
@@ -122,19 +116,19 @@ const SessionService = {
 			throw error;
 		}
 	},
-	
-	 async loginEmpleado(credentials) {
+
+	async loginEmpleado(credentials) {
 		try {
 			console.log("Enviando datos de login para empleado:", credentials);
 
-			const response = await fetch("http://192.168.99.41:8080/ciberloja-rest-api/api/empleado/autenticar", {
+			const response = await fetch("http://192.168.99.40:8080/ciberloja-rest-api/api/empleado/autenticar", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					"Accept": "application/json"
 				},
 				body: JSON.stringify({
-					id: credentials.id,  // Cambiado de email a id
+					id: credentials.id,
 					password: credentials.password
 				})
 			});
@@ -145,7 +139,6 @@ const SessionService = {
 				headers: Object.fromEntries(response.headers.entries())
 			});
 
-			// Manejo de respuestas específicas
 			if (response.status === 401) {
 				const errorData = await response.json();
 				throw new Error(errorData.error || "Credenciales inválidas");
@@ -171,7 +164,6 @@ const SessionService = {
 				throw new Error("No se recibieron datos de empleado válidos");
 			}
 
-			// Guardar token si está presente en la respuesta
 			if (data.token) {
 				localStorage.setItem('empleadoToken', data.token);
 				localStorage.setItem('empleadoRol', data.rol || '');
@@ -188,6 +180,110 @@ const SessionService = {
 			throw error;
 		}
 	},
+
+	async forgotPassword(email) {
+		try {
+			console.log("Enviando solicitud de restablecimiento de contraseña para:", email);
+
+			const response = await fetch("http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/forgot-password", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Accept": "application/json"
+				},
+				body: JSON.stringify({ email })
+			});
+
+			console.log('Forgot Password Response Details:', {
+				status: response.status,
+				statusText: response.statusText,
+				headers: Object.fromEntries(response.headers.entries())
+			});
+
+			if (response.status === 400) {
+				const errorData = await response.json();
+				throw new Error(errorData.mensaje || "Correo electrónico inválido o no registrado");
+			}
+
+			if (response.status === 500) {
+				const errorData = await response.json();
+				throw new Error(errorData.mensaje || "Error interno del servidor");
+			}
+
+			if (!response.ok) {
+				throw new Error(`Error en la solicitud de restablecimiento: ${response.status}`);
+			}
+
+			const data = await response.json();
+			console.log("Respuesta del servidor:", data);
+
+			return data; // Returns { mensaje: "Enlace de restablecimiento enviado correctamente" }
+		} catch (error) {
+			console.error("Error en la solicitud de restablecimiento de contraseña:", {
+				message: error.message,
+				name: error.name,
+				stack: error.stack
+			});
+			throw error;
+		}
+	},
+
+	async resetPassword(token, clientId, newPassword) {
+		try {
+			console.log("Enviando solicitud de cambio de contraseña:", { token, clientId, newPassword });
+	
+			// Primero intentamos con PUT (más común para actualizaciones)
+			let response;
+			try {
+				const url = new URL("http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/reset-password");
+				url.searchParams.append('token', token);
+				url.searchParams.append('id', clientId);
+				
+				response = await fetch(url, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "application/json"
+					},
+					body: JSON.stringify({ newPassword })
+				});
+				
+				if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			} catch (putError) {
+				console.log("PUT falló, intentando con POST...", putError);
+				
+				// Si PUT falla, intentamos con POST
+				response = await fetch("http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/reset-password", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "application/json"
+					},
+					body: JSON.stringify({ 
+						token, 
+						id: clientId,
+						newPassword 
+					})
+				});
+				
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(errorData.mensaje || `Error ${response.status}`);
+				}
+			}
+	
+			const data = await response.json();
+			console.log("Respuesta del servidor:", data);
+			return data;
+		} catch (error) {
+			console.error("Error en el servicio al cambiar contraseña:", {
+				message: error.message,
+				name: error.name,
+				stack: error.stack
+			});
+			throw error;
+		}
+	}
 };
 
 export default SessionService;

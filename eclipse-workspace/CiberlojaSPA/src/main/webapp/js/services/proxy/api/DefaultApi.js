@@ -1103,6 +1103,49 @@ export default class DefaultApi {
       );
     }
     /**
+     * Callback function to receive the result of the forgotPassword operation.
+     * @callback moduleapi/DefaultApi~forgotPasswordCallback
+     * @param {String} error Error message, if any.
+     * @param data This operation does not return a value.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * Solicitud de restablecimiento de contraseña
+     * Genera un token de restablecimiento de contraseña y envía un correo electrónico con un enlace para restablecer la contraseña
+     * @param {Object} opts Optional parameters
+     * @param {{String: String}} opts.body 
+     * @param {module:api/DefaultApi~forgotPasswordCallback} callback The callback function, accepting three arguments: error, data, response
+     */
+    forgotPassword(opts, callback) {
+      opts = opts || {};
+      let postBody = opts['body'];
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = null;
+
+      return this.apiClient.callApi(
+        '/api/cliente/forgot-password', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
      * Callback function to receive the result of the getExternalGrammar operation.
      * @callback moduleapi/DefaultApi~getExternalGrammarCallback
      * @param {String} error Error message, if any.
@@ -1329,6 +1372,49 @@ export default class DefaultApi {
 
       return this.apiClient.callApi(
         '/api/cliente/registrar', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
+     * Callback function to receive the result of the resetPassword operation.
+     * @callback moduleapi/DefaultApi~resetPasswordCallback
+     * @param {String} error Error message, if any.
+     * @param data This operation does not return a value.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * Restablecimiento de contraseña
+     * Valida un token de restablecimiento y actualiza la contraseña del cliente
+     * @param {Object} opts Optional parameters
+     * @param {{String: String}} opts.body 
+     * @param {module:api/DefaultApi~resetPasswordCallback} callback The callback function, accepting three arguments: error, data, response
+     */
+    resetPassword(opts, callback) {
+      opts = opts || {};
+      let postBody = opts['body'];
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = null;
+
+      return this.apiClient.callApi(
+        '/api/cliente/reset-password', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );

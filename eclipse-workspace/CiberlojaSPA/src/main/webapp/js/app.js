@@ -7,6 +7,125 @@ import DireccionController from './controllers/direccionController.js';
 import FooterController from './controllers/footerController.js';
 import LanguageManager from './resources/languageManager.js';
 
+
+const Router = {
+  init() {
+    console.log("Router.init()...");
+    // Configurar el evento hashchange para detectar cambios en la URL
+    window.addEventListener('hashchange', this.handleRouteChange.bind(this));
+
+    // Comprobar la ruta inicial al cargar la página
+    this.handleRouteChange();
+  },
+
+  handleRouteChange() {
+    const hash = window.location.hash;
+    console.log('Hash changed:', hash);
+
+    // Extraer la ruta del hash (p.ej., #/login -> login)
+    let route = '';
+    if (hash.startsWith('#/')) {
+      route = hash.substring(2).split('?')[0]; // Eliminar parámetros de consulta
+      console.log('Detected route with prefix:', route);
+
+      // Rutas específicas con prefijo #/
+      switch (route) {
+        case 'login':
+          SesionController.init('login', App.languageManager.currentLang);
+          App.hideHomeContent();
+          return;
+        case 'register':
+          SesionController.init('register', App.languageManager.currentLang);
+          App.hideHomeContent();
+          return;
+        case 'forgot_password':
+          SesionController.init('forgot_password', App.languageManager.currentLang);
+          App.hideHomeContent();
+          return;
+        case 'reset-password':
+          // La detección de parámetros se hace en SesionController.init
+          SesionController.init(null, App.languageManager.currentLang);
+          App.hideHomeContent();
+          return;
+      }
+    }
+
+    // Para las rutas sin prefijo #/ (formato antiguo #reset-password)
+    // o rutas no reconocidas con prefijo, procesamos el hash sin el #
+    route = hash.substring(1);
+    console.log('Processing standard route:', route);
+
+    switch (route) {
+      case 'cart':
+        if (App.cliente && App.isCliente()) {
+          CartController.init(App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          SesionController.init('login', App.languageManager.currentLang);
+          App.hideHomeContent();
+        }
+        break;
+      case 'buscar-produtos':
+        ProductoController.init("search", App.languageManager.currentLang);
+        App.hideHomeContent();
+        break;
+      case 'crear-productos':
+        if (App.isEmpleado()) {
+          ProductoController.init("create", App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          App.showHomeContent();
+        }
+        break;
+      case 'buscar-pedidos':
+        if (App.cliente && App.isEmpleado()) {
+          PedidoController.init("search", App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          App.showHomeContent();
+        }
+        break;
+      case 'mis-pedidos':
+        if (App.cliente) {
+          PedidoController.init("pedidos", App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          SesionController.init('login', App.languageManager.currentLang);
+          App.hideHomeContent();
+        }
+        break;
+      case 'mi-perfil':
+        if (App.cliente) {
+          ClienteController.init("perfil", App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          SesionController.init('login', App.languageManager.currentLang);
+          App.hideHomeContent();
+        }
+        break;
+      case 'mis-direcciones':
+        if (App.cliente) {
+          DireccionController.init(App.languageManager.currentLang);
+          App.hideHomeContent();
+        } else {
+          SesionController.init('login', App.languageManager.currentLang);
+          App.hideHomeContent();
+        }
+        break;
+      case 'contact':
+        App.showContactContent();
+        break;
+      case '':
+        App.showHomeContent();
+        break;
+      default:
+        // Si no se reconoce la ruta, mostramos la página principal
+        App.showHomeContent();
+        break;
+    }
+  }
+};
+
 const App = {
   cliente: null,
   previousResults: [],

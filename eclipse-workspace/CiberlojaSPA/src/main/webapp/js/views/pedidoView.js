@@ -1,5 +1,5 @@
-import Translations from '../resources/translations.js'; // Adjust path as needed
-
+import Translations from '../resources/translations.js';
+import FileService from '../services/fileService.js'; // Add this import if keeping getProductImageSrc
 const PedidoView = {
     getPedidosView(pedidos, lang = 'pt') {
         let t = {};
@@ -147,11 +147,21 @@ const PedidoView = {
         `;
     },
 
-    getProductImageSrc(productId) {
+    // Keep getProductImageSrc if needed elsewhere, otherwise comment out or remove
+    async getProductImageSrc(productId) {
         if (!productId) {
             return './img/placeholder.png';
         }
-        return `./img/${productId}.jpg`; // Adjust this logic based on how images are stored
+        try {
+            const images = await FileService.getImagesByProductoId(productId);
+            if (images && images.length > 0) {
+                return `http://192.168.99.40:8080${images[0].url}`;
+            }
+            return './img/placeholder.png';
+        } catch (error) {
+            console.warn(`No se pudieron cargar las imágenes para el producto ${productId}:`, error);
+            return './img/placeholder.png';
+        }
     },
 
     getPedidoDetalheView(pedido, lang = 'pt') {
@@ -210,7 +220,7 @@ const PedidoView = {
                             ${pedido.lineas && pedido.lineas.length > 0 ? pedido.lineas.map(item => `
                                 <div class="order-item-card card mb-3">
                                     <div class="card-body d-flex align-items-center">
-                                        <img src="${this.getProductImageSrc(item.productoId)}" alt="Imagen de ${item.nombreProducto || 'N/A'}" class="order-item-image me-3" onerror="this.onerror=null; this.src='./img/placeholder.png';">
+                                        <img src="${item.imageSrc || './img/placeholder.png'}" alt="Imagen de ${item.nombreProducto || 'N/A'}" class="order-item-image me-3" onerror="this.onerror=null; this.src='./img/placeholder.png';">
                                         <div class="order-item-details">
                                             <h6 class="order-item-title mb-1">
                                                 <a href="#" class="producto-link" data-producto-id="${item.productoId}">${item.nombreProducto || 'N/A'}</a>
@@ -361,7 +371,7 @@ const PedidoView = {
     renderPedidoDetalhe(containerId, pedido, lang = 'pt') {
         const container = document.getElementById(containerId);
         if (!container) {
-            console.error(`Contêiner não encontrado com ID: ${containerId}`);
+            console.error(`Contêiner não encontrado con ID: ${containerId}`);
             return;
         }
         container.innerHTML = this.getPedidoDetalheView(pedido, lang);

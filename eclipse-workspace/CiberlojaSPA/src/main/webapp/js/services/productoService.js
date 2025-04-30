@@ -122,7 +122,7 @@ const ProductoService = {
 				throw new Error("El objeto productoData debe contener un ID válido");
 			}
 
-			const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/producto/update/${productoData.id}`, {
+			const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/producto/update/${productoData.id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',

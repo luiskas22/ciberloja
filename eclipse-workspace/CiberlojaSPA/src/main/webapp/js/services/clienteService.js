@@ -50,7 +50,7 @@ const ClienteService = {
 				throw new Error("El objeto clienteData debe contener un ID válido");
 			}
 
-			const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/cliente/update`, {
+			const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/cliente/update`, {
 				method: 'POST', // El endpoint usa POST según tu definición en ClienteResource
 				headers: {
 					'Content-Type': 'application/json',

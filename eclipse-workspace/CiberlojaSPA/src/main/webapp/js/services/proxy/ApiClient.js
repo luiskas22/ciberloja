@@ -32,9 +32,9 @@ export default class ApiClient {
         /**
          * The base URL against which to resolve every API call's (relative) path.
          * @type {String}
-         * @default http://192.168.99.41:8080/ciberloja-rest-api/
+         * @default http://192.168.99.40:8080/ciberloja-rest-api/
          */
-        this.basePath = 'http://192.168.99.41:8080/ciberloja-rest-api/'.replace(/\/+$/, '');
+        this.basePath = 'http://192.168.99.40:8080/ciberloja-rest-api/'.replace(/\/+$/, '');
 
         /**
          * The authentication methods to be included for all API calls.

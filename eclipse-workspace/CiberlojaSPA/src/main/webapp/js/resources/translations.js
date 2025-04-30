@@ -4,6 +4,7 @@ const translations = {
         nav: {
             home: "Inicio",
             addProducts: "Añadir Productos",
+            products: "Productos",
             searchProducts: "Buscar Productos",
             searchOrders: "Buscar Pedidos",
             myAccount: "Mi Cuenta",
@@ -60,7 +61,7 @@ const translations = {
             },
             services: {
                 title: "Nuestros servicios",
-                address: "Rua João Bento Padilha Edifício do, Loja U, 4795-076 Vila das Aves",
+                address: "Rua João Bento Padilha Edifício Bom Nome, Loja U, 4795-076 Vila das Aves",
                 location: "Vila das Aves, Portugal",
             },
             social: {
@@ -77,7 +78,7 @@ const translations = {
             hours: "Horario de Atención: Lunes a Viernes, 9:00-12:30 y 14:30-19:00",
             locationTitle: "Nuestra Ubicación",
             locationDescription: "Estamos ubicados en el corazón de Vila das Aves, Portugal. Visítenos en:",
-            address: "Dirección: Rua João Bento Padilha, Edifício do, Tienda U, 4795-076 Vila das Aves, Portugal",
+            address: "Dirección: Rua João Bento Padilha, Edifício Bom Nome, Tienda U, 4795-076 Vila das Aves, Portugal",
             mapLink: "Ver en Google Maps",
         },
         services: {
@@ -156,7 +157,10 @@ const translations = {
             employee: "Empleado",
             login: "Iniciar Sesión",
             register: "Registrar",
-            logout: "Cerrar Sesión"
+            logout: "Cerrar Sesión",
+            forgot_password: "Recuperar contraseña",
+            email_placeholder2: "Ingrese su email",
+            forgot_password_button: "Enviar enlace de recuperación",
         },
         productos: {
             search: {
@@ -339,6 +343,7 @@ const translations = {
         nav: {
             home: "Início",
             addProducts: "Adicionar Produtos",
+            products: "Produtos",
             searchProducts: "Procurar Produtos",
             searchOrders: "Procurar Pedidos",
             myAccount: "Minha Conta",
@@ -395,7 +400,7 @@ const translations = {
             },
             services: {
                 title: "Os nossos serviços",
-                address: "Rua João Bento Padilha Edifício do, Loja U, 4795-076 Vila das Aves",
+                address: "Rua João Bento Padilha Edifício Bom Nome, Loja U, 4795-076 Vila das Aves",
                 location: "Vila das Aves, Portugal",
             },
             social: {
@@ -412,7 +417,7 @@ const translations = {
             hours: "Horário de Atendimento: Segunda a Sexta, 9:00-12:30 e 14:30-19:00",
             locationTitle: "A Nossa Localização",
             locationDescription: "Estamos localizados no coração de Vila das Aves, Portugal. Visite-nos em:",
-            address: "Endereço: Rua João Bento Padilha, Edifício do, Loja U, 4795-076 Vila das Aves, Portugal",
+            address: "Endereço: Rua João Bento Padilha, Edifício Bom Nome, Loja U, 4795-076 Vila das Aves, Portugal",
             mapLink: "Ver no Google Maps",
         },
         services: {
@@ -461,7 +466,11 @@ const translations = {
             employee: "Funcionário",
             login: "Iniciar Sessão",
             register: "Registar",
-            logout: "Terminar Sessão"
+            logout: "Terminar Sessão",
+            forgot_password: "Recuperar palavra-passe",
+            email:"Email",
+            email_placeholder2: "Insira o seu email",
+            forgot_password_button: "Enviar link de recuperação",
         },
         alerts: {
             employeeOnlyCreate: "Apenas os funcionários podem criar produtos.",
@@ -675,6 +684,7 @@ const translations = {
         nav: {
             home: "Home",
             addProducts: "Add Products",
+            products: "Products",
             searchProducts: "Search Products",
             searchOrders: "Search Orders",
             myAccount: "My Account",
@@ -748,7 +758,7 @@ const translations = {
             },
             services: {
                 title: "Our Services",
-                address: "Rua João Bento Padilha Edifício do, Loja U, 4795-076 Vila das Aves",
+                address: "Rua João Bento Padilha Edifício Bom Nome, Loja U, 4795-076 Vila das Aves",
                 location: "Vila das Aves, Portugal",
             },
             social: {
@@ -765,7 +775,7 @@ const translations = {
             hours: "Business Hours: Monday to Friday, 9:00-12:30 and 14:30-19:00",
             locationTitle: "Our Location",
             locationDescription: "We’re located in the heart of Vila das Aves, Portugal. Visit us at:",
-            address: "Address: Rua João Bento Padilha, Edifício do, Store U, 4795-076 Vila das Aves, Portugal",
+            address: "Address: Rua João Bento Padilha, Edifício Bom Nome, Store U, 4795-076 Vila das Aves, Portugal",
             mapLink: "View on Google Maps",
         },
         services: {
@@ -844,7 +854,11 @@ const translations = {
             employee: "Employee",
             login: "Log In",
             register: "Register",
-            logout: "Log Out"
+            logout: "Log Out",
+            forgot_password: "Recover Password",
+            email:"Email",
+            email_placeholder2: "Enter your email",
+            forgot_password_button: "Send Recovery Link",
         },
         productos: {
             search: {

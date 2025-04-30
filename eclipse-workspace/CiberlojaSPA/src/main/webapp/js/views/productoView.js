@@ -327,7 +327,7 @@ const ProductoView = {
             <div class="col-md-6">
               <div class="product-detail-image-container">
                 ${producto.images && producto.images.length > 0 ? `
-                  <img src="http://192.168.99.41:8080${producto.images[0].url}" 
+                  <img src="http://192.168.99.40:8080${producto.images[0].url}" 
                        alt="${nombre}" 
                        class="product-detail-image"
                        onerror="this.onerror=null; this.src='./img/placeholder.png'; console.error('Error loading image: ${producto.images[0].url}');">
@@ -532,7 +532,7 @@ const ProductoView = {
           <div class="product-card h-100">
             <div class="product-image-container">
               ${producto.images && producto.images.length > 0 ? `
-                <img src="http://192.168.99.41:8080${producto.images[0].url}" 
+                <img src="http://192.168.99.40:8080${producto.images[0].url}" 
                      alt="${nombre}" 
                      class="product-image"
                      onerror="this.onerror=null; this.src='./img/placeholder.png'; console.error('Error loading image: ${producto.images[0].url}');">

@@ -4,7 +4,7 @@ const FileService = {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/file/upload/producto/${productoId}`, {
+            const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/file/upload/producto/${productoId}`, {
                 method: 'POST',
                 body: formData,
             });
@@ -25,7 +25,7 @@ const FileService = {
 
     async getImagesByProductoId(productoId) {
         try {
-            const url = `http://192.168.99.41:8080/ciberloja-rest-api/api/file/producto/${productoId}`;
+            const url = `http://192.168.99.40:8080/ciberloja-rest-api/api/file/producto/${productoId}`;
             console.log(`Obteniendo imágenes para producto ${productoId} desde: ${url}`);
 
             const response = await fetch(url, {

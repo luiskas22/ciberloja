@@ -58,7 +58,7 @@ const PedidoService = {
 				throw new Error("El objeto pedidoData debe contener un clienteId válido");
 			}
 
-			const response = await fetch('http://192.168.99.41:8080/ciberloja-rest-api/api/pedido/create', {
+			const response = await fetch('http://192.168.99.40:8080/ciberloja-rest-api/api/pedido/create', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const PedidoService = {
 		if (criteria.productoId) queryParams.append("productoId", criteria.productoId);
 		if (criteria.descripcion) queryParams.append("descripcion", criteria.descripcion);
 
-		const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/pedido/pedidos?${queryParams.toString()}`, {
+		const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/pedido/pedidos?${queryParams.toString()}`, {
 			method: 'GET',
 			headers: { 'Content-Type': 'application/json' },
 		});
@@ -112,7 +112,7 @@ const PedidoService = {
 				throw new Error("El pedido debe contener id, clienteId y tipoEstadoPedidoId válidos");
 			}
 
-			const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/pedido/update`, {
+			const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/pedido/update`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',

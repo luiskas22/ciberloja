@@ -49,7 +49,7 @@ const DireccionService = {
 
 			try {
 				// Use fetch API for consistency with updateDireccion method
-				fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/direccion/create`, {
+				fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/direccion/create`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const DireccionService = {
 				throw new Error("La dirección debe contener id, nombreVia, dirVia y localidadId válidos");
 			}
 
-			const response = await fetch(`http://192.168.99.41:8080/ciberloja-rest-api/api/direccion/update`, {
+			const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/direccion/update`, {
 				method: 'PUT', // El endpoint usa PUT según la anotación en el recurso
 				headers: {
 					'Content-Type': 'application/json',

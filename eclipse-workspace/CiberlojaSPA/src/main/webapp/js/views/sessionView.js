@@ -1,8 +1,7 @@
-import Translations from '../resources/translations.js'; // Adjust the path as needed
+import Translations from '../resources/translations.js';
 
 const SessionView = {
     getLoginForm(lang = 'pt') {
-        // Access translations safely
         let t = {};
         try {
             t = Translations[lang]?.session || {};
@@ -26,6 +25,9 @@ const SessionView = {
                                placeholder="${t.password_placeholder || 'Insira a sua palavra-passe'}" required>
                     </div>
                 </div>
+                <div class="mt-3 text-end">
+                    <a href="#" id="forgotPasswordLink" data-i18n="session.forgot_password">${t.forgot_password || 'Esqueceu-se da palavra-passe?'}</a>
+                </div>
                 <div class="mt-4 text-center">
                     <button type="submit" class="btn btn-primary" data-i18n="session.login_button">${t.login_button || 'Entrar'}</button>
                 </div>
@@ -35,8 +37,68 @@ const SessionView = {
         `;
     },
 
+    getForgotPasswordForm(lang = 'pt') {
+        let t = {};
+        try {
+            t = Translations[lang]?.session || {};
+        } catch (e) {
+            console.warn('Translation not available:', e);
+        }
+
+        return `
+        <div class="container mt-4">
+            <h2 class="mb-4 text-center" data-i18n="session.forgot_password_title">${t.forgot_password_title || 'Recuperar Palavra-passe'}</h2>
+            <form id="forgotPasswordForm" class="bg-light p-4 rounded shadow-sm">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="forgotPasswordEmail" class="form-label" data-i18n="session.email">${t.email || 'Email'}</label>
+                        <input type="email" id="forgotPasswordEmail" class="form-control" 
+                               placeholder="${t.email_placeholder2 || 'Insira o seu email'}" required>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary" data-i18n="session.forgot_password_button">${t.forgot_password_button || 'Enviar Link de Recuperação'}</button>
+                </div>
+            </form>
+            <div id="forgotPasswordResults" class="mt-4"></div>
+        </div>
+        `;
+    },
+
+    getChangePasswordForm(lang = 'pt', { token, clientId } = {}) {
+        let t = {};
+        try {
+            t = Translations[lang]?.session || {};
+        } catch (e) {
+            console.warn('Translation not available:', e);
+        }
+
+        return `
+        <div class="container mt-4">
+            <h2 class="mb-4 text-center" data-i18n="session.change_password_title">${t.change_password_title || 'Alterar Palavra-passe'}</h2>
+            <form id="changePasswordForm" class="bg-light p-4 rounded shadow-sm" data-token="${token || ''}" data-client-id="${clientId || ''}">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label for="newPassword" class="form-label" data-i18n="session.new_password">${t.new_password || 'Nova Palavra-passe'}</label>
+                        <input type="password" id="newPassword" class="form-control" 
+                               placeholder="${t.new_password_placeholder || 'Insira a nova palavra-passe'}" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="confirmPassword" class="form-label" data-i18n="session.confirm_password">${t.confirm_password || 'Confirmar Palavra-passe'}</label>
+                        <input type="password" id="confirmPassword" class="form-control" 
+                               placeholder="${t.confirm_password_placeholder || 'Confirme a nova palavra-passe'}" required>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary" data-i18n="session.change_password_button">${t.change_password_button || 'Alterar Palavra-passe'}</button>
+                </div>
+            </form>
+            <div id="changePasswordResults" class="mt-4"></div>
+        </div>
+        `;
+    },
+
     getRegisterForm(lang = 'pt') {
-        // Access translations safely
         let t = {};
         try {
             t = Translations[lang]?.session || {};
@@ -99,7 +161,7 @@ const SessionView = {
         `;
     },
 
-    render(containerId, type, lang = 'pt') {
+    render(containerId, type, lang = 'pt', data = {}) {
         const container = document.getElementById(containerId);
         if (!container) {
             console.error(`Contenedor não encontrado com ID: ${containerId}`);
@@ -110,6 +172,10 @@ const SessionView = {
             container.innerHTML = this.getLoginForm(lang);
         } else if (type === "register") {
             container.innerHTML = this.getRegisterForm(lang);
+        } else if (type === "forgot_password") {
+            container.innerHTML = this.getForgotPasswordForm(lang);
+        } else if (type === "change_password") {
+            container.innerHTML = this.getChangePasswordForm(lang, data);
         }
     },
 
@@ -129,6 +195,50 @@ const SessionView = {
         if (resultsContainer) {
             resultsContainer.innerHTML = `
                 <div class="alert alert-danger" role="alert" data-i18n="session.login_error">
+                    ${message}
+                </div>
+            `;
+        }
+    },
+
+    renderForgotPasswordSuccess(message, lang = 'pt') {
+        const resultsContainer = document.getElementById("forgotPasswordResults");
+        if (resultsContainer) {
+            resultsContainer.innerHTML = `
+                <div class="alert alert-success" role="alert" data-i18n="session.forgot_password_success">
+                    ${message}
+                </div>
+            `;
+        }
+    },
+
+    renderForgotPasswordError(message, lang = 'pt') {
+        const resultsContainer = document.getElementById("forgotPasswordResults");
+        if (resultsContainer) {
+            resultsContainer.innerHTML = `
+                <div class="alert alert-danger" role="alert" data-i18n="session.forgot_password_error">
+                    ${message}
+                </div>
+            `;
+        }
+    },
+
+    renderChangePasswordSuccess(message, lang = 'pt') {
+        const resultsContainer = document.getElementById("changePasswordResults");
+        if (resultsContainer) {
+            resultsContainer.innerHTML = `
+                <div class="alert alert-success" role="alert" data-i18n="session.change_password_success">
+                    ${message}
+                </div>
+            `;
+        }
+    },
+
+    renderChangePasswordError(message, lang = 'pt') {
+        const resultsContainer = document.getElementById("changePasswordResults");
+        if (resultsContainer) {
+            resultsContainer.innerHTML = `
+                <div class="alert alert-danger" role="alert" data-i18n="session.change_password_error">
                     ${message}
                 </div>
             `;

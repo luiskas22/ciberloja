@@ -62,99 +62,99 @@ import DefaultApi from './api/DefaultApi.js';
 * @version 1.0
 */
 export {
-	/**
-	 * The ApiClient constructor.
-	 * @property {module:ApiClient}
-	 */
-	ApiClient,
+    /**
+     * The ApiClient constructor.
+     * @property {module:ApiClient}
+     */
+    ApiClient,
 
-	/**
-	 * The ClienteDTO model constructor.
-	 * @property {module:model/ClienteDTO}
-	 */
-	ClienteDTO,
+    /**
+     * The ClienteDTO model constructor.
+     * @property {module:model/ClienteDTO}
+     */
+    ClienteDTO,
 
-	/**
-	 * The ClienteRegistrarBody model constructor.
-	 * @property {module:model/ClienteRegistrarBody}
-	 */
-	ClienteRegistrarBody,
+    /**
+     * The ClienteRegistrarBody model constructor.
+     * @property {module:model/ClienteRegistrarBody}
+     */
+    ClienteRegistrarBody,
 
-	/**
-	 * The DireccionDTO model constructor.
-	 * @property {module:model/DireccionDTO}
-	 */
-	DireccionDTO,
+    /**
+     * The DireccionDTO model constructor.
+     * @property {module:model/DireccionDTO}
+     */
+    DireccionDTO,
 
-	/**
-	 * The EmpleadoDTO model constructor.
-	 * @property {module:model/EmpleadoDTO}
-	 */
-	EmpleadoDTO,
+    /**
+     * The EmpleadoDTO model constructor.
+     * @property {module:model/EmpleadoDTO}
+     */
+    EmpleadoDTO,
 
-	/**
-	 * The FormDataContentDisposition model constructor.
-	 * @property {module:model/FormDataContentDisposition}
-	 */
-	FormDataContentDisposition,
+    /**
+     * The FormDataContentDisposition model constructor.
+     * @property {module:model/FormDataContentDisposition}
+     */
+    FormDataContentDisposition,
 
-	/**
-	 * The LineaPedido model constructor.
-	 * @property {module:model/LineaPedido}
-	 */
-	LineaPedido,
+    /**
+     * The LineaPedido model constructor.
+     * @property {module:model/LineaPedido}
+     */
+    LineaPedido,
 
-	/**
-	 * The Localidad model constructor.
-	 * @property {module:model/Localidad}
-	 */
-	Localidad,
+    /**
+     * The Localidad model constructor.
+     * @property {module:model/Localidad}
+     */
+    Localidad,
 
-	/**
-	 * The Pais model constructor.
-	 * @property {module:model/Pais}
-	 */
-	Pais,
+    /**
+     * The Pais model constructor.
+     * @property {module:model/Pais}
+     */
+    Pais,
 
-	/**
-	 * The Pedido model constructor.
-	 * @property {module:model/Pedido}
-	 */
-	Pedido,
+    /**
+     * The Pedido model constructor.
+     * @property {module:model/Pedido}
+     */
+    Pedido,
 
-	/**
-	 * The ProductoCreateBody model constructor.
-	 * @property {module:model/ProductoCreateBody}
-	 */
-	ProductoCreateBody,
+    /**
+     * The ProductoCreateBody model constructor.
+     * @property {module:model/ProductoCreateBody}
+     */
+    ProductoCreateBody,
 
-	/**
-	 * The ProductoDTO model constructor.
-	 * @property {module:model/ProductoDTO}
-	 */
-	ProductoDTO,
+    /**
+     * The ProductoDTO model constructor.
+     * @property {module:model/ProductoDTO}
+     */
+    ProductoDTO,
 
-	/**
-	 * The ProductoProductoIdBody model constructor.
-	 * @property {module:model/ProductoProductoIdBody}
-	 */
-	ProductoProductoIdBody,
+    /**
+     * The ProductoProductoIdBody model constructor.
+     * @property {module:model/ProductoProductoIdBody}
+     */
+    ProductoProductoIdBody,
 
-	/**
-	 * The Provincia model constructor.
-	 * @property {module:model/Provincia}
-	 */
-	Provincia,
+    /**
+     * The Provincia model constructor.
+     * @property {module:model/Provincia}
+     */
+    Provincia,
 
-	/**
-	 * The Results model constructor.
-	 * @property {module:model/Results}
-	 */
-	Results,
+    /**
+     * The Results model constructor.
+     * @property {module:model/Results}
+     */
+    Results,
 
-	/**
-	* The DefaultApi service constructor.
-	* @property {module:api/DefaultApi}
-	*/
-	DefaultApi
+    /**
+    * The DefaultApi service constructor.
+    * @property {module:api/DefaultApi}
+    */
+    DefaultApi
 };

@@ -1,16 +1,72 @@
-import SessionView from "../views/sessionView.js"; // Note: Renamed to SessionView to match export
-import SesionService from "../services/sessionService.js";
+import SessionView from "../views/sessionView.js";
+import SessionService from "../services/sessionService.js";
 import App from "../app.js";
 import Translations from '../resources/translations.js';
 
 const SesionController = {
+    // Modificación del método init en SesionController
     init(action, lang = 'pt') {
         console.log(`SesionController.init(${action}, ${lang})...`);
         this.currentLang = lang;
-        if (action === "login") {
-            this.loadLoginForm();
-        } else if (action === "register") {
-            this.loadRegisterForm();
+
+        // Primero verificamos si hay parámetros de restablecimiento de contraseña en el hash
+        if (window.location.hash.includes('reset-password')) {
+            // Extraer parámetros del hash (#/reset-password?token=xxx&id=123)
+            const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+            const token = hashParams.get('token');
+            const clientId = hashParams.get('id');
+
+            if (token && clientId) {
+                console.log(`Detected reset-password in hash with token=${token} and id=${clientId}`);
+                this.loadChangePasswordForm(token, clientId);
+                return;
+            }
+        }
+
+        // Verificar la URL completa (para compatibilidad con otras formas de acceso)
+        const url = new URL(window.location.href);
+        if (url.pathname.includes('/reset-password')) {
+            const token = url.searchParams.get('token');
+            const clientId = url.searchParams.get('id');
+
+            if (token && clientId) {
+                console.log(`Detected reset-password URL with token=${token} and id=${clientId}`);
+                this.loadChangePasswordForm(token, clientId);
+                return;
+            } else {
+                console.warn('Reset password URL missing token or id');
+                this.loadForgotPasswordForm(); // Fallback to forgot password form
+                return;
+            }
+        }
+
+        // Si llegamos aquí, procesamos las acciones normales
+        switch (action) {
+            case "login":
+                this.loadLoginForm();
+                break;
+            case "register":
+                this.loadRegisterForm();
+                break;
+            case "forgot_password":
+                this.loadForgotPasswordForm();
+                break;
+            case "change_password":
+                // Si llegamos por action directamente, no tendremos token ni clientId
+                this.loadChangePasswordForm();
+                break;
+            default:
+                // Si no hay acción específica, intentamos determinar qué mostrar basado en el estado de la sesión
+                const cliente = JSON.parse(sessionStorage.getItem("cliente") || "null");
+                const empleado = JSON.parse(sessionStorage.getItem("empleado") || "null");
+
+                if (cliente || empleado) {
+                    // Si hay un usuario logueado, mostrar página principal
+                    App.showHomeContent();
+                } else {
+                    // Si no hay usuario logueado, mostrar login
+                    this.loadLoginForm();
+                }
         }
     },
 
@@ -22,6 +78,9 @@ const SesionController = {
             mainContainer.addEventListener("click", (event) => {
                 if (event.target.id === "logoutBtn") {
                     this.handleLogout();
+                } else if (event.target.id === "forgotPasswordLink") {
+                    event.preventDefault();
+                    this.loadForgotPasswordForm();
                 }
             });
             mainContainer.hasListener = true;
@@ -38,6 +97,18 @@ const SesionController = {
             registerForm.addEventListener("submit", (event) => this.handleRegister(event));
             registerForm.hasListener = true;
         }
+
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        if (forgotPasswordForm && !forgotPasswordForm.hasListener) {
+            forgotPasswordForm.addEventListener("submit", (event) => this.handleForgotPassword(event));
+            forgotPasswordForm.hasListener = true;
+        }
+
+        const changePasswordForm = document.getElementById("changePasswordForm");
+        if (changePasswordForm && !changePasswordForm.hasListener) {
+            changePasswordForm.addEventListener("submit", (event) => this.handleChangePassword(event));
+            changePasswordForm.hasListener = true;
+        }
     },
 
     loadLoginForm() {
@@ -50,6 +121,36 @@ const SesionController = {
         console.log("Carregando formulário de registo...");
         SessionView.render("pro-inventario", "register", this.currentLang);
         this.setupEvents();
+    },
+
+    loadForgotPasswordForm() {
+        console.log("Carregando formulário de recuperação de palavra-passe...");
+        SessionView.render("pro-inventario", "forgot_password", this.currentLang);
+        this.setupEvents();
+    },
+
+    loadChangePasswordForm(token, clientId) {
+        console.log("Carregando formulário de alteração de palavra-passe...");
+        console.log(`Token: ${token}, ClientId: ${clientId}`);
+
+        // Renderizar el formulario con los parámetros de token y clientId
+        SessionView.render("pro-inventario", "change_password", this.currentLang, { token, clientId });
+
+        // Configurar eventos después de que el DOM se haya actualizado
+        setTimeout(() => {
+            this.setupEvents();
+
+            // Verificar que los valores se han pasado correctamente al formulario
+            const form = document.getElementById("changePasswordForm");
+            if (form) {
+                console.log("Formulario cargado con datos:", {
+                    tokenInForm: form.dataset.token,
+                    clientIdInForm: form.dataset.clientId
+                });
+            } else {
+                console.error("El formulario de cambio de contraseña no se encontró en el DOM");
+            }
+        }, 100);
     },
 
     async handleLogin(event) {
@@ -65,13 +166,12 @@ const SesionController = {
             }
 
             let response;
-            const isNumeric = /^\d+$/.test(emailOrId); // Check if it's a number (employee ID)
+            const isNumeric = /^\d+$/.test(emailOrId);
 
             if (isNumeric) {
-                // Employee login using ID and password
                 const credentials = { id: emailOrId, password };
                 console.log("Credenciais de funcionário a enviar:", credentials);
-                response = await SesionService.loginEmpleado(credentials);
+                response = await SessionService.loginEmpleado(credentials);
 
                 if (!response || Object.keys(response).length === 0) {
                     throw new Error(Translations[this.currentLang].alerts.employee_login_failed || "Autenticação de funcionário falhou: Dados inválidos recebidos.");
@@ -79,20 +179,17 @@ const SesionController = {
 
                 console.log("Resposta do servidor (funcionário):", response);
 
-                // Ensure employee has rol_id = 2
                 if (response.rol_id !== 2) {
                     console.warn("O funcionário não tem rol_id = 2, forçando valor");
                     response.rol_id = 2;
                 }
 
-                // Store employee data in sessionStorage
                 sessionStorage.setItem("empleado", JSON.stringify(response));
                 sessionStorage.removeItem("cliente");
             } else if (emailOrId.includes("@")) {
-                // Client login using email and password
                 const credentials = { username: emailOrId, password };
                 console.log("Credenciais de cliente a enviar:", credentials);
-                response = await SesionService.login(credentials);
+                response = await SessionService.login(credentials);
 
                 if (!response || Object.keys(response).length === 0) {
                     throw new Error(Translations[this.currentLang].alerts.client_login_failed || "Autenticação de cliente falhou: Dados inválidos recebidos.");
@@ -100,29 +197,24 @@ const SesionController = {
 
                 console.log("Resposta do servidor (cliente):", response);
 
-                // Ensure client has rol_id = 1
                 if (response.rol_id !== 1) {
                     console.warn("O cliente não tem rol_id = 1, forçando valor");
                     response.rol_id = 1;
                 }
 
-                // Store client data in sessionStorage
                 sessionStorage.setItem("cliente", JSON.stringify(response));
                 sessionStorage.removeItem("empleado");
             } else {
                 throw new Error(Translations[this.currentLang].alerts.invalid_email_or_id || "Por favor, insira um email válido ou um ID numérico.");
             }
 
-            // Show success message
             const welcomeMessage = isNumeric
                 ? Translations[this.currentLang].alerts.employee_login_success || "Login bem-sucedido! Bem-vindo, funcionário."
                 : Translations[this.currentLang].alerts.client_login_success || "Login bem-sucedido! Bem-vindo, cliente.";
             SessionView.renderLoginSuccess(welcomeMessage, this.currentLang);
 
-            // Notify App of successful login and sync state
             App.onLoginSuccess(response);
 
-            // Redirect to home after a delay
             setTimeout(() => {
                 App.showHomeContent();
             }, 1500);
@@ -157,7 +249,7 @@ const SesionController = {
 
             console.log("Dados a enviar:", registerData);
 
-            const response = await SesionService.registrar(registerData);
+            const response = await SessionService.registrar(registerData);
             console.log("Resposta do servidor:", response);
 
             SessionView.renderRegisterSuccess(
@@ -166,7 +258,6 @@ const SesionController = {
             );
             document.getElementById("registerForm").reset();
 
-            // Redirect to login form after a delay
             setTimeout(() => {
                 this.loadLoginForm();
             }, 1500);
@@ -179,13 +270,93 @@ const SesionController = {
         }
     },
 
+    async handleForgotPassword(event) {
+        event.preventDefault();
+        console.log("SesionController.handleForgotPassword()...");
+
+        try {
+            const email = document.getElementById("forgotPasswordEmail")?.value.trim() || "";
+
+            if (!email) {
+                throw new Error(Translations[this.currentLang].alerts.missing_email || "Por favor, insira o seu email.");
+            }
+
+            if (!email.includes("@")) {
+                throw new Error(Translations[this.currentLang].alerts.invalid_email || "Por favor, insira um email válido.");
+            }
+
+            console.log("Enviando solicitação de recuperação para:", email);
+
+            const response = await SessionService.forgotPassword(email);
+            console.log("Resposta do servidor:", response);
+
+            SessionView.renderForgotPasswordSuccess(
+                Translations[this.currentLang].alerts.forgot_password_success || "Um link de recuperação foi enviado para o seu email.",
+                this.currentLang
+            );
+
+            setTimeout(() => {
+                this.loadLoginForm();
+            }, 2000);
+        } catch (error) {
+            console.error("Erro ao solicitar recuperação de palavra-passe:", error);
+            SessionView.renderForgotPasswordError(
+                error.message || Translations[this.currentLang].alerts.forgot_password_error || "Erro ao processar a solicitação de recuperação.",
+                this.currentLang
+            );
+        }
+    },
+
+    async handleChangePassword(event) {
+        event.preventDefault();
+        console.log("SesionController.handleChangePassword()...");
+
+        try {
+            const newPassword = document.getElementById("newPassword")?.value.trim() || "";
+            const confirmPassword = document.getElementById("confirmPassword")?.value.trim() || "";
+            const form = document.getElementById("changePasswordForm");
+            const token = form?.dataset.token || "";
+            const clientId = form?.dataset.clientId || "";
+
+            // Validaciones
+            if (!newPassword || !confirmPassword) {
+                throw new Error(Translations[this.currentLang].alerts.missing_password_fields || "Por favor, preencha ambos os campos de palavra-passe.");
+            }
+
+            if (newPassword !== confirmPassword) {
+                throw new Error(Translations[this.currentLang].alerts.password_mismatch || "As palavras-passe não coincidem.");
+            }
+
+            if (!token || !clientId) {
+                throw new Error(Translations[this.currentLang].alerts.missing_token_or_id || "Token ou ID de cliente inválido ou ausente.");
+            }
+
+            console.log("Solicitando cambio de contraseña al servicio...");
+            const response = await SessionService.resetPassword(token, clientId, newPassword);
+            console.log("Respuesta del servicio:", response);
+
+            SessionView.renderChangePasswordSuccess(
+                Translations[this.currentLang].alerts.change_password_success || "Palavra-passe alterada com sucesso! Pode iniciar sessão agora.",
+                this.currentLang
+            );
+
+            setTimeout(() => {
+                this.loadLoginForm();
+            }, 2000);
+        } catch (error) {
+            console.error("Error en el controlador al cambiar contraseña:", error);
+            SessionView.renderChangePasswordError(
+                error.message || Translations[this.currentLang].alerts.change_password_error || "Erro ao alterar a palavra-passe.",
+                this.currentLang
+            );
+        }
+    },
+
     handleLogout() {
         console.log("SesionController.handleLogout()...");
 
-        // Delegate logout handling to App for consistency
         App.handleLogout();
 
-        // Show success message
         SessionView.renderLogoutSuccess(
             Translations[this.currentLang].alerts.logout_success || "Sessão terminada com sucesso.",
             this.currentLang

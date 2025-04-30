@@ -66,7 +66,7 @@ const CartView = {
                         ${cart.items.map(item => {
                             const nombre = item.product.nombre || 'N/A';
                             const imageSrc = item.product.images && item.product.images.length > 0
-                                ? `http://192.168.99.41:8080${item.product.images[0].url}`
+                                ? `http://192.168.99.40:8080${item.product.images[0].url}`
                                 : './img/placeholder.png';
                             return `
                                 <tr class="cart-item">
