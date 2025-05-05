@@ -2,7 +2,7 @@ import CartService from "../services/cartService.js";
 import CartView from "../views/cartView.js";
 import ProductoService from "../services/productoService.js";
 import PedidoService from "../services/pedidoService.js";
-import FileService from "../services/fileService.js"; // Import FileService
+import FileService from "../services/fileService.js"; 
 import Translations from '../resources/translations.js';
 
 const CartController = {
