@@ -55,6 +55,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Provincia.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Results.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\Rol.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\SyncRequestDTO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\TipoEmpleado.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\UnidadMedida.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\model\ValueObject.java
@@ -88,3 +89,11 @@ C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\servi
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\ServiceException.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\StockException.java
 C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\service\TipoEmpleadoService.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\GetArtigosCiberlojaSite.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\GetArtigosCiberlojaSiteResponse.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\ObjectFactory.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\package-info.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\SoapServiceIntegration.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\Website.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\WebsiteSoap.java
+C:\Users\Luis\eclipse-workspace\ciberloja\src\main\java\com\luis\ciberloja\soap\WsdlValidator.java

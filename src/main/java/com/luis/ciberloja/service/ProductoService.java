@@ -1,5 +1,7 @@
 package com.luis.ciberloja.service;
 
+import java.util.List;
+
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.model.ProductoCriteria;
 import com.luis.ciberloja.model.ProductoDTO;
@@ -15,5 +17,6 @@ public interface ProductoService {
 	public boolean update(ProductoDTO p) throws DataException;
 
 	public boolean delete(Long id) throws DataException;
+	
 
 }

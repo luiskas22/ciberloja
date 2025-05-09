@@ -13,6 +13,7 @@ com\luis\ciberloja\service\impl\MailServiceImpl$4.class
 com\luis\ciberloja\service\impl\LocalidadServiceImpl.class
 com\luis\ciberloja\dao\CategoriaDAO.class
 com\luis\ciberloja\dao\impl\LineaPedidoDAOImpl.class
+com\luis\ciberloja\model\SyncRequestDTO.class
 com\luis\ciberloja\service\impl\PedidoServiceImpl.class
 com\luis\ciberloja\service\impl\MailServiceImpl$1.class
 com\luis\ciberloja\service\TipoEmpleadoService.class
@@ -24,6 +25,7 @@ com\luis\ciberloja\conf\ConfigurationParametersManager.class
 com\luis\ciberloja\model\ProductoCriteria.class
 com\luis\ciberloja\service\impl\PaisServiceImpl.class
 com\luis\ciberloja\DataException.class
+com\luis\ciberloja\soap\GetArtigosCiberlojaSiteResponse.class
 com\luis\ciberloja\dao\PedidoDAO.class
 com\luis\ciberloja\service\ProductoService.class
 com\luis\ciberloja\dao\TipoEmpleadoDAO.class
@@ -33,10 +35,13 @@ com\luis\ciberloja\service\impl\MailServiceImpl$2.class
 com\luis\ciberloja\dao\impl\PedidoDAOImpl.class
 com\luis\ciberloja\model\Pedido.class
 com\luis\ciberloja\model\Results.class
+com\luis\ciberloja\soap\SoapServiceIntegration.class
 com\luis\ciberloja\model\EstadoPedido.class
 com\luis\ciberloja\service\DireccionService.class
+com\luis\ciberloja\soap\ObjectFactory.class
 com\luis\ciberloja\service\ServiceException.class
 com\luis\ciberloja\model\Provincia.class
+com\luis\ciberloja\soap\package-info.class
 com\luis\ciberloja\service\LineaPedidoService.class
 com\luis\ciberloja\service\PaisService.class
 com\luis\ciberloja\service\impl\EmpleadoServiceImpl.class
@@ -49,6 +54,7 @@ com\luis\ciberloja\dao\LocalidadDAO.class
 com\luis\ciberloja\service\ClienteService.class
 com\luis\ciberloja\model\ClienteDTO.class
 com\luis\ciberloja\dao\PaisDAO.class
+com\luis\ciberloja\soap\Website.class
 com\luis\ciberloja\dao\util\SQLUtils.class
 com\luis\ciberloja\model\TipoEmpleado.class
 com\luis\ciberloja\dao\impl\PasswordResetTokenDAOImpl.class
@@ -65,14 +71,17 @@ com\luis\ciberloja\model\Localidad.class
 com\luis\ciberloja\model\Marca.class
 com\luis\ciberloja\model\Rol.class
 com\luis\ciberloja\service\impl\FileServiceImpl.class
+com\luis\ciberloja\soap\GetArtigosCiberlojaSiteResponse$GetArtigosCiberlojaSiteResult.class
 com\luis\ciberloja\dao\impl\ClienteDAOImpl.class
 com\luis\ciberloja\dao\EmpleadoDAO.class
 com\luis\ciberloja\model\EmpleadoDTO.class
 com\luis\ciberloja\dao\impl\RolDAOImpl.class
 com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.class
 com\luis\ciberloja\service\EstadoPedidoService.class
+com\luis\ciberloja\soap\WebsiteSoap.class
 com\luis\ciberloja\service\EmpleadoService.class
 com\luis\ciberloja\PinguelaException.class
+com\luis\ciberloja\soap\WsdlValidator.class
 com\luis\ciberloja\model\PedidoCriteria.class
 com\luis\ciberloja\model\AbstractValueObject.class
 com\luis\ciberloja\dao\MarcaDAO.class
@@ -90,5 +99,6 @@ com\luis\ciberloja\model\DireccionDTO.class
 com\luis\ciberloja\dao\ProductoDAO.class
 com\luis\ciberloja\conf\TestConnection.class
 com\luis\ciberloja\dao\UnidadMedidaDAO.class
+com\luis\ciberloja\soap\GetArtigosCiberlojaSite.class
 com\luis\ciberloja\dao\impl\ProvinciaDAOImpl.class
 com\luis\ciberloja\dao\impl\LocalidadDAOImpl.class

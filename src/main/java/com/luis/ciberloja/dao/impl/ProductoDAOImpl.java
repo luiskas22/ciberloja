@@ -72,12 +72,8 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 			int i = 1;
 			JDBCUtils.setNullable(pst, i++, p.getNombre()); // Maneja null explícitamente
-			JDBCUtils.setNullable(pst, i++, p.getDescripcion()); // Maneja null explícitamente
 			pst.setDouble(i++, p.getPrecio());
-			pst.setInt(i++, p.getStockDisponible());
-			pst.setLong(i++, p.getIdCategoria());
-			pst.setLong(i++, p.getIdMarca());
-			pst.setLong(i++, p.getIdUnidadMedida());
+			pst.setDouble(i++, p.getStockDisponible());
 
 			int insertedRows = pst.executeUpdate();
 
@@ -88,7 +84,6 @@ public class ProductoDAOImpl implements ProductoDAO {
 			rs = pst.getGeneratedKeys();
 			if (rs.next()) {
 				Long id = rs.getLong(1);
-				p.setId(id);
 				return id; // Eliminamos las llamadas a findAll si no son necesarias
 			} else {
 				throw new DataException("No se pudo obtener el ID del producto insertado");
@@ -161,11 +156,11 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 			int i = 1;
 			// Configura parámetros
-			
+
 			if (criteria.getId() != null) {
 				pst.setLong(i++, criteria.getId());
 			}
-			
+
 			if (criteria.getNombre() != null && !criteria.getNombre().isEmpty()) {
 				pst.setString(i++, "%" + criteria.getNombre().toUpperCase() + "%");
 			}
@@ -229,30 +224,8 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 			int i = 1;
 			pst.setString(i++, p.getNombre());
-			pst.setString(i++, p.getDescripcion());
 			pst.setDouble(i++, p.getPrecio());
-			pst.setInt(i++, p.getStockDisponible());
-
-			// Manejar posibles nulos para referencias
-			if (p.getIdCategoria() != null) {
-				pst.setLong(i++, p.getIdCategoria());
-			} else {
-				pst.setNull(i++, java.sql.Types.BIGINT);
-			}
-
-			if (p.getIdMarca() != null) {
-				pst.setLong(i++, p.getIdMarca());
-			} else {
-				pst.setNull(i++, java.sql.Types.BIGINT);
-			}
-
-			if (p.getIdUnidadMedida() != null) {
-				pst.setLong(i++, p.getIdUnidadMedida());
-			} else {
-				pst.setNull(i++, java.sql.Types.BIGINT);
-			}
-
-			pst.setLong(i++, p.getId());
+			pst.setDouble(i++, p.getStockDisponible());
 
 			int updatedRows = pst.executeUpdate();
 
@@ -307,21 +280,9 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 		ProductoDTO p = new ProductoDTO();
 
-		p.setId(rs.getLong(i++)); // ID
 		p.setNombre(rs.getString(i++)); // NOMBRE
-		p.setDescripcion(rs.getString(i++)); // DESCRIPCION
 		p.setPrecio(rs.getDouble(i++)); // PRECIO
-		p.setStockDisponible(rs.getInt(i++)); // STOCK_DISPONIBLE
-
-		// IDs de categoría, marca, unidad de medida
-		p.setIdCategoria(rs.getLong(i++)); // ID_CATEGORIA
-		p.setNombreCategoria(rs.getString(i++)); // NOMBRE_CATEGORIA
-
-		p.setIdMarca(rs.getLong(i++)); // ID_MARCA
-		p.setNombreMarca(rs.getString(i++)); // NOMBRE_MARCA
-
-		p.setIdUnidadMedida(rs.getLong(i++)); // ID_UNIDAD_MEDIDA
-		p.setNombreUnidadMedida(rs.getString(i++)); // NOMBRE_UNIDAD_MEDIDA
+		p.setStockDisponible(rs.getDouble(i++)); // STOCK_DISPONIBLE
 
 		return p;
 	}

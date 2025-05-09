@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="https://jakarta.ee/xml/ns/jaxb"
+          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+          xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+          xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws"
+          xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb">
+          
+    <jaxws:bindings wsdlLocation="website.wsdl" node="wsdl:definitions">
+        <jaxws:bindings node="wsdl:types/xsd:schema/xsd:element[@name='GetArtigosCiberlojaSiteResponse']/xsd:complexType/xsd:sequence/xsd:element[@name='GetArtigosCiberlojaSiteResult']/xsd:complexType/xsd:sequence">
+            <!-- Mark the first <xsd:any> with a specific property name -->
+            <jaxb:property name="schemaAny" />
+            
+            <!-- Navigate to the second <xsd:any> element -->
+            <jaxws:bindings node="xsd:any[2]">
+                <jaxb:property name="diffgramAny" />
+            </jaxws:bindings>
+        </jaxws:bindings>
+    </jaxws:bindings>
+</bindings>
