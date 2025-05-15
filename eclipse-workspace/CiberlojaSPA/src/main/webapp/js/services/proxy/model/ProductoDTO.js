@@ -40,36 +40,22 @@ export default class ProductoDTO {
     if (data) {
       obj = obj || new ProductoDTO();
       if (data.hasOwnProperty('id'))
-        obj.id = ApiClient.convertToType(data['id'], 'Number');
+        obj.id = ApiClient.convertToType(data['id'], 'String');
       if (data.hasOwnProperty('nombre'))
         obj.nombre = ApiClient.convertToType(data['nombre'], 'String');
-      if (data.hasOwnProperty('descripcion'))
-        obj.descripcion = ApiClient.convertToType(data['descripcion'], 'String');
       if (data.hasOwnProperty('precio'))
         obj.precio = ApiClient.convertToType(data['precio'], 'Number');
       if (data.hasOwnProperty('stockDisponible'))
         obj.stockDisponible = ApiClient.convertToType(data['stockDisponible'], 'Number');
-      if (data.hasOwnProperty('idCategoria'))
-        obj.idCategoria = ApiClient.convertToType(data['idCategoria'], 'Number');
-      if (data.hasOwnProperty('nombreCategoria'))
-        obj.nombreCategoria = ApiClient.convertToType(data['nombreCategoria'], 'String');
-      if (data.hasOwnProperty('idMarca'))
-        obj.idMarca = ApiClient.convertToType(data['idMarca'], 'Number');
-      if (data.hasOwnProperty('nombreMarca'))
-        obj.nombreMarca = ApiClient.convertToType(data['nombreMarca'], 'String');
-      if (data.hasOwnProperty('idUnidadMedida'))
-        obj.idUnidadMedida = ApiClient.convertToType(data['idUnidadMedida'], 'Number');
-      if (data.hasOwnProperty('nombreUnidadMedida'))
-        obj.nombreUnidadMedida = ApiClient.convertToType(data['nombreUnidadMedida'], 'String');
-      if (data.hasOwnProperty('imagenUrl'))
-        obj.imagenUrl = ApiClient.convertToType(data['imagenUrl'], 'String');
+      if (data.hasOwnProperty('familia'))
+        obj.familia = ApiClient.convertToType(data['familia'], 'String');
     }
     return obj;
   }
 }
 
 /**
- * @member {Number} id
+ * @member {String} id
  */
 ProductoDTO.prototype.id = undefined;
 
@@ -77,11 +63,6 @@ ProductoDTO.prototype.id = undefined;
  * @member {String} nombre
  */
 ProductoDTO.prototype.nombre = undefined;
-
-/**
- * @member {String} descripcion
- */
-ProductoDTO.prototype.descripcion = undefined;
 
 /**
  * @member {Number} precio
@@ -94,37 +75,7 @@ ProductoDTO.prototype.precio = undefined;
 ProductoDTO.prototype.stockDisponible = undefined;
 
 /**
- * @member {Number} idCategoria
+ * @member {String} familia
  */
-ProductoDTO.prototype.idCategoria = undefined;
-
-/**
- * @member {String} nombreCategoria
- */
-ProductoDTO.prototype.nombreCategoria = undefined;
-
-/**
- * @member {Number} idMarca
- */
-ProductoDTO.prototype.idMarca = undefined;
-
-/**
- * @member {String} nombreMarca
- */
-ProductoDTO.prototype.nombreMarca = undefined;
-
-/**
- * @member {Number} idUnidadMedida
- */
-ProductoDTO.prototype.idUnidadMedida = undefined;
-
-/**
- * @member {String} nombreUnidadMedida
- */
-ProductoDTO.prototype.nombreUnidadMedida = undefined;
-
-/**
- * @member {String} imagenUrl
- */
-ProductoDTO.prototype.imagenUrl = undefined;
+ProductoDTO.prototype.familia = undefined;
 

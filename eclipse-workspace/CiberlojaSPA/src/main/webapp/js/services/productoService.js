@@ -143,7 +143,95 @@ const ProductoService = {
 			throw new Error(`Error al actualizar el producto: ${error.message}`);
 		}
 	},
+	/**
+		 * Busca todos los productos usando el endpoint SOAP.
+		 * @param {Object} credentials - Credenciales para la autenticación SOAP.
+		 * @returns {Promise<Object>} Promesa que resuelve con los datos de los productos encontrados.
+		 */
+	async findByProductosSOAP(credentials, filters = {}) {
+		try {
+			const { nombre, precioMin, precioMax, stockMin, stockMax } = filters;
+			const queryParams = new URLSearchParams({
+				empresa: credentials.empresa || 'ciberloja',
+				utilizador: credentials.utilizador || 'website',
+				password: credentials.password || 'Website2025*',
+				descricao: nombre || '',
+				PVP3Min: precioMin || '',
+				PVP3Max: precioMax || '',
+				StockMin: stockMin || '',
+				StockMax: stockMax || '',
 
+			});
+
+			const url = `http://192.168.99.40:8080/ciberloja-rest-api/api/producto/sync-soap?${queryParams}`;
+
+			console.log("Enviando petición a:", url);
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`Error al buscar productos SOAP: ${response.status} - ${errorText}`);
+			}
+
+			const data = await response.json();
+			console.log("Productos SOAP encontrados:", data);
+
+			// Asegura que la respuesta tenga el formato esperado
+			return {
+				page: data.page || [],
+				totalElements: data.total || 0
+			};
+		} catch (error) {
+			console.error("Error al buscar productos SOAP:", error);
+			throw new Error(`Error al buscar productos SOAP: ${error.message}`);
+		}
+	},
+
+	async findByIdSOAP(credentials, id) {
+		try {
+			const queryParams = new URLSearchParams({
+				empresa: credentials.empresa || 'ciberloja',
+				utilizador: credentials.utilizador || 'website',
+				password: credentials.password || 'Website2025*',
+				id: id || '',
+			});
+
+			const url = `http://192.168.99.40:8080/ciberloja-rest-api/api/producto/sync-soap/findById?${queryParams}`;
+
+			console.log("Enviando petición a:", url);
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`Error al buscar producto por ID SOAP: ${response.status} - ${errorText}`);
+			}
+
+			const producto = await response.json();
+			console.log("Producto SOAP encontrado:", producto);
+
+			// Verifica que la respuesta sea un producto válido
+			if (!producto || !producto.id) {
+				throw new Error("Producto no encontrado o respuesta inválida");
+			}
+
+			return producto; // Devuelve el ProductoDTO directamente
+		} catch (error) {
+			console.error("Error al buscar producto por ID SOAP:", error);
+			throw new Error(`Error al buscar producto por ID SOAP: ${error.message}`);
+		}
+	}
 };
 
 export default ProductoService;

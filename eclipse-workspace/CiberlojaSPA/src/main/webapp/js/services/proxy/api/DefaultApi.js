@@ -1003,6 +1003,53 @@ export default class DefaultApi {
       );
     }
     /**
+     * Callback function to receive the result of the findProductoByIdFromSoap operation.
+     * @callback moduleapi/DefaultApi~findProductoByIdFromSoapCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/ProductoDTO{ data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * Buscar un producto por ID
+     * Este endpoint permite buscar un producto específico por su ID desde el sistema.
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.empresa 
+     * @param {String} opts.utilizador 
+     * @param {String} opts.password 
+     * @param {String} opts.id 
+     * @param {module:api/DefaultApi~findProductoByIdFromSoapCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+     */
+    findProductoByIdFromSoap(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        'empresa': opts['empresa'],'utilizador': opts['utilizador'],'password': opts['password'],'id': opts['id']
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = ProductoDTO;
+
+      return this.apiClient.callApi(
+        '/api/producto/sync-soap/findById', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
      * Callback function to receive the result of the findProductosByCriteria operation.
      * @callback moduleapi/DefaultApi~findProductosByCriteriaCallback
      * @param {String} error Error message, if any.
@@ -1200,7 +1247,7 @@ export default class DefaultApi {
     /**
      * Servir imagen de producto
      * Devuelve el archivo de imagen para un producto específico.
-     * @param {Number} productoId ID del producto
+     * @param {String} productoId ID del producto
      * @param {String} fileName Nombre del archivo de imagen
      * @param {module:api/DefaultApi~getImageFileCallback} callback The callback function, accepting three arguments: error, data, response
      */
@@ -1251,7 +1298,7 @@ export default class DefaultApi {
     /**
      * Obtener imágenes por ID de producto
      * Recupera la lista de URLs de imágenes asociadas a un producto por su ID.
-     * @param {Number} productoId ID del producto para buscar sus imágenes
+     * @param {String} productoId ID del producto para buscar sus imágenes
      * @param {module:api/DefaultApi~getImagesByProductoIdCallback} callback The callback function, accepting three arguments: error, data, response
      */
     getImagesByProductoId(productoId, callback) {
@@ -1415,6 +1462,57 @@ export default class DefaultApi {
 
       return this.apiClient.callApi(
         '/api/cliente/reset-password', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
+     * Callback function to receive the result of the syncProductosFromSoap operation.
+     * @callback moduleapi/DefaultApi~syncProductosFromSoapCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/Results{ data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * Buscar un producto
+     * Este endpoint permite buscar un producto del sistema 
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.empresa 
+     * @param {String} opts.utilizador 
+     * @param {String} opts.password 
+     * @param {String} opts.descricao 
+     * @param {Number} opts.pVP3Min 
+     * @param {Number} opts.pVP3Max 
+     * @param {Number} opts.stockMin 
+     * @param {Number} opts.stockMax 
+     * @param {module:api/DefaultApi~syncProductosFromSoapCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+     */
+    syncProductosFromSoap(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        'empresa': opts['empresa'],'utilizador': opts['utilizador'],'password': opts['password'],'descricao': opts['descricao'],'PVP3Min': opts['pVP3Min'],'PVP3Max': opts['pVP3Max'],'StockMin': opts['stockMin'],'StockMax': opts['stockMax']
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = Results;
+
+      return this.apiClient.callApi(
+        '/api/producto/sync-soap', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
@@ -1614,7 +1712,7 @@ export default class DefaultApi {
     /**
      * Subir una imagen para un producto
      * Sube una imagen asociada a un producto específico usando su ID.
-     * @param {Number} productoId ID del producto al que se subirá la imagen
+     * @param {String} productoId ID del producto al que se subirá la imagen
      * @param {Object} opts Optional parameters
      * @param {module:model/FormDataContentDisposition} opts.file 
      * @param {module:api/DefaultApi~uploadImageCallback} callback The callback function, accepting three arguments: error, data, response

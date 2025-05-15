@@ -1,391 +1,417 @@
 import ProductoView from "../views/productoView.js";
 import ProductoService from "../services/productoService.js";
-import FileService from "../services/fileService.js";
+import FileService from "../services/fileService.js"; // Added for image handling
 import App from "../app.js";
 import Translations from '../resources/translations.js';
 
 function debounce(func, delay) {
-	let timeoutId;
-	return (...args) => {
-		clearTimeout(timeoutId);
-		timeoutId = setTimeout(() => func.apply(null, args), delay);
-	};
+    let timeoutId;
+    return (...args) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(null, args), delay);
+    };
 }
 
 const ProductoController = {
-	previousResults: [],
-	currentPage: 1,
-	itemsPerPage: 10,
-	totalItems: 0,
-	totalPages: 0,
-	currentLang: 'pt', // Idioma por defecto
+    previousResults: [],
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+    currentLang: 'pt', // Idioma por defecto
 
-	init(action, lang = 'pt') {
-		console.log(`ProductoController.init(${action}, ${lang})...`);
-		this.currentLang = lang;
-		this.currentAction = action; // Guardar la acción actual
+    init(action, lang = 'pt') {
+        console.log(`ProductoController.init(${action}, ${lang})...`);
+        this.currentLang = lang;
+        this.currentAction = action;
 
-		if (action === "search") {
-			this.loadProductoSearchForm();
-		} else if (action === "create") {
-			if (App.isEmpleado()) {
-				this.loadProductoAddForm();
-			} else {
-				alert(Translations[lang].alerts.employeeOnlyCreate);
-				this.loadProductoSearchForm();
-			}
-		}
-	},
+        if (action === "search") {
+            this.loadProductoSearchForm();
+        } else if (action === "create") {
+            if (App.isEmpleado()) {
+                this.loadProductoAddForm();
+            } else {
+                alert(Translations[lang].alerts.employeeOnlyCreate);
+                this.loadProductoSearchForm();
+            }
+        }
+    },
 
+    setupEvents() {
+        console.log("ProductoController.setupEvents()...");
+        this.setupSearchInputs();
 
+        document.removeEventListener("click", this.handleDocumentClick);
+        this.handleDocumentClick = this.handleDocumentClick.bind(this);
+        document.addEventListener("click", this.handleDocumentClick);
 
-	setupEvents() {
-		console.log("ProductoController.setupEvents()...");
-		this.setupSearchInputs();
+        const createForm = document.getElementById("createProductoForm");
+        if (createForm && !createForm.hasListener && App.isEmpleado()) {
+            createForm.addEventListener("submit", (event) => this.handleAddProducto(event));
+            createForm.hasListener = true;
+        }
 
-		document.removeEventListener("click", this.handleDocumentClick);
-		this.handleDocumentClick = this.handleDocumentClick.bind(this);
-		document.addEventListener("click", this.handleDocumentClick);
+        const updateForm = document.getElementById("updateProductoForm");
+        if (updateForm && !updateForm.hasListener && App.isEmpleado()) {
+            updateForm.addEventListener("submit", (event) => this.handleUpdateProducto(event));
+            updateForm.hasListener = true;
+        }
 
-		const createForm = document.getElementById("createProductoForm");
-		if (createForm && !createForm.hasListener && App.isEmpleado()) {
-			createForm.addEventListener("submit", (event) => this.handleAddProducto(event));
-			createForm.hasListener = true;
-		}
+        const clearButton = document.getElementById("clearSearchForm");
+        if (clearButton && !clearButton.hasListener) {
+            clearButton.addEventListener("click", () => this.clearSearchForm());
+            clearButton.hasListener = true;
+        }
 
-		const clearButton = document.getElementById("clearSearchForm");
-		if (clearButton && !clearButton.hasListener) {
-			clearButton.addEventListener("click", () => this.clearSearchForm());
-			clearButton.hasListener = true;
-		}
-	},
+        const searchForm = document.getElementById("searchProductosForm");
+        if (searchForm && !searchForm.hasListener) {
+            searchForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+                this.handleSearch();
+            });
+            searchForm.hasListener = true;
+        }
+    },
 
-	clearSearchForm() {
-		console.log("ProductoController.clearSearchForm()...");
-		const form = document.getElementById("searchProductosForm");
-		if (form) {
-			form.reset();
-			this.handleSearch();
-		}
-	},
+    clearSearchForm() {
+        console.log("ProductoController.clearSearchForm()...");
+        const form = document.getElementById("searchProductosForm");
+        if (form) {
+            form.reset();
+            this.handleSearch();
+        }
+    },
 
-	handleDocumentClick(event) {
-		const target = event.target;
+    handleDocumentClick(event) {
+        const target = event.target;
 
-		if (target.classList.contains("product-link")) {
-			const productId = target.getAttribute("data-id");
-			const inputs = document.querySelectorAll('#searchProductosForm input, #searchProductosForm select');
-			inputs.forEach(input => {
-				input.dataset.previousValue = input.value;
-			});
-			this.fetchProductoInfo(productId);
-		}
+        if (target.classList.contains("product-link")) {
+            const productId = target.getAttribute("data-id");
+            const inputs = document.querySelectorAll('#searchProductosForm input, #searchProductosForm select');
+            inputs.forEach(input => {
+                input.dataset.previousValue = input.value;
+            });
+            this.fetchProductoInfo(productId);
+        }
 
-		if (target.id === "backToResultsBtn") {
-			event.preventDefault();
-			this.showPreviousResults();
-		}
+        if (target.id === "backToResultsBtn") {
+            event.preventDefault();
+            this.showPreviousResults();
+        }
 
-		if (target.id === "deleteProduct" && App.isEmpleado()) {
-			const productId = target.getAttribute("data-id");
-			this.handleDeleteProduct(productId);
-		}
+        if (target.id === "deleteProduct" && App.isEmpleado()) {
+            const productId = target.getAttribute("data-id");
+            this.handleDeleteProduct(productId);
+        }
 
-		if (target.classList.contains("page-link") || target.parentElement.classList.contains("page-link")) {
-			event.preventDefault();
-			const pageElement = target.classList.contains("page-link") ? target : target.parentElement;
-			const page = parseInt(pageElement.dataset.page);
-			console.log("Navegando a página:", page);
-			if (!isNaN(page)) {
-				this.goToPage(page);
-			}
-		}
-	},
+        if (target.classList.contains("page-link") || target.parentElement.classList.contains("page-link")) {
+            event.preventDefault();
+            const pageElement = target.classList.contains("page-link") ? target : target.parentElement;
+            const page = parseInt(pageElement.dataset.page);
+            console.log("Navegando a página:", page);
+            if (!isNaN(page)) {
+                this.goToPage(page);
+            }
+        }
+    },
 
-	setupSearchInputs() {
-		const inputs = [
-			"idCriteria", "nombreCriteria", "descripcionCriteria",
-			"precioMinCriteria", "precioMaxCriteria", "stockMinCriteria",
-			"stockMaxCriteria", "nombreCategoriaCriteria", "nombreMarcaCriteria",
-			"nombreUnidadMedidaCriteria"
-		];
-		const debouncedSearch = debounce(() => this.handleSearch(), 300);
+    setupSearchInputs() {
+        console.log("ProductoController.setupSearchInputs()...");
+        const inputs = [
+            "nombreCriteria",
+            "precioMinCriteria",
+            "precioMaxCriteria",
+            "stockMinCriteria",
+            "stockMaxCriteria",
+            "empresaCriteria",
+            "utilizadorCriteria",
+            "passwordCriteria"
+        ];
+        const debouncedSearch = debounce(() => this.handleSearch(), 300);
 
-		inputs.forEach(inputId => {
-			const input = document.getElementById(inputId);
-			if (input) {
-				if (input.hasListener) {
-					input.removeEventListener("input", input.listener);
-				}
-				const listener = () => debouncedSearch();
-				input.addEventListener("input", listener);
-				input.hasListener = true;
-				input.listener = listener;
-			}
-		});
-	},
+        inputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                if (input.hasListener) {
+                    input.removeEventListener("input", input.listener);
+                }
+                const listener = () => debouncedSearch();
+                input.addEventListener("input", listener);
+                input.hasListener = true;
+                input.listener = listener;
+            }
+        });
+    },
 
-	showPreviousResults() {
-		const container = document.getElementById("pro-inventario");
-		if (!container) return;
+    showPreviousResults() {
+        const container = document.getElementById("pro-inventario");
+        if (!container) return;
 
-		if (!document.getElementById('searchResults')) {
-			ProductoView.render("pro-inventario", "search", this.currentLang);
-			const inputs = [
-				"idCriteria", "nombreCriteria", "descripcionCriteria",
-				"precioMinCriteria", "precioMaxCriteria", "stockMinCriteria",
-				"stockMaxCriteria", "nombreCategoriaCriteria",
-				"nombreMarcaCriteria", "nombreUnidadMedidaCriteria"
-			];
-			inputs.forEach(inputId => {
-				const input = document.getElementById(inputId);
-				if (input && input.dataset.previousValue) {
-					input.value = input.dataset.previousValue;
-				}
-			});
-			this.setupEvents();
-		}
+        if (!document.getElementById('searchResults')) {
+            ProductoView.render("pro-inventario", "search", this.currentLang);
+            const inputs = [
+                "nombreCriteria",
+                "precioMinCriteria",
+                "precioMaxCriteria",
+                "stockMinCriteria",
+                "stockMaxCriteria",
+                "empresaCriteria",
+                "utilizadorCriteria",
+                "passwordCriteria"
+            ];
+            inputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input && input.dataset.previousValue) {
+                    input.value = input.dataset.previousValue;
+                }
+            });
+            this.setupEvents();
+        }
 
-		if (this.previousResults && this.previousResults.length > 0) {
-			ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
-		} else {
-			this.handleSearch();
-		}
-	},
+        if (this.previousResults && this.previousResults.length > 0) {
+            ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+        } else {
+            this.handleSearch();
+        }
+    },
 
-	loadProductoSearchForm() {
-		console.log("Cargando formulario de búsqueda de productos...");
-		ProductoView.render("pro-inventario", "search", this.currentLang);
-		this.setupEvents();
-		this.handleSearch();
-	},
+    loadProductoSearchForm() {
+        console.log("Cargando formulario de búsqueda de productos...");
+        ProductoView.render("pro-inventario", "search", this.currentLang);
+        this.setupEvents();
+        this.handleSearch();
+    },
 
-	loadProductoAddForm() {
-		console.log("Cargando formulario de creación de productos...");
-		ProductoView.render("pro-inventario", "create", this.currentLang);
-		this.setupEvents();
-	},
+    loadProductoAddForm() {
+        console.log("Cargando formulario de creación de productos...");
+        ProductoView.render("pro-inventario", "create", this.currentLang);
+        this.setupEvents();
+    },
 
-	async handleSearch(page = 1) {
-		console.log(`ProductoController.handleSearch(page: ${page})...`);
-		this.currentPage = page;
+    async handleSearch(page = 1) {
+        console.log(`ProductoController.handleSearch(page: ${page})...`);
+        this.currentPage = page;
 
-		const criteria = {
-			id: document.getElementById("idCriteria")?.value ? Number(document.getElementById("idCriteria").value) : null,
-			nombre: document.getElementById("nombreCriteria")?.value || "",
-			descripcion: document.getElementById("descripcionCriteria")?.value || "",
-			precioMin: document.getElementById("precioMinCriteria")?.value ? Number(document.getElementById("precioMinCriteria").value) : null,
-			precioMax: document.getElementById("precioMaxCriteria")?.value ? Number(document.getElementById("precioMaxCriteria").value) : null,
-			stockMin: document.getElementById("stockMinCriteria")?.value ? Number(document.getElementById("stockMinCriteria").value) : null,
-			stockMax: document.getElementById("stockMaxCriteria")?.value ? Number(document.getElementById("stockMaxCriteria").value) : null,
-			nombreCategoria: document.getElementById("nombreCategoriaCriteria")?.value || "",
-			nombreMarca: document.getElementById("nombreMarcaCriteria")?.value || "",
-			nombreUnidadMedida: document.getElementById("nombreUnidadMedidaCriteria")?.value || "",
-			page: this.currentPage - 1,
-			size: this.itemsPerPage
-		};
+        const filters = {
+            nombre: document.getElementById("nombreCriteria")?.value || "",
+            precioMin: parseFloat(document.getElementById("precioMinCriteria")?.value) || null,
+            precioMax: parseFloat(document.getElementById("precioMaxCriteria")?.value) || null,
+            stockMin: parseInt(document.getElementById("stockMinCriteria")?.value) || null,
+            stockMax: parseInt(document.getElementById("stockMaxCriteria")?.value) || null
+        };
 
-		try {
-			const response = await ProductoService.findByProductosCriteria(criteria);
-			console.log("Respuesta del servicio:", response);
+        const credentials = {
+            empresa: document.getElementById("empresaCriteria")?.value || "ciberloja",
+            utilizador: document.getElementById("utilizadorCriteria")?.value || "website",
+            password: document.getElementById("passwordCriteria")?.value || "Website2025*"
+        };
 
-			if (response && Array.isArray(response.page)) {
-				this.previousResults = response.page;
-				this.totalItems = response.totalElements || response.page.length;
-				this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+        // Basic client-side validation
+        if (filters.precioMin && filters.precioMax && filters.precioMin > filters.precioMax) {
+            alert(Translations[this.currentLang].alerts.invalidPriceRange);
+            return;
+        }
+        if (filters.stockMin && filters.stockMax && filters.stockMin > filters.stockMax) {
+            alert(Translations[this.currentLang].alerts.invalidStockRange);
+            return;
+        }
 
-				for (let producto of this.previousResults) {
-					try {
-						const images = await FileService.getImagesByProductoId(producto.id);
-						producto.images = images || [];
-					} catch (imageError) {
-						console.warn(`No se pudieron cargar las imágenes para el producto ${producto.id}:`, imageError);
-						producto.images = [];
-					}
-				}
+        try {
+            const response = await ProductoService.findByProductosSOAP(credentials, filters);
+            console.log("Respuesta del servicio SOAP:", response);
 
-				const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-				const endIndex = startIndex + this.itemsPerPage;
-				const paginatedResults = this.previousResults.slice(startIndex, endIndex);
+            if (response && Array.isArray(response.page)) {
+                this.previousResults = response.page;
+                this.totalItems = response.total || response.page.length;
+                this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.itemsPerPage);
 
-				ProductoView.renderResults(paginatedResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
-			} else {
-				this.previousResults = [];
-				this.totalItems = 0;
-				this.totalPages = 0;
-				ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
-			}
-		} catch (error) {
-			console.error("Error al buscar productos:", error);
-			this.previousResults = [];
-			this.totalItems = 0;
-			this.totalPages = 0;
-			ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
-		}
-	},
+                // Fetch images for each product
+                for (let producto of this.previousResults) {
+                    try {
+                        const images = await FileService.getImagesByProductoId(producto.id);
+                        producto.images = images || [];
+                    } catch (imageError) {
+                        console.warn(`No se pudieron cargar las imágenes para el producto ${producto.id}:`, imageError);
+                        producto.images = [];
+                    }
+                }
 
-	goToPage(page) {
-		console.log(`ProductoController.goToPage(${page}) - Total páginas: ${this.totalPages}`);
-		if (page >= 1 && page <= this.totalPages) {
-			this.currentPage = page;
-			this.handleSearch(page);
-		}
-	},
+                ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+            } else {
+                this.previousResults = [];
+                this.totalItems = 0;
+                this.totalPages = 0;
+                ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+            }
+        } catch (error) {
+            console.error("Error al buscar productos SOAP:", error);
+            this.previousResults = [];
+            this.totalItems = 0;
+            this.totalPages = 0;
+            ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+            alert(Translations[this.currentLang].alerts.loadProductError + (error.message || ""));
+        }
+    },
 
-	async handleAddProducto(event) {
-		event.preventDefault();
-		if (!App.isEmpleado()) {
-			alert(Translations[this.currentLang].alerts.employeeOnlyCreate);
-			return;
-		}
-		console.log("ProductoController.handleAddProducto()...");
+    goToPage(page) {
+        console.log(`ProductoController.goToPage(${page}) - Total páginas: ${this.totalPages}`);
+        if (page >= 1 && page <= this.totalPages) {
+            this.currentPage = page;
+            this.handleSearch(page);
+        }
+    },
 
-		try {
-			const form = event.target;
-			const formData = new FormData(form);
+    async handleAddProducto(event) {
+        event.preventDefault();
+        if (!App.isEmpleado()) {
+            alert(Translations[this.currentLang].alerts.employeeOnlyCreate);
+            return;
+        }
+        console.log("ProductoController.handleAddProducto()...");
 
-			const nombre = formData.get("createNombre") || "";
-			const descripcion = formData.get("createDescripcion") || "";
-			const precio = parseFloat(formData.get("createPrecio")) || 0;
-			const stockDisponible = parseInt(formData.get("createStockDisponible")) || 0;
-			const nombreCategoria = formData.get("createIdCategoria") || "";
-			const nombreMarca = formData.get("createIdMarca") || "";
-			const nombreUnidadMedida = formData.get("createIdUnidadMedida") || "";
-			const imageFile = formData.get("productImage");
+        try {
+            const form = event.target;
+            const formData = new FormData(form);
 
-			console.log("Form values:", {
-				nombre, descripcion, precio, stockDisponible, nombreCategoria, nombreMarca, nombreUnidadMedida,
-				imageFile: imageFile ? imageFile.name : "No file"
-			});
+            const nombre = formData.get("createNombre") || "";
+            const precio = parseFloat(formData.get("createPrecio")) || 0;
+            const stockDisponible = parseInt(formData.get("createStockDisponible")) || 0;
+            const familia = formData.get("createFamilia") || "";
+            const productImage = formData.get("createProductImage");
 
-			const categoriaMap = { "Electrónica": 1, "Ropa": 2, "Accesorios": 3, "Hogar": 4, "Deportes": 5, "Juguetes": 6, "Alimentación": 7, "Belleza": 8, "Libros": 9, "Muebles": 10 };
-			const marcaMap = { "Samsung": 1, "Nike": 2, "Ray-Ban": 3, "Apple": 4, "Sony": 5, "Adidas": 6, "Puma": 7, "LG": 8, "Xiaomi": 9, "HP": 10, "Dell": 11, "Canon": 12, "Nestlé": 13, "L'Oréal": 14, "IKEA": 15 };
-			const unidadMedidaMap = { "Unidad": 1, "Kilogramos": 2, "Litros": 3, "Gramos": 4, "Mililitros": 5, "Metros": 6, "Centímetros": 7, "Paquete": 8, "Caja": 9, "Docena": 10 };
+            console.log("Form values:", {
+                nombre,
+                precio,
+                stockDisponible,
+                familia,
+                productImage: productImage ? productImage.name : "No file"
+            });
 
-			const idCategoria = categoriaMap[nombreCategoria];
-			const idMarca = marcaMap[nombreMarca];
-			const idUnidadMedida = unidadMedidaMap[nombreUnidadMedida];
+            if (!nombre || precio <= 0 || stockDisponible <= 0 || !familia) {
+                throw new Error(Translations[this.currentLang].alerts.invalidFields);
+            }
 
-			console.log("Mapped values:", { idCategoria, idMarca, idUnidadMedida });
+            // Create product data without the image
+            const productoData = {
+                nombre,
+                precio,
+                stockDisponible,
+                familia
+            };
 
-			if (!nombre || precio <= 0 || stockDisponible <= 0 || !idCategoria || !idMarca || !idUnidadMedida) {
-				throw new Error(Translations[this.currentLang].alerts.invalidFields);
-			}
+            // Create product via SOAP service
+            const response = await ProductoService.createProducto(productoData);
 
-			const productoData = { nombre, descripcion, precio, stockDisponible, idCategoria, idMarca, idUnidadMedida };
-			const response = await ProductoService.createProducto(productoData);
+            // Upload image if provided
+            if (productImage && productImage.size > 0) {
+                await FileService.uploadImageToProducto(response.id, productImage);
+            }
 
-			if (imageFile && imageFile.size > 0) {
-				await FileService.uploadImageToProducto(response.id, imageFile);
-			}
-
-			const message = Translations[this.currentLang].alerts.productAdded;
-			ProductoView.renderCompraSuccess(message, this.currentLang);
-			form.reset();
-			this.loadProductoSearchForm();
-		} catch (error) {
-			console.error("Error al agregar el producto:", error);
-			ProductoView.renderCompraError(error.message || Translations[this.currentLang].alerts.addProductError, this.currentLang);
-		}
-	},
+            const message = Translations[this.currentLang].alerts.productAdded;
+            ProductoView.renderCompraSuccess(message, this.currentLang);
+            form.reset();
+            this.loadProductoSearchForm();
+        } catch (error) {
+            console.error("Error al agregar el producto:", error);
+            ProductoView.renderCompraError(error.message || Translations[this.currentLang].alerts.addProductError, this.currentLang);
+        }
+    },
 
 	async handleUpdateProducto(event) {
-		event.preventDefault();
-		if (!App.isEmpleado()) {
-			alert(Translations[this.currentLang].alerts.employeeOnlyUpdate);
-			return;
-		}
-		console.log("ProductoController.handleUpdateProducto()...");
+	    event.preventDefault();
+	    if (!App.isEmpleado()) {
+	        alert(Translations[this.currentLang].alerts.employeeOnlyUpdate);
+	        return;
+	    }
+	    console.log("ProductoController.handleUpdateProducto()...");
 
-		try {
-			const form = event.target;
-			const formData = new FormData(form);
+	    try {
+	        const form = event.target;
+	        const formData = new FormData(form);
 
-			const id = formData.get("updateId") || "";
-			const nombre = formData.get("updateNombre") || "";
-			const descripcion = formData.get("updateDescripcion") || "";
-			const precio = parseFloat(formData.get("updatePrecio")) || 0;
-			const stockDisponible = parseInt(formData.get("updateStockDisponible")) || 0;
-			const nombreCategoria = formData.get("updateIdCategoria") || "";
-			const nombreMarca = formData.get("updateIdMarca") || "";
-			const nombreUnidadMedida = formData.get("updateIdUnidadMedida") || "";
-			const imageFile = formData.get("productImage");
+	        const id = formData.get("updateId") || "";
+	        const productImage = formData.get("productImage");
 
-			const categoriaMap = { "Electrónica": 1, "Ropa": 2, "Accesorios": 3, "Hogar": 4, "Deportes": 5, "Juguetes": 6, "Alimentación": 7, "Belleza": 8, "Libros": 9, "Muebles": 10 };
-			const marcaMap = { "Samsung": 1, "Nike": 2, "Ray-Ban": 3, "Apple": 4, "Sony": 5, "Adidas": 6, "Puma": 7, "LG": 8, "Xiaomi": 9, "HP": 10, "Dell": 11, "Canon": 12, "Nestlé": 13, "L'Oréal": 14, "IKEA": 15 };
-			const unidadMedidaMap = { "Unidad": 1, "Kilogramos": 2, "Litros": 3, "Gramos": 4, "Mililitros": 5, "Metros": 6, "Centímetros": 7, "Paquete": 8, "Caja": 9, "Docena": 10 };
+	        console.log("Form values:", {
+	            id,
+	            productImage: productImage ? productImage.name : "No file"
+	        });
 
-			const idCategoria = categoriaMap[nombreCategoria];
-			const idMarca = marcaMap[nombreMarca];
-			const idUnidadMedida = unidadMedidaMap[nombreUnidadMedida];
+	        if (!id) {
+	            throw new Error(Translations[this.currentLang].alerts.invalidFields);
+	        }
 
-			if (!nombre || precio <= 0 || stockDisponible <= 0 || !idCategoria || !idMarca || !idUnidadMedida) {
-				throw new Error(Translations[this.currentLang].alerts.invalidFields);
-			}
+	        // Upload image if provided
+	        if (productImage && productImage.size > 0) {
+	            await FileService.uploadImageToProducto(id, productImage);
+	        } else {
+	            throw new Error(Translations[this.currentLang].alerts.noImageProvided || "Nenhuma imagem fornecida");
+	        }
 
-			const productoData = { id, nombre, descripcion, precio, stockDisponible, idCategoria, idMarca, idUnidadMedida };
-			await ProductoService.updateProducto(productoData);
-
-			if (imageFile && imageFile.size > 0) {
-				await FileService.uploadImageToProducto(id, imageFile);
-			}
-
-			await this.fetchProductoInfo(id);
-			alert(Translations[this.currentLang].alerts.productUpdated);
-		} catch (error) {
-			console.error("Error al actualizar el producto:", error);
-			alert(Translations[this.currentLang].alerts.updateProductError + (error.message || ""));
-		}
+	        // Refresh product details to show the new image
+	        await this.fetchProductoInfo(id);
+	        alert(Translations[this.currentLang].alerts.productUpdated);
+	    } catch (error) {
+	        console.error("Error al actualizar el producto:", error);
+	        alert(Translations[this.currentLang].alerts.updateProductError + (error.message || ""));
+	    }
 	},
 
-	async fetchProductoInfo(productId) {
-		try {
-			const producto = await ProductoService.findById(productId);
-			if (!producto) {
-				throw new Error(Translations[this.currentLang].alerts.productNotFound);
-			}
+    async fetchProductoInfo(productId) {
+        const credentials = {
+            empresa: document.getElementById("empresaCriteria")?.value || "ciberloja",
+            utilizador: document.getElementById("utilizadorCriteria")?.value || "website",
+            password: document.getElementById("passwordCriteria")?.value || "Website2025*"
+        };
 
-			let images = [];
-			try {
-				images = await FileService.getImagesByProductoId(productId);
-			} catch (imageError) {
-				console.warn(`No se pudieron cargar las imágenes para el producto ${productId}:`, imageError);
-			}
-			producto.images = images;
+        try {
+            const producto = await ProductoService.findByIdSOAP(credentials, productId);
+            if (!producto) {
+                throw new Error(Translations[this.currentLang].alerts.productNotFound);
+            }
 
-			ProductoView.renderProductoDetails(producto, "pro-inventario", App.isEmpleado(), this.currentLang);
+            // Fetch images for the product
+            try {
+                const images = await FileService.getImagesByProductoId(productId);
+                producto.images = images || [];
+            } catch (imageError) {
+                console.warn(`No se pudieron cargar las imágenes para el producto ${productId}:`, imageError);
+                producto.images = [];
+            }
 
-			const updateForm = document.getElementById("updateProductoForm");
-			if (updateForm && !updateForm.hasListener && App.isEmpleado()) {
-				updateForm.addEventListener("submit", (event) => {
-					event.preventDefault();
-					this.handleUpdateProducto(event);
-				});
-				updateForm.hasListener = true;
-			}
-		} catch (error) {
-			console.error("Error al obtener la información del producto:", error);
-			alert(Translations[this.currentLang].alerts.loadProductError);
-			this.showPreviousResults();
-		}
-	},
+            ProductoView.renderProductoDetails(producto, "pro-inventario", App.isEmpleado(), this.currentLang);
 
-	async handleDeleteProduct(productId) {
-		if (!App.isEmpleado()) {
-			alert(Translations[this.currentLang].alerts.employeeOnlyDelete);
-			return;
-		}
-		if (confirm(Translations[this.currentLang].alerts.confirmDelete)) {
-			try {
-				await ProductoService.deleteProducto(productId);
-				alert(Translations[this.currentLang].alerts.productDeleted);
-				await this.handleSearch(this.currentPage);
-			} catch (error) {
-				console.error("Error al eliminar el producto:", error);
-				alert(Translations[this.currentLang].alerts.deleteProductError);
-			}
-		}
-	}
+            const updateForm = document.getElementById("updateProductoForm");
+            if (updateForm && !updateForm.hasListener && App.isEmpleado()) {
+                updateForm.addEventListener("submit", (event) => {
+                    event.preventDefault();
+                    this.handleUpdateProducto(event);
+                });
+                updateForm.hasListener = true;
+            }
+        } catch (error) {
+            console.error("Error al obtener la información del producto:", error);
+            alert(Translations[this.currentLang].alerts.loadProductError);
+            this.showPreviousResults();
+        }
+    },
+
+    async handleDeleteProduct(productId) {
+        if (!App.isEmpleado()) {
+            alert(Translations[this.currentLang].alerts.employeeOnlyDelete);
+            return;
+        }
+        if (confirm(Translations[this.currentLang].alerts.confirmDelete)) {
+            try {
+                await ProductoService.deleteProducto(productId);
+                alert(Translations[this.currentLang].alerts.productDeleted);
+                await this.handleSearch(this.currentPage);
+            } catch (error) {
+                console.error("Error al eliminar el producto:", error);
+                alert(Translations[this.currentLang].alerts.deleteProductError);
+            }
+        }
+    }
 };
 
 export default ProductoController;
