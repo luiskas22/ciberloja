@@ -29,6 +29,7 @@ com\luis\ciberloja\soap\GetArtigosCiberlojaSiteResponse.class
 com\luis\ciberloja\dao\PedidoDAO.class
 com\luis\ciberloja\service\ProductoService.class
 com\luis\ciberloja\dao\TipoEmpleadoDAO.class
+com\luis\ciberloja\Main.class
 com\luis\ciberloja\service\PedidoService.class
 com\luis\ciberloja\dao\LineaPedidoDAO.class
 com\luis\ciberloja\service\impl\MailServiceImpl$2.class
@@ -66,9 +67,11 @@ com\luis\ciberloja\dao\DireccionDAO.class
 com\luis\ciberloja\service\MailService.class
 com\luis\ciberloja\dao\impl\EmpleadoDAOImpl.class
 com\luis\ciberloja\service\FileService.class
+com\luis\ciberloja\repository\ProductoRepository.class
 com\luis\ciberloja\dao\ProvinciaDAO.class
 com\luis\ciberloja\model\Localidad.class
 com\luis\ciberloja\model\Marca.class
+com\luis\ciberloja\service\ProductoSyncService.class
 com\luis\ciberloja\model\Rol.class
 com\luis\ciberloja\service\impl\FileServiceImpl.class
 com\luis\ciberloja\soap\GetArtigosCiberlojaSiteResponse$GetArtigosCiberlojaSiteResult.class
@@ -91,12 +94,14 @@ com\luis\ciberloja\dao\EstadoPedidoDAO.class
 com\luis\ciberloja\dao\PasswordResetTokenDAO.class
 com\luis\ciberloja\service\impl\MailServiceImpl.class
 com\luis\ciberloja\model\ProductoDTO.class
+com\luis\ciberloja\service\impl\ProductoSyncScheduler.class
 com\luis\ciberloja\service\impl\ProvinciaServiceImpl.class
 com\luis\ciberloja\service\impl\DireccionServiceImpl.class
 com\luis\ciberloja\service\StockException.class
 com\luis\ciberloja\model\LineaPedido.class
 com\luis\ciberloja\model\DireccionDTO.class
 com\luis\ciberloja\dao\ProductoDAO.class
+com\luis\ciberloja\service\impl\ProductoSyncServiceImpl.class
 com\luis\ciberloja\conf\TestConnection.class
 com\luis\ciberloja\dao\UnidadMedidaDAO.class
 com\luis\ciberloja\soap\GetArtigosCiberlojaSite.class

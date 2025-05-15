@@ -23,7 +23,7 @@ public class SoapClientTest {
         System.out.println("Llamando al método getArtigosCiberlojaSite...");
 
         try {
-            // Llamar al servicio SOAP y obtener la lista de productos
+            // Llamar al servicio SOAP y obtener los resultados
             List<ProductoDTO> productos = soapService.getArtigosCiberlojaSite();
 
             // Verificar si se obtuvieron productos
@@ -58,14 +58,14 @@ public class SoapClientTest {
                             ? "Sin familia" : producto.getFamilia();
 
                     // Truncar nombre si es demasiado largo para mantener el formato
-                    String nombre = producto.getNombre();
+                    String nombre = producto.getNombre() != null ? producto.getNombre() : "";
                     if (nombre.length() > 30) {
                         nombre = nombre.substring(0, 27) + "...";
                     }
 
                     // Imprimir fila de producto
                     System.out.printf("| %-15s | %-30s | %-15s | %-10.2f | %-10.2f |%n",
-                            producto.getId(),
+                            producto.getId() != null ? producto.getId() : "",
                             nombre,
                             familia,
                             producto.getPrecio(),
@@ -73,7 +73,7 @@ public class SoapClientTest {
                     count++;
 
                     // Limitar a 15 productos
-                    if (count >= 2100) {
+                    if (count >= 15) {
                         System.out.println("=====================================================================================");
                         System.out.println("... (más productos disponibles)");
                         break;
@@ -91,7 +91,7 @@ public class SoapClientTest {
                 }
             } else {
                 System.out.println("No se obtuvieron productos del servicio SOAP.");
-                System.out.println("Revise los logs para más detalles del error.");
+                System.out.println("Es posible que el servidor haya devuelto un error. Revise los logs para más detalles.");
             }
         } catch (Exception e) {
             System.err.println("Error al llamar al servicio SOAP: " + e.getMessage());

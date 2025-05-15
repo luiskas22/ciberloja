@@ -31850,3 +31850,159 @@ java.lang.NumberFormatException: For input string: "0.0000000000"
 [WARN ] 2025-05-09 15:20:32.722 [main] SoapServiceIntegration - SOAP service returned empty or null response for empresa: ciberloja
 [WARN ] 2025-05-09 15:21:07.164 [main] SoapServiceIntegration - diffgramAny is null for empresa: ciberloja
 [WARN ] 2025-05-09 15:21:07.164 [main] SoapServiceIntegration - SOAP service returned empty or null response for empresa: ciberloja
+[WARN ] 2025-05-09 16:34:36.869 [main] SoapServiceIntegration - diffgramAny is null for empresa: ciberloja
+[WARN ] 2025-05-09 16:34:36.871 [main] SoapServiceIntegration - SOAP service returned empty or null response for empresa: ciberloja
+[ERROR] 2025-05-09 16:35:27.871 [main] SoapServiceIntegration - SOAP error while calling GetArtigosCiberlojaSite for empresa: ciberloja
+jakarta.xml.soap.SOAPException: Unknown Protocol: http://schemas.xmlsoap.org/soap/encoding/  specified for creating MessageFactory
+	at com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl.newMessageFactory(SAAJMetaFactoryImpl.java:47) ~[saaj-impl-3.0.3.jar:3.0.3]
+	at jakarta.xml.soap.MessageFactory.newInstance(MessageFactory.java:126) ~[jakarta.xml.soap-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.createSoapRequest(SoapServiceIntegration.java:77) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:54) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+[ERROR] 2025-05-09 16:35:44.926 [main] SoapServiceIntegration - SOAP error while calling GetArtigosCiberlojaSite for empresa: ciberloja
+jakarta.xml.soap.SOAPException: Unknown Protocol: http://schemas.xmlsoap.org/soap/encoding/  specified for creating MessageFactory
+	at com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl.newMessageFactory(SAAJMetaFactoryImpl.java:47) ~[saaj-impl-3.0.3.jar:3.0.3]
+	at jakarta.xml.soap.MessageFactory.newInstance(MessageFactory.java:126) ~[jakarta.xml.soap-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.createSoapRequest(SoapServiceIntegration.java:77) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:54) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+[ERROR] 2025-05-09 16:36:37.627 [main] SoapServiceIntegration - SOAP error while calling GetArtigosCiberlojaSite for empresa: ciberloja
+jakarta.xml.soap.SOAPException: Unknown Protocol: http://schemas.xmlsoap.org/soap/http  specified for creating MessageFactory
+	at com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl.newMessageFactory(SAAJMetaFactoryImpl.java:47) ~[saaj-impl-3.0.3.jar:3.0.3]
+	at jakarta.xml.soap.MessageFactory.newInstance(MessageFactory.java:126) ~[jakarta.xml.soap-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.createSoapRequest(SoapServiceIntegration.java:77) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:54) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+[WARN ] 2025-05-09 16:46:21.074 [main] SoapServiceIntegration - No GetArtigosCiberlojaSiteResult element found in SOAP response for empresa: ciberloja
+[WARN ] 2025-05-09 16:46:21.075 [main] SoapServiceIntegration - SOAP service returned empty or null response for empresa: ciberloja
+[ERROR] 2025-05-12 09:05:03.483 [main] SoapServiceIntegration - SOAP error while calling GetArtigosCiberlojaSite for empresa: ciberloja
+jakarta.xml.soap.SOAPException: Unable to create SOAP connection factory: Provider com.sun.xml.internal.messaging.saaj.client.p2p.HttpSOAPConnectionFactory not found
+	at jakarta.xml.soap.SOAPConnectionFactory.newInstance(SOAPConnectionFactory.java:58) ~[jakarta.xml.soap-api-2.0.1.jar:2.0.1]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:37) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+[ERROR] 2025-05-12 09:08:37.144 [main] SoapServiceIntegration - Unexpected error while calling GetArtigosCiberlojaSite at endpoint: https://ns4.ciberloja.com:8081/website.asmx for empresa: ciberloja
+jakarta.xml.ws.WebServiceException: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:162) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.<init>(ServiceImpl.java:128) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.spi.ProviderImpl.createServiceDelegate(ProviderImpl.java:82) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at jakarta.xml.ws.Service.<init>(Service.java:82) ~[jakarta.xml.ws-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.Website.<init>(Website.java:50) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:40) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+Caused by: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:87) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: javax.wsdl.WSDLException: WSDLException: faultCode=PARSER_ERROR: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:244) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at com.ctc.wstx.sr.StreamScanner.constructWfcException(StreamScanner.java:634) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:504) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:488) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.reportWrongEndElem(BasicStreamReader.java:3373) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.readEndElem(BasicStreamReader.java:3300) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.nextFromTree(BasicStreamReader.java:2920) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.next(BasicStreamReader.java:1122) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1347) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1241) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.read(StaxUtils.java:1169) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:235) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+[ERROR] 2025-05-12 09:09:04.551 [main] SoapServiceIntegration - Unexpected error while calling GetArtigosCiberlojaSite at endpoint: https://ns4.ciberloja.com:8081/website.asmx for empresa: ciberloja
+jakarta.xml.ws.WebServiceException: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:162) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.<init>(ServiceImpl.java:128) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.spi.ProviderImpl.createServiceDelegate(ProviderImpl.java:82) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at jakarta.xml.ws.Service.<init>(Service.java:82) ~[jakarta.xml.ws-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.Website.<init>(Website.java:50) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:40) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+Caused by: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:87) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: javax.wsdl.WSDLException: WSDLException: faultCode=PARSER_ERROR: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:244) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at com.ctc.wstx.sr.StreamScanner.constructWfcException(StreamScanner.java:634) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:504) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:488) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.reportWrongEndElem(BasicStreamReader.java:3373) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.readEndElem(BasicStreamReader.java:3300) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.nextFromTree(BasicStreamReader.java:2920) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.next(BasicStreamReader.java:1122) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1347) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1241) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.read(StaxUtils.java:1169) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:235) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+[ERROR] 2025-05-12 09:09:57.358 [main] SoapServiceIntegration - Unexpected error while calling GetArtigosCiberlojaSite at endpoint: https://ns4.ciberloja.com:8081/website.asmx for empresa: ciberloja
+jakarta.xml.ws.WebServiceException: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:162) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.<init>(ServiceImpl.java:128) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.spi.ProviderImpl.createServiceDelegate(ProviderImpl.java:82) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at jakarta.xml.ws.Service.<init>(Service.java:82) ~[jakarta.xml.ws-api-3.0.1.jar:3.0.1]
+	at com.luis.ciberloja.soap.Website.<init>(Website.java:50) ~[classes/:?]
+	at com.luis.ciberloja.soap.SoapServiceIntegration.getArtigosCiberlojaSite(SoapServiceIntegration.java:40) [classes/:?]
+	at com.luis.ciberloja.service.SoapClientTest.main(SoapClientTest.java:27) [test-classes/:?]
+Caused by: org.apache.cxf.service.factory.ServiceConstructionException: Failed to create service.
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:87) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: javax.wsdl.WSDLException: WSDLException: faultCode=PARSER_ERROR: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:244) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+Caused by: com.ctc.wstx.exc.WstxParsingException: Unexpected close tag </span>; expected </br>.
+ at [row,col,system-id]: [59,22,"https://ns4.ciberloja.com:8081/website.asmx"]
+	at com.ctc.wstx.sr.StreamScanner.constructWfcException(StreamScanner.java:634) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:504) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.StreamScanner.throwParseError(StreamScanner.java:488) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.reportWrongEndElem(BasicStreamReader.java:3373) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.readEndElem(BasicStreamReader.java:3300) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.nextFromTree(BasicStreamReader.java:2920) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at com.ctc.wstx.sr.BasicStreamReader.next(BasicStreamReader.java:1122) ~[woodstox-core-6.6.2.jar:6.6.2]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1347) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.readDocElements(StaxUtils.java:1241) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.staxutils.StaxUtils.read(StaxUtils.java:1169) ~[cxf-core-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.loadDefinition(WSDLManagerImpl.java:235) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLManagerImpl.getDefinition(WSDLManagerImpl.java:165) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.wsdl11.WSDLServiceFactory.<init>(WSDLServiceFactory.java:85) ~[cxf-rt-wsdl-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initializePorts(ServiceImpl.java:217) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	at org.apache.cxf.jaxws.ServiceImpl.initialize(ServiceImpl.java:160) ~[cxf-rt-frontend-jaxws-4.0.5.jar:4.0.5]
+	... 6 more
+[WARN ] 2025-05-12 09:11:50.571 [main] SoapServiceIntegration - diffgramAny is null for empresa: ciberloja
+[WARN ] 2025-05-12 09:11:50.572 [main] SoapServiceIntegration - SOAP service returned empty or null response for empresa: ciberloja
+[ERROR] 2025-05-12 09:22:54.299 [main] SoapServiceIntegration - El servidor devolvió un SOAP Fault: <?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><soap:Fault><faultcode>soap:Server</faultcode><faultstring>System.Web.Services.Protocols.SoapException: Server was unable to process request. ---&gt; System.NullReferenceException: Object reference not set to an instance of an object.   at WebServicePrimavera.PriEngine.CloseCompany() in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\PriEngine.vb:line 77   at WebServicePrimavera.Website.GetArtigosCiberlojaSite(String empresa, String utilizador, String password) in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\Website.asmx.vb:line 76   --- End of inner exception stack trace ---</faultstring><detail /></soap:Fault></soap:Body></soap:Envelope>
+[ERROR] 2025-05-12 09:22:54.393 [main] SoapServiceIntegration - Detalles del SOAP Fault: System.Web.Services.Protocols.SoapException: Server was unable to process request. ---> System.NullReferenceException: Object reference not set to an instance of an object.   at WebServicePrimavera.PriEngine.CloseCompany() in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\PriEngine.vb:line 77   at WebServicePrimavera.Website.GetArtigosCiberlojaSite(String empresa, String utilizador, String password) in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\Website.asmx.vb:line 76   --- End of inner exception stack trace ---
+[ERROR] 2025-05-12 09:27:00.130 [main] SoapServiceIntegration - El servidor devolvió un SOAP Fault: <?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><soap:Fault><faultcode>soap:Server</faultcode><faultstring>System.Web.Services.Protocols.SoapException: Server was unable to process request. ---&gt; System.NullReferenceException: Object reference not set to an instance of an object.   at WebServicePrimavera.PriEngine.CloseCompany() in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\PriEngine.vb:line 77   at WebServicePrimavera.Website.GetArtigosCiberlojaSite(String empresa, String utilizador, String password) in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\Website.asmx.vb:line 76   --- End of inner exception stack trace ---</faultstring><detail /></soap:Fault></soap:Body></soap:Envelope>
+[ERROR] 2025-05-12 09:27:00.196 [main] SoapServiceIntegration - Detalles del SOAP Fault: System.Web.Services.Protocols.SoapException: Server was unable to process request. ---> System.NullReferenceException: Object reference not set to an instance of an object.   at WebServicePrimavera.PriEngine.CloseCompany() in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\PriEngine.vb:line 77   at WebServicePrimavera.Website.GetArtigosCiberlojaSite(String empresa, String utilizador, String password) in C:\Users\Ciberloja_BrunoGomes\ownCloud\WMS Ciberloja\WebServicePrimavera19022025\WebServicePrimavera\Website.asmx.vb:line 76   --- End of inner exception stack trace ---

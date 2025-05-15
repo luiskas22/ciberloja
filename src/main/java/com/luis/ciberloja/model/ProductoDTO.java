@@ -1,45 +1,63 @@
 package com.luis.ciberloja.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "producto") // Map to the correct table name
 public class ProductoDTO {
-	private String id;
-	private String nombre;
-	private Double precio;
-	private Double stockDisponible;
+	@Id
+	@Column(name = "artigo", nullable = false)
+	private String artigo;
+
+	@Column(name = "descricao")
+	private String descricao;
+
+	@Column(name = "familia")
 	private String familia;
 
+	@Column(name = "PVP3")
+	private Double pvp3;
+
+	@Column(name = "stock")
+	private Double stock;
+
+	// Constructor, getters, setters, and toString as before
 	public ProductoDTO() {
 	}
 
 	public String getId() {
-		return id;
+		return artigo;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.artigo = id;
 	}
 
 	public String getNombre() {
-		return nombre;
+		return descricao;
 	}
 
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		this.descricao = nombre;
 	}
 
 	public Double getPrecio() {
-		return precio;
+		return pvp3;
 	}
 
 	public void setPrecio(Double precio) {
-		this.precio = precio;
+		this.pvp3 = precio;
 	}
 
 	public Double getStockDisponible() {
-		return stockDisponible;
+		return stock;
 	}
 
 	public void setStockDisponible(Double stockDisponible) {
-		this.stockDisponible = stockDisponible;
+		this.stock = stockDisponible;
 	}
 
 	public String getFamilia() {
@@ -52,8 +70,7 @@ public class ProductoDTO {
 
 	@Override
 	public String toString() {
-		return "ProductoDTO [id=" + id + ", nombre=" + nombre + ", precio=" + precio + ", stockDisponible="
-				+ stockDisponible + "]";
+		return "ProductoDTO [id=" + artigo + ", nombre=" + descricao + ", precio=" + pvp3 + ", stockDisponible=" + stock
+				+ "]";
 	}
-
 }

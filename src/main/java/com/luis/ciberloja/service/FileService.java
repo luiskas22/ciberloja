@@ -21,9 +21,9 @@ public interface FileService {
 
 	public Image iconToImage(Icon icon);
 
-	public List<File> getImagesByProductoId(Long productoId);
+	public List<File> getImagesByProductoId(String productoId);
 
-	public void uploadImage(Long productoId, InputStream inputStream, String originalFileName) throws IOException;
+	public void uploadImage(String productoId, InputStream inputStream, String originalFileName) throws IOException;
 
 	public List<File> getProfileImageByClienteId(Long clienteId);
 
