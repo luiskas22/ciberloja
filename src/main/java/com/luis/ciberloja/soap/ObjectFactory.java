@@ -38,6 +38,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetFamiliasResponse }
+     * 
+     */
+    public GetFamiliasResponse createGetFamiliasResponse() {
+        return new GetFamiliasResponse();
+    }
+
+    /**
      * Create an instance of {@link GetArtigosCiberlojaSite }
      * 
      */
@@ -51,6 +59,22 @@ public class ObjectFactory {
      */
     public GetArtigosCiberlojaSiteResponse.GetArtigosCiberlojaSiteResult createGetArtigosCiberlojaSiteResponseGetArtigosCiberlojaSiteResult() {
         return new GetArtigosCiberlojaSiteResponse.GetArtigosCiberlojaSiteResult();
+    }
+
+    /**
+     * Create an instance of {@link GetFamilias }
+     * 
+     */
+    public GetFamilias createGetFamilias() {
+        return new GetFamilias();
+    }
+
+    /**
+     * Create an instance of {@link GetFamiliasResponse.GetFamiliasResult }
+     * 
+     */
+    public GetFamiliasResponse.GetFamiliasResult createGetFamiliasResponseGetFamiliasResult() {
+        return new GetFamiliasResponse.GetFamiliasResult();
     }
 
 }

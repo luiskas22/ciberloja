@@ -1,10 +1,13 @@
 com\luis\ciberloja\dao\impl\MarcaDAOImpl.class
 com\luis\ciberloja\dao\impl\PaisDAOImpl.class
+com\luis\ciberloja\repository\FamiliaRepository.class
 com\luis\ciberloja\dao\impl\CategoriaDAOImpl.class
 com\luis\ciberloja\model\AbstractCriteria.class
 com\luis\ciberloja\service\LocalidadService.class
 com\luis\ciberloja\dao\util\DateUtils.class
 com\luis\ciberloja\service\MailException.class
+com\luis\ciberloja\service\impl\FamiliasCiberlojaImpl.class
+com\luis\ciberloja\service\impl\FamiliaSyncScheduler.class
 com\luis\ciberloja\model\Categoria.class
 com\luis\ciberloja\dao\impl\ProductoDAOImpl.class
 com\luis\ciberloja\dao\impl\DireccionDAOImpl.class
@@ -36,7 +39,6 @@ com\luis\ciberloja\service\impl\MailServiceImpl$2.class
 com\luis\ciberloja\dao\impl\PedidoDAOImpl.class
 com\luis\ciberloja\model\Pedido.class
 com\luis\ciberloja\model\Results.class
-com\luis\ciberloja\soap\SoapServiceIntegration.class
 com\luis\ciberloja\model\EstadoPedido.class
 com\luis\ciberloja\service\DireccionService.class
 com\luis\ciberloja\soap\ObjectFactory.class
@@ -55,6 +57,7 @@ com\luis\ciberloja\dao\LocalidadDAO.class
 com\luis\ciberloja\service\ClienteService.class
 com\luis\ciberloja\model\ClienteDTO.class
 com\luis\ciberloja\dao\PaisDAO.class
+com\luis\ciberloja\service\impl\ArtigosCiberlojaImpl.class
 com\luis\ciberloja\soap\Website.class
 com\luis\ciberloja\dao\util\SQLUtils.class
 com\luis\ciberloja\model\TipoEmpleado.class
@@ -68,7 +71,9 @@ com\luis\ciberloja\service\MailService.class
 com\luis\ciberloja\dao\impl\EmpleadoDAOImpl.class
 com\luis\ciberloja\service\FileService.class
 com\luis\ciberloja\repository\ProductoRepository.class
+com\luis\ciberloja\soap\GetFamiliasResponse$GetFamiliasResult.class
 com\luis\ciberloja\dao\ProvinciaDAO.class
+com\luis\ciberloja\soap\GetFamilias.class
 com\luis\ciberloja\model\Localidad.class
 com\luis\ciberloja\model\Marca.class
 com\luis\ciberloja\service\ProductoSyncService.class
@@ -82,10 +87,13 @@ com\luis\ciberloja\dao\impl\RolDAOImpl.class
 com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.class
 com\luis\ciberloja\service\EstadoPedidoService.class
 com\luis\ciberloja\soap\WebsiteSoap.class
+com\luis\ciberloja\service\impl\FamiliaSyncServiceImpl.class
 com\luis\ciberloja\service\EmpleadoService.class
 com\luis\ciberloja\PinguelaException.class
+com\luis\ciberloja\soap\GetFamiliasResponse.class
 com\luis\ciberloja\soap\WsdlValidator.class
 com\luis\ciberloja\model\PedidoCriteria.class
+com\luis\ciberloja\service\FamiliaSyncService.class
 com\luis\ciberloja\model\AbstractValueObject.class
 com\luis\ciberloja\dao\MarcaDAO.class
 com\luis\ciberloja\model\ValueObject.class
@@ -93,6 +101,7 @@ com\luis\ciberloja\dao\ClienteDAO.class
 com\luis\ciberloja\dao\EstadoPedidoDAO.class
 com\luis\ciberloja\dao\PasswordResetTokenDAO.class
 com\luis\ciberloja\service\impl\MailServiceImpl.class
+com\luis\ciberloja\model\Familia.class
 com\luis\ciberloja\model\ProductoDTO.class
 com\luis\ciberloja\service\impl\ProductoSyncScheduler.class
 com\luis\ciberloja\service\impl\ProvinciaServiceImpl.class

@@ -44,4 +44,25 @@ public interface WebsiteSoap {
         @WebParam(name = "password", targetNamespace = "http://tempuri.org/")
         String password);
 
+    /**
+     * Serviço que devolve as famílias de artigos
+     * 
+     * @param password
+     * @param utilizador
+     * @param empresa
+     * @return
+     *     returns com.luis.ciberloja.soap.GetFamiliasResponse.GetFamiliasResult
+     */
+    @WebMethod(operationName = "GetFamilias", action = "http://tempuri.org/GetFamilias")
+    @WebResult(name = "GetFamiliasResult", targetNamespace = "http://tempuri.org/")
+    @RequestWrapper(localName = "GetFamilias", targetNamespace = "http://tempuri.org/", className = "com.luis.ciberloja.soap.GetFamilias")
+    @ResponseWrapper(localName = "GetFamiliasResponse", targetNamespace = "http://tempuri.org/", className = "com.luis.ciberloja.soap.GetFamiliasResponse")
+    public com.luis.ciberloja.soap.GetFamiliasResponse.GetFamiliasResult getFamilias(
+        @WebParam(name = "empresa", targetNamespace = "http://tempuri.org/")
+        String empresa,
+        @WebParam(name = "utilizador", targetNamespace = "http://tempuri.org/")
+        String utilizador,
+        @WebParam(name = "password", targetNamespace = "http://tempuri.org/")
+        String password);
+
 }

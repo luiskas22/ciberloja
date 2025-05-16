@@ -1,7 +1,7 @@
 package com.luis.ciberloja.model;
 
 public class ProductoCriteria {
-	private Long id;
+	private String id;
 	private String nombre;
 	private String descripcion;
 	private Double precioMin;
@@ -15,11 +15,11 @@ public class ProductoCriteria {
 	public ProductoCriteria() {
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

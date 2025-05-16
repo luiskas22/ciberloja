@@ -25,7 +25,7 @@ public class ProductoServiceImpl implements ProductoService {
 	}
 
 	@Override
-	public ProductoDTO findById(Long id) throws DataException {
+	public ProductoDTO findById(String id) throws DataException {
 		ProductoDTO p = null;
 		Connection con = null;
 		boolean commit = false;
@@ -47,10 +47,10 @@ public class ProductoServiceImpl implements ProductoService {
 	}
 
 	@Override
-	public Long create(ProductoDTO p) throws DataException {
+	public String create(ProductoDTO p) throws DataException {
 		Connection con = null;
 		boolean commit = false;
-		Long id = null;
+		String id = null;
 		try {
 			con = JDBCUtils.getConnection();
 			con.setAutoCommit(false);
@@ -111,7 +111,7 @@ public class ProductoServiceImpl implements ProductoService {
 	}
 
 	@Override
-	public boolean delete(Long id) throws DataException {
+	public boolean delete(String id) throws DataException {
 		boolean pro = false;
 		Connection con = null;
 		boolean commit = false;

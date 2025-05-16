@@ -4,7 +4,7 @@ public class LineaPedido extends AbstractValueObject {
 
 	private Long id;
 	private Double precio;
-	private Long productoId;
+	private String productoId;
 	private String nombreProducto;
 	private Long pedidoId;
 	private Integer unidades;
@@ -45,11 +45,11 @@ public class LineaPedido extends AbstractValueObject {
 		this.unidades = unidades;
 	}
 
-	public Long getProductoId() {
+	public String getProductoId() {
 		return productoId;
 	}
 
-	public void setProductoId(Long productoId) {
+	public void setProductoId(String productoId) {
 		this.productoId = productoId;
 	}
 

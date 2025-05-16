@@ -130,7 +130,7 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-
+ 
         <!-- SOAP API -->
         <dependency>
             <groupId>jakarta.xml.soap</groupId>
@@ -236,7 +236,7 @@
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <version>${jaxws-maven-plugin.version}</version>
                 <executions>
-                    <execution>
+                    <execution> 
                         <id>wsimport</id>
                         <phase>generate-sources</phase>
                         <goals>

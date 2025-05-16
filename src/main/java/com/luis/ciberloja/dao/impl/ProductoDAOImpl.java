@@ -31,7 +31,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 	}
 
 	@Override
-	public ProductoDTO findById(Connection con, Long id) throws DataException {
+	public ProductoDTO findById(Connection con, String id) throws DataException {
 		ProductoDTO p = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -61,7 +61,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 	}
 
 	@Override
-	public Long create(Connection con, ProductoDTO p) throws DataException {
+	public String create(Connection con, ProductoDTO p) throws DataException {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		try {
@@ -83,7 +83,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 			rs = pst.getGeneratedKeys();
 			if (rs.next()) {
-				Long id = rs.getLong(1);
+				String id = rs.getString(1);
 				return id; // Eliminamos las llamadas a findAll si no son necesarias
 			} else {
 				throw new DataException("No se pudo obtener el ID del producto insertado");
@@ -158,7 +158,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 			// Configura parámetros
 
 			if (criteria.getId() != null) {
-				pst.setLong(i++, criteria.getId());
+				pst.setString(i++, criteria.getId());
 			}
 
 			if (criteria.getNombre() != null && !criteria.getNombre().isEmpty()) {
@@ -245,7 +245,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 	}
 
 	@Override
-	public boolean delete(Connection con, Long id) throws DataException {
+	public boolean delete(Connection con, String id) throws DataException {
 		PreparedStatement pst = null;
 		try {
 			ProductoDTO existingProducto = findById(con, id);
@@ -255,7 +255,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 			}
 
 			pst = con.prepareStatement("DELETE FROM PRODUCTO WHERE ID = ?");
-			pst.setLong(1, id);
+			pst.setString(1, id);
 
 			int deletedRows = pst.executeUpdate();
 
