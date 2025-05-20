@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxws:bindings wsdlLocation="website.wsdl"
+	xmlns:jaxws="https://jakarta.ee/xml/ns/jaxws"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:s="http://www.w3.org/2001/XMLSchema">
+
+	<jaxws:bindings
+		node="wsdl:definitions/wsdl:types/s:schema/s:element[@name='GetArtigosCiberlojaSiteResponse']/s:complexType/s:sequence/s:element[@name='GetArtigosCiberlojaSiteResult']/s:complexType/s:sequence">
+
+		<!-- First <s:any> -->
+		<jaxws:bindings node="s:any[1]">
+			<jaxb:property name="schemaAny" />
+		</jaxws:bindings>
+
+		<!-- Second <s:any> -->
+		<jaxws:bindings node="s:any[2]">
+			<jaxb:property name="diffgramAny" />
+		</jaxws:bindings>
+
+	</jaxws:bindings>
+
+	<!-- Apply similar bindings for GetFamiliasResponse -->
+	<jaxws:bindings
+		node="wsdl:definitions/wsdl:types/s:schema/s:element[@name='GetFamiliasResponse']/s:complexType/s:sequence/s:element[@name='GetFamiliasResult']/s:complexType/s:sequence">
+
+		<!-- First <s:any> -->
+		<jaxws:bindings node="s:any[1]">
+			<jaxb:property name="schemaAny" />
+		</jaxws:bindings>
+
+		<!-- Second <s:any> -->
+		<jaxws:bindings node="s:any[2]">
+			<jaxb:property name="diffgramAny" />
+		</jaxws:bindings>
+
+	</jaxws:bindings>
+</jaxws:bindings>
