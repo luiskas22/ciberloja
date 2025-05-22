@@ -23,7 +23,7 @@ public class ProductoSyncScheduler {
         productoSyncService.syncUpdatedProductos();
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay = Long.MAX_VALUE)
+    @Scheduled(initialDelay = 6000, fixedDelay = Long.MAX_VALUE)
     public void initialImport() {
         logger.info("Running initial import of all products");
         productoSyncService.importAllProductos();

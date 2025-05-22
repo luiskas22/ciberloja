@@ -1,9 +1,12 @@
 package com.luis.ciberloja.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -23,42 +26,78 @@ import com.luis.ciberloja.model.Familia;
 import com.luis.ciberloja.model.ProductoDTO;
 import com.luis.ciberloja.repository.FamiliaRepository;
 import com.luis.ciberloja.service.ArtigosCiberloja;
-import com.luis.ciberloja.soap.Website;
-import com.luis.ciberloja.soap.WebsiteSoap;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.ws.BindingProvider;
-import jakarta.xml.ws.handler.MessageContext;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPConnection;
 import jakarta.xml.soap.SOAPConnectionFactory;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 
 @Service
 public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 
 	private static final Logger logger = LogManager.getLogger(ArtigosCiberlojaImpl.class);
-	private final String ENPOINT = "https://ns4.ciberloja.com:8081/website.asmx?WSDL";
-	private final String EMPRESA = "ciberloja";
-	private final String UTILIZADOR = "website";
-	private final String PASSWORD = "Website2025*";
+
+	private final String ENDPOINT;
+	private final String EMPRESA;
+	private final String UTILIZADOR;
+	private final String PASSWORD;
 
 	@Autowired
 	private FamiliaRepository familiaRepository;
 
+	public ArtigosCiberlojaImpl() {
+		Properties props = new Properties();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+			if (input == null) {
+				logger.error("Unable to find application.properties in classpath");
+				throw new IllegalStateException("application.properties not found in classpath");
+			}
+			props.load(input);
+			logger.debug("Successfully loaded application.properties");
+		} catch (Exception e) {
+			logger.error("Failed to load application.properties", e);
+			throw new IllegalStateException("Failed to load application.properties", e);
+		}
+
+		// Load and validate properties
+		ENDPOINT = props.getProperty("soap.service.endpoint");
+		if (ENDPOINT == null || ENDPOINT.trim().isEmpty()) {
+			logger.error("Missing required property: soap.service.endpoint");
+			throw new IllegalStateException("Missing required property: soap.service.endpoint");
+		}
+
+		EMPRESA = props.getProperty("soap.service.empresa");
+		if (EMPRESA == null || EMPRESA.trim().isEmpty()) {
+			logger.error("Missing required property: soap.service.empresa");
+			throw new IllegalStateException("Missing required property: soap.service.empresa");
+		}
+
+		UTILIZADOR = props.getProperty("soap.service.utilizador");
+		if (UTILIZADOR == null || UTILIZADOR.trim().isEmpty()) {
+			logger.error("Missing required property: soap.service.utilizador");
+			throw new IllegalStateException("Missing required property: soap.service.utilizador");
+		}
+
+		PASSWORD = props.getProperty("soap.service.password");
+		if (PASSWORD == null || PASSWORD.trim().isEmpty()) {
+			logger.error("Missing required property: soap.service.password");
+			throw new IllegalStateException("Missing required property: soap.service.password");
+		}
+
+		logger.debug("Properties loaded - endpoint: {}, empresa: {}, utilizador: {}, password: [REDACTED]", ENDPOINT,
+				EMPRESA, UTILIZADOR);
+	}
+
 	@PostConstruct
 	public void init() {
-		logger.info("ArtigosCiberlojaImpl initialized with endpoint: {}, empresa: {}, utilizador: {}", ENPOINT, EMPRESA,
-				UTILIZADOR);
+		logger.info("ArtigosCiberlojaImpl initialized with endpoint: {}, empresa: {}, utilizador: {}", ENDPOINT,
+				EMPRESA, UTILIZADOR);
 		if (familiaRepository == null) {
 			logger.error("FamiliaRepository is null");
 		} else {
@@ -69,7 +108,7 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 	public List<ProductoDTO> getArtigosCiberlojaSite() throws Exception {
 		try {
 			// Validate properties
-			if (ENPOINT == null || ENPOINT.trim().isEmpty()) {
+			if (ENDPOINT == null || ENDPOINT.trim().isEmpty()) {
 				logger.error("SOAP endpoint is not configured");
 				throw new IllegalStateException("SOAP endpoint is not configured");
 			}
@@ -79,7 +118,7 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 				throw new IllegalStateException("SOAP credentials are not configured");
 			}
 
-			logger.info("Calling SOAP service GetArtigosCiberlojaSite at endpoint: {} for empresa: {}", ENPOINT,
+			logger.info("Calling SOAP service GetArtigosCiberlojaSite at endpoint: {} for empresa: {}", ENDPOINT,
 					EMPRESA);
 
 			// Usar SAAJ directamente en lugar de JAX-WS para evitar problemas de generación
@@ -89,12 +128,12 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 
 			return parseSoapResponse(xmlResponse);
 		} catch (SOAPException e) {
-			logger.error("SOAP error while calling GetArtigosCiberlojaSite at endpoint: {} for empresa: {}", ENPOINT,
+			logger.error("SOAP error while calling GetArtigosCiberlojaSite at endpoint: {} for empresa: {}", ENDPOINT,
 					EMPRESA, e);
 			throw new RuntimeException("SOAP service error", e);
 		} catch (Exception e) {
 			logger.error("Unexpected error while calling GetArtigosCiberlojaSite at endpoint: {} for empresa: {}",
-					ENPOINT, EMPRESA, e);
+					ENDPOINT, EMPRESA, e);
 			throw e;
 		}
 	}
@@ -132,7 +171,7 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 		soapMessage.saveChanges();
 
 		// Realizar la llamada SOAP
-		SOAPMessage soapResponse = soapConnection.call(soapMessage, ENPOINT);
+		SOAPMessage soapResponse = soapConnection.call(soapMessage, ENDPOINT);
 		soapConnection.close();
 
 		// Convertir la respuesta a String

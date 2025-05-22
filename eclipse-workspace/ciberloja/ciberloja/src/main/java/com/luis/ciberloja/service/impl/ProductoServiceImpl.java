@@ -47,26 +47,6 @@ public class ProductoServiceImpl implements ProductoService {
 		return p;
 	}
 
-	@Override
-	public String create(ProductoDTO p) throws DataException {
-		Connection con = null;
-		boolean commit = false;
-		String id = null;
-		try {
-			con = JDBCUtils.getConnection();
-			con.setAutoCommit(false);
-			id = productoDAO.create(con, p);
-			commit = true;
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new DataException(e);
-
-		} finally {
-			JDBCUtils.close(con, commit);
-		}
-		return id;
-	}
 
 	@Override
 	public Results<ProductoDTO> findBy(ProductoCriteria criteria, int pos, int pageSize) throws DataException {
@@ -90,48 +70,6 @@ public class ProductoServiceImpl implements ProductoService {
 		return resultados;
 	}
 
-	@Override
-	public boolean update(ProductoDTO p) throws DataException {
-		boolean pro = false;
-		Connection con = null;
-		boolean commit = false;
-		try {
-			con = JDBCUtils.getConnection();
-			con.setAutoCommit(false);
-			pro = productoDAO.update(con, p);
-			commit = true;
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new DataException(e);
-
-		} finally {
-			JDBCUtils.close(con, commit);
-		}
-		return pro;
-	}
-
-	@Override
-	public boolean delete(String id) throws DataException {
-		boolean pro = false;
-		Connection con = null;
-		boolean commit = false;
-
-		try {
-			con = JDBCUtils.getConnection();
-			con.setAutoCommit(false);
-			pro = productoDAO.delete(con, id);
-			commit = true;
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new DataException(e);
-
-		} finally {
-			JDBCUtils.close(con, commit);
-		}
-		return pro;
-	}
 
 	
 }

@@ -10,14 +10,8 @@ import com.luis.ciberloja.model.Results;
 @Service
 public interface ProductoService {
 	public ProductoDTO findById(String id) throws DataException;
-
-	public String create(ProductoDTO p) throws DataException;
 	
 	public Results<ProductoDTO> findBy(ProductoCriteria criteria, int pos, int pageSize) throws DataException;
 
-	public boolean update(ProductoDTO p) throws DataException;
-
-	public boolean delete(String id) throws DataException;
-	
 
 }
