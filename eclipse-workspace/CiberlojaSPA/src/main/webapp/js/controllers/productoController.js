@@ -1,6 +1,6 @@
 import ProductoView from "../views/productoView.js";
 import ProductoService from "../services/productoService.js";
-import FileService from "../services/fileService.js"; // Added for image handling
+import FileService from "../services/fileService.js";
 import App from "../app.js";
 import Translations from '../resources/translations.js';
 
@@ -15,10 +15,11 @@ function debounce(func, delay) {
 const ProductoController = {
     previousResults: [],
     currentPage: 1,
-    itemsPerPage: 10,
+    itemsPerPage: 30,
     totalItems: 0,
     totalPages: 0,
-    currentLang: 'pt', // Idioma por defecto
+    currentLang: 'pt',
+    lastFilters: {},
 
     init(action, lang = 'pt') {
         console.log(`ProductoController.init(${action}, ${lang})...`);
@@ -78,6 +79,11 @@ const ProductoController = {
         const form = document.getElementById("searchProductosForm");
         if (form) {
             form.reset();
+            this.lastFilters = {};
+            this.currentPage = 1;
+            this.previousResults = [];
+            this.totalItems = 0;
+            this.totalPages = 0;
             this.handleSearch();
         }
     },
@@ -118,14 +124,13 @@ const ProductoController = {
     setupSearchInputs() {
         console.log("ProductoController.setupSearchInputs()...");
         const inputs = [
+            "idCriteria",
             "nombreCriteria",
             "precioMinCriteria",
             "precioMaxCriteria",
             "stockMinCriteria",
             "stockMaxCriteria",
-            "empresaCriteria",
-            "utilizadorCriteria",
-            "passwordCriteria"
+            "familiaCriteria"
         ];
         const debouncedSearch = debounce(() => this.handleSearch(), 300);
 
@@ -150,14 +155,13 @@ const ProductoController = {
         if (!document.getElementById('searchResults')) {
             ProductoView.render("pro-inventario", "search", this.currentLang);
             const inputs = [
+                "idCriteria",
                 "nombreCriteria",
                 "precioMinCriteria",
                 "precioMaxCriteria",
                 "stockMinCriteria",
                 "stockMaxCriteria",
-                "empresaCriteria",
-                "utilizadorCriteria",
-                "passwordCriteria"
+                "familiaCriteria"
             ];
             inputs.forEach(inputId => {
                 const input = document.getElementById(inputId);
@@ -193,20 +197,28 @@ const ProductoController = {
         this.currentPage = page;
 
         const filters = {
+            id: document.getElementById("idCriteria")?.value || "",
             nombre: document.getElementById("nombreCriteria")?.value || "",
             precioMin: parseFloat(document.getElementById("precioMinCriteria")?.value) || null,
             precioMax: parseFloat(document.getElementById("precioMaxCriteria")?.value) || null,
             stockMin: parseInt(document.getElementById("stockMinCriteria")?.value) || null,
-            stockMax: parseInt(document.getElementById("stockMaxCriteria")?.value) || null
+            stockMax: parseInt(document.getElementById("stockMaxCriteria")?.value) || null,
         };
 
-        const credentials = {
-            empresa: document.getElementById("empresaCriteria")?.value || "ciberloja",
-            utilizador: document.getElementById("utilizadorCriteria")?.value || "website",
-            password: document.getElementById("passwordCriteria")?.value || "Website2025*"
-        };
+        // Check if filters changed
+        const filtersChanged = JSON.stringify(filters) !== JSON.stringify(this.lastFilters);
+        if (filtersChanged) {
+            console.log("Filtros cambiados, reiniciando página a 1");
+            this.currentPage = 1;
+            this.lastFilters = { ...filters };
+            this.previousResults = []; // Clear previous results
+        }
 
-        // Basic client-side validation
+        // Log filters and pagination
+        console.log("Filtros:", filters);
+        console.log("Parámetros de paginación:", { page: this.currentPage, size: this.itemsPerPage });
+
+        // Client-side validation
         if (filters.precioMin && filters.precioMax && filters.precioMin > filters.precioMax) {
             alert(Translations[this.currentLang].alerts.invalidPriceRange);
             return;
@@ -217,24 +229,31 @@ const ProductoController = {
         }
 
         try {
-            const response = await ProductoService.findByProductosSOAP(credentials, filters);
-            console.log("Respuesta del servicio SOAP:", response);
+            const response = await ProductoService.findByProductosCriteria(filters, {
+                page: this.currentPage,
+                size: this.itemsPerPage
+            });
+
+            console.log("Respuesta del servicio REST:", {
+                pageLength: response.page?.length,
+                total: response.total,
+                totalPages: response.totalPages,
+                firstItem: response.page?.[0]?.id,
+                lastItem: response.page?.[response.page.length - 1]?.id,
+                productIds: response.page?.map(p => p.id)
+            });
 
             if (response && Array.isArray(response.page)) {
-                this.previousResults = response.page;
+                this.previousResults = response.page.slice(0, this.itemsPerPage);
                 this.totalItems = response.total || response.page.length;
                 this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.itemsPerPage);
 
                 // Fetch images for each product
-                for (let producto of this.previousResults) {
-                    try {
-                        const images = await FileService.getImagesByProductoId(producto.id);
-                        producto.images = images || [];
-                    } catch (imageError) {
-                        console.warn(`No se pudieron cargar las imágenes para el producto ${producto.id}:`, imageError);
-                        producto.images = [];
-                    }
-                }
+                const imagePromises = this.previousResults.map(p => 
+                    FileService.getImagesByProductoId(p.id).catch(() => [])
+                );
+                const imageResults = await Promise.all(imagePromises);
+                this.previousResults.forEach((p, i) => p.images = imageResults[i]);
 
                 ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
             } else {
@@ -244,7 +263,7 @@ const ProductoController = {
                 ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
             }
         } catch (error) {
-            console.error("Error al buscar productos SOAP:", error);
+            console.error("Error al buscar productos:", error);
             this.previousResults = [];
             this.totalItems = 0;
             this.totalPages = 0;
@@ -291,7 +310,6 @@ const ProductoController = {
                 throw new Error(Translations[this.currentLang].alerts.invalidFields);
             }
 
-            // Create product data without the image
             const productoData = {
                 nombre,
                 precio,
@@ -299,10 +317,8 @@ const ProductoController = {
                 familia
             };
 
-            // Create product via SOAP service
             const response = await ProductoService.createProducto(productoData);
 
-            // Upload image if provided
             if (productImage && productImage.size > 0) {
                 await FileService.uploadImageToProducto(response.id, productImage);
             }
@@ -317,60 +333,51 @@ const ProductoController = {
         }
     },
 
-	async handleUpdateProducto(event) {
-	    event.preventDefault();
-	    if (!App.isEmpleado()) {
-	        alert(Translations[this.currentLang].alerts.employeeOnlyUpdate);
-	        return;
-	    }
-	    console.log("ProductoController.handleUpdateProducto()...");
-
-	    try {
-	        const form = event.target;
-	        const formData = new FormData(form);
-
-	        const id = formData.get("updateId") || "";
-	        const productImage = formData.get("productImage");
-
-	        console.log("Form values:", {
-	            id,
-	            productImage: productImage ? productImage.name : "No file"
-	        });
-
-	        if (!id) {
-	            throw new Error(Translations[this.currentLang].alerts.invalidFields);
-	        }
-
-	        // Upload image if provided
-	        if (productImage && productImage.size > 0) {
-	            await FileService.uploadImageToProducto(id, productImage);
-	        } else {
-	            throw new Error(Translations[this.currentLang].alerts.noImageProvided || "Nenhuma imagem fornecida");
-	        }
-
-	        // Refresh product details to show the new image
-	        await this.fetchProductoInfo(id);
-	        alert(Translations[this.currentLang].alerts.productUpdated);
-	    } catch (error) {
-	        console.error("Error al actualizar el producto:", error);
-	        alert(Translations[this.currentLang].alerts.updateProductError + (error.message || ""));
-	    }
-	},
-
-    async fetchProductoInfo(productId) {
-        const credentials = {
-            empresa: document.getElementById("empresaCriteria")?.value || "ciberloja",
-            utilizador: document.getElementById("utilizadorCriteria")?.value || "website",
-            password: document.getElementById("passwordCriteria")?.value || "Website2025*"
-        };
+    async handleUpdateProducto(event) {
+        event.preventDefault();
+        if (!App.isEmpleado()) {
+            alert(Translations[this.currentLang].alerts.employeeOnlyUpdate);
+            return;
+        }
+        console.log("ProductoController.handleUpdateProducto()...");
 
         try {
-            const producto = await ProductoService.findByIdSOAP(credentials, productId);
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const id = formData.get("updateId") || "";
+            const productImage = formData.get("productImage");
+
+            console.log("Form values:", {
+                id,
+                productImage: productImage ? productImage.name : "No file"
+            });
+
+            if (!id) {
+                throw new Error(Translations[this.currentLang].alerts.invalidFields);
+            }
+
+            if (productImage && productImage.size > 0) {
+                await FileService.uploadImageToProducto(id, productImage);
+            } else {
+                throw new Error(Translations[this.currentLang].alerts.noImageProvided || "Nenhuma imagem fornecida");
+            }
+
+            await this.fetchProductoInfo(id);
+            alert(Translations[this.currentLang].alerts.productUpdated);
+        } catch (error) {
+            console.error("Error al actualizar el producto:", error);
+            alert(Translations[this.currentLang].alerts.updateProductError + (error.message || ""));
+        }
+    },
+
+    async fetchProductoInfo(productId) {
+        try {
+            const producto = await ProductoService.findById(productId);
             if (!producto) {
                 throw new Error(Translations[this.currentLang].alerts.productNotFound);
             }
 
-            // Fetch images for the product
             try {
                 const images = await FileService.getImagesByProductoId(productId);
                 producto.images = images || [];

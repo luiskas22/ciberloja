@@ -39,6 +39,10 @@ export default class ProductoDTO {
   static constructFromObject(data, obj) {
     if (data) {
       obj = obj || new ProductoDTO();
+      if (data.hasOwnProperty('familia'))
+        obj.familia = ApiClient.convertToType(data['familia'], 'String');
+      if (data.hasOwnProperty('familiaNombre'))
+        obj.familiaNombre = ApiClient.convertToType(data['familiaNombre'], 'String');
       if (data.hasOwnProperty('id'))
         obj.id = ApiClient.convertToType(data['id'], 'String');
       if (data.hasOwnProperty('nombre'))
@@ -47,12 +51,20 @@ export default class ProductoDTO {
         obj.precio = ApiClient.convertToType(data['precio'], 'Number');
       if (data.hasOwnProperty('stockDisponible'))
         obj.stockDisponible = ApiClient.convertToType(data['stockDisponible'], 'Number');
-      if (data.hasOwnProperty('familia'))
-        obj.familia = ApiClient.convertToType(data['familia'], 'String');
     }
     return obj;
   }
 }
+
+/**
+ * @member {String} familia
+ */
+ProductoDTO.prototype.familia = undefined;
+
+/**
+ * @member {String} familiaNombre
+ */
+ProductoDTO.prototype.familiaNombre = undefined;
 
 /**
  * @member {String} id
@@ -73,9 +85,4 @@ ProductoDTO.prototype.precio = undefined;
  * @member {Number} stockDisponible
  */
 ProductoDTO.prototype.stockDisponible = undefined;
-
-/**
- * @member {String} familia
- */
-ProductoDTO.prototype.familia = undefined;
 

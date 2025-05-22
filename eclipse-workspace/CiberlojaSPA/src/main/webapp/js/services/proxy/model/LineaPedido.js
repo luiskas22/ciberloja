@@ -44,7 +44,7 @@ export default class LineaPedido {
       if (data.hasOwnProperty('precio'))
         obj.precio = ApiClient.convertToType(data['precio'], 'Number');
       if (data.hasOwnProperty('productoId'))
-        obj.productoId = ApiClient.convertToType(data['productoId'], 'Number');
+        obj.productoId = ApiClient.convertToType(data['productoId'], 'String');
       if (data.hasOwnProperty('nombreProducto'))
         obj.nombreProducto = ApiClient.convertToType(data['nombreProducto'], 'String');
       if (data.hasOwnProperty('pedidoId'))
@@ -67,7 +67,7 @@ LineaPedido.prototype.id = undefined;
 LineaPedido.prototype.precio = undefined;
 
 /**
- * @member {Number} productoId
+ * @member {String} productoId
  */
 LineaPedido.prototype.productoId = undefined;
 

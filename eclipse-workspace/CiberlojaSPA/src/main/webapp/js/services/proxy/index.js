@@ -23,7 +23,6 @@ import LineaPedido from './model/LineaPedido.js';
 import Localidad from './model/Localidad.js';
 import Pais from './model/Pais.js';
 import Pedido from './model/Pedido.js';
-import ProductoCreateBody from './model/ProductoCreateBody.js';
 import ProductoDTO from './model/ProductoDTO.js';
 import ProductoProductoIdBody from './model/ProductoProductoIdBody.js';
 import Provincia from './model/Provincia.js';
@@ -121,12 +120,6 @@ export {
      * @property {module:model/Pedido}
      */
     Pedido,
-
-    /**
-     * The ProductoCreateBody model constructor.
-     * @property {module:model/ProductoCreateBody}
-     */
-    ProductoCreateBody,
 
     /**
      * The ProductoDTO model constructor.
