@@ -39,41 +39,47 @@ public class ProductoSyncServiceImpl implements ProductoSyncService {
             logger.info("Importing families...");
             List<Familia> familias = familiasCiberlojaImpl.getFamiliasCiberlojaSite();
             if (familias.isEmpty()) {
-                logger.warn("No families retrieved from SOAP service. Products with unknown families will be skipped.");
-            } else {
-                familiaRepository.saveAll(familias);
-                logger.info("Saved {} families to the database", familias.size());
+                logger.error("No families retrieved from SOAP service. Aborting product import to avoid foreign key violations.");
+                throw new RuntimeException("No families available for import");
             }
+            familiaRepository.saveAll(familias);
+            logger.info("Saved {} families to the database", familias.size());
 
             // Step 2: Sync products
             List<ProductoDTO> productos = artigosCiberlojaImpl.getArtigosCiberlojaSite();
+            if (productos.isEmpty()) {
+                logger.warn("No products retrieved from SOAP service.");
+                return;
+            }
             int skipped = 0;
             for (ProductoDTO producto : productos) {
-                Familia familia = producto.getFamilia();
-                if (familia != null && familia.getId() != null) {
-                    // Check if the familia exists
-                    Optional<Familia> existingFamiliaOpt = familiaRepository.findById(familia.getId());
+                String familiaId = producto.getFamilia();
+                if (familiaId != null) {
+                    Optional<Familia> existingFamiliaOpt = familiaRepository.findById(familiaId);
                     if (existingFamiliaOpt.isEmpty()) {
-                        logger.warn("Familia with id {} not found. Skipping product: {}", familia.getId(), producto.getId());
+                        logger.warn("Familia with id {} not found. Skipping product: {}", familiaId, producto.getId());
                         skipped++;
                         continue;
                     }
-                    producto.setFamilia(existingFamiliaOpt.get());
+                    producto.setFamiliaNombre(existingFamiliaOpt.get().getDescricao());
+                } else {
+                    logger.warn("Product {} has no familia ID. Skipping to avoid foreign key violation.", producto.getId());
+                    skipped++;
+                    continue;
                 }
-                // Check if product already exists
                 ProductoDTO existingProduct = productoRepository.findById(producto.getId()).orElse(null);
                 if (existingProduct == null) {
                     productoRepository.save(producto);
                 } else {
-                    // Update existing product
                     existingProduct.setNombre(producto.getNombre());
                     existingProduct.setPrecio(producto.getPrecio());
                     existingProduct.setStockDisponible(producto.getStockDisponible());
                     existingProduct.setFamilia(producto.getFamilia());
+                    existingProduct.setFamiliaNombre(producto.getFamiliaNombre());
                     productoRepository.save(existingProduct);
                 }
             }
-            logger.info("Completed full import of {} productos ({} skipped due to missing families)", productos.size() - skipped, skipped);
+            logger.info("Completed full import of {} productos ({} skipped due to missing or null families)", productos.size() - skipped, skipped);
         } catch (Exception e) {
             logger.error("Error during full import", e);
             throw new RuntimeException("Error during full import: " + e.getMessage(), e);
@@ -88,25 +94,33 @@ public class ProductoSyncServiceImpl implements ProductoSyncService {
             // Step 1: Sync families first
             List<Familia> familias = familiasCiberlojaImpl.getFamiliasCiberlojaSite();
             if (familias.isEmpty()) {
-                logger.warn("No families retrieved from SOAP service. Products with unknown families will be skipped.");
-            } else {
-                familiaRepository.saveAll(familias);
-                logger.info("Saved {} families to the database", familias.size());
+                logger.error("No families retrieved from SOAP service. Aborting product sync to avoid foreign key violations.");
+                throw new RuntimeException("No families available for sync");
             }
+            familiaRepository.saveAll(familias);
+            logger.info("Saved {} families to the database", familias.size());
 
             // Step 2: Sync products
             List<ProductoDTO> productos = artigosCiberlojaImpl.getArtigosCiberlojaSite();
+            if (productos.isEmpty()) {
+                logger.warn("No products retrieved from SOAP service.");
+                return;
+            }
             int skipped = 0;
             for (ProductoDTO producto : productos) {
-                Familia familia = producto.getFamilia();
-                if (familia != null && familia.getId() != null) {
-                    Optional<Familia> existingFamiliaOpt = familiaRepository.findById(familia.getId());
+                String familiaId = producto.getFamilia();
+                if (familiaId != null) {
+                    Optional<Familia> existingFamiliaOpt = familiaRepository.findById(familiaId);
                     if (existingFamiliaOpt.isEmpty()) {
-                        logger.warn("Familia with id {} not found. Skipping product: {}", familia.getId(), producto.getId());
+                        logger.warn("Familia with id {} not found. Skipping product: {}", familiaId, producto.getId());
                         skipped++;
                         continue;
                     }
-                    producto.setFamilia(existingFamiliaOpt.get());
+                    producto.setFamiliaNombre(existingFamiliaOpt.get().getDescricao());
+                } else {
+                    logger.warn("Product {} has no familia ID. Skipping to avoid foreign key violation.", producto.getId());
+                    skipped++;
+                    continue;
                 }
                 ProductoDTO existingProduct = productoRepository.findById(producto.getId()).orElse(null);
                 if (existingProduct == null) {
@@ -116,10 +130,11 @@ public class ProductoSyncServiceImpl implements ProductoSyncService {
                     existingProduct.setPrecio(producto.getPrecio());
                     existingProduct.setStockDisponible(producto.getStockDisponible());
                     existingProduct.setFamilia(producto.getFamilia());
+                    existingProduct.setFamiliaNombre(producto.getFamiliaNombre());
                     productoRepository.save(existingProduct);
                 }
             }
-            logger.info("Completed incremental sync of {} productos ({} skipped due to missing families)", productos.size() - skipped, skipped);
+            logger.info("Completed incremental sync of {} productos ({} skipped due to missing or null families)", productos.size() - skipped, skipped);
         } catch (Exception e) {
             logger.error("Error during incremental sync", e);
             throw new RuntimeException("Error during incremental sync: " + e.getMessage(), e);
@@ -130,7 +145,10 @@ public class ProductoSyncServiceImpl implements ProductoSyncService {
         return !existing.getNombre().equals(updated.getNombre()) ||
                !existing.getPrecio().equals(updated.getPrecio()) ||
                !existing.getStockDisponible().equals(updated.getStockDisponible()) ||
-               (existing.getFamilia() != null && updated.getFamilia() != null &&
-                !existing.getFamilia().getId().equals(updated.getFamilia().getId()));
+               !nullSafeEquals(existing.getFamilia(), updated.getFamilia());
+    }
+
+    private boolean nullSafeEquals(String a, String b) {
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 }

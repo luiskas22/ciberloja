@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.ProductoDAO;
@@ -15,7 +15,7 @@ import com.luis.ciberloja.model.ProductoDTO;
 import com.luis.ciberloja.model.Results;
 import com.luis.ciberloja.service.ProductoService;
 
-@Component
+@Service
 public class ProductoServiceImpl implements ProductoService {
 	private ProductoDAO productoDAO = null;
 

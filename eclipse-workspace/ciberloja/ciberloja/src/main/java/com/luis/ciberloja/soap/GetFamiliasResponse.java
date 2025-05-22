@@ -127,8 +127,8 @@ public class GetFamiliasResponse {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link Element }
          * {@link Object }
+         * {@link Element }
          * 
          * 
          */
@@ -144,8 +144,8 @@ public class GetFamiliasResponse {
          * 
          * @return
          *     possible object is
-         *     {@link Element }
          *     {@link Object }
+         *     {@link Element }
          *     
          */
         public Object getDiffgramAny() {
@@ -157,8 +157,8 @@ public class GetFamiliasResponse {
          * 
          * @param value
          *     allowed object is
-         *     {@link Element }
          *     {@link Object }
+         *     {@link Element }
          *     
          */
         public void setDiffgramAny(Object value) {

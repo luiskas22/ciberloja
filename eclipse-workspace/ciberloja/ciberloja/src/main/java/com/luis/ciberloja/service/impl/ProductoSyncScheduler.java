@@ -1,14 +1,20 @@
 package com.luis.ciberloja.service.impl;
 
-import com.luis.ciberloja.service.ProductoSyncService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.luis.ciberloja.service.ProductoSyncService;
+
 @Component
 @EnableScheduling
 public class ProductoSyncScheduler {
+	
+	private static Logger logger = LogManager.getLogger(ProductoSyncScheduler.class);
+
     @Autowired
     private ProductoSyncService productoSyncService;
 
@@ -17,10 +23,10 @@ public class ProductoSyncScheduler {
         productoSyncService.syncUpdatedProductos();
     }
 
-    
     @Scheduled(initialDelay = 1000, fixedDelay = Long.MAX_VALUE)
     public void initialImport() {
+        logger.info("Running initial import of all products");
         productoSyncService.importAllProductos();
+        logger.info("Initial import completed");
     }
-    
 }

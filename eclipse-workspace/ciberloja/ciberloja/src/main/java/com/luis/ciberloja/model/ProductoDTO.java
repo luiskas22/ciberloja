@@ -2,65 +2,67 @@ package com.luis.ciberloja.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "producto")
 public class ProductoDTO {
+	@Id
+	private String artigo;
+	private String descricao;
+	private Double pvp3;
+	private Double stock;
+	private String familia;
+	@Transient
+	private String familiaNombre;
 
-    @Id
-    private String artigo; // Este es el ID del producto (e.g., "artigo")
+	// Getters and setters
+	public String getId() {
+		return artigo;
+	}
 
-    private String descricao;
+	public void setId(String artigo) {
+		this.artigo = artigo;
+	}
 
-    private Double pvp3;
+	public String getNombre() {
+		return descricao;
+	}
 
-    private Double stock;
+	public void setNombre(String descripcion) {
+		this.descricao = descripcion;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "familia", referencedColumnName = "familia") // La columna 'familia' en 'producto' referencia la columna 'familia' en 'familia'
-    private Familia familia;
+	public Double getPrecio() {
+		return pvp3;
+	}
 
-    // Getters y setters
-    public String getId() {
-        return artigo;
-    }
+	public void setPrecio(Double pvp3) {
+		this.pvp3 = pvp3;
+	}
 
-    public void setId(String artigo) {
-        this.artigo = artigo;
-    }
+	public Double getStockDisponible() {
+		return stock;
+	}
 
-    public String getNombre() {
-        return descricao;
-    }
+	public void setStockDisponible(Double stock) {
+		this.stock = stock;
+	}
 
-    public void setNombre(String descricao) {
-        this.descricao = descricao;
-    }
+	public String getFamilia() {
+		return familia;
+	}
 
-    public Double getPrecio() {
-        return pvp3;
-    }
+	public void setFamilia(String familia) {
+		this.familia = familia;
+	}
 
-    public void setPrecio(Double pvp3) {
-        this.pvp3 = pvp3;
-    }
+	public String getFamiliaNombre() {
+		return familiaNombre;
+	}
 
-    public Double getStockDisponible() {
-        return stock;
-    }
-
-    public void setStockDisponible(Double stock) {
-        this.stock = stock;
-    }
-
-    public Familia getFamilia() {
-        return familia;
-    }
-
-    public void setFamilia(Familia familia) {
-        this.familia = familia;
-    }
+	public void setFamiliaNombre(String familiaNombre) {
+		this.familiaNombre = familiaNombre;
+	}
 }

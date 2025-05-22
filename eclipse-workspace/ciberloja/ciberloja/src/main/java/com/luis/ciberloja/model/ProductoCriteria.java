@@ -1,98 +1,70 @@
 package com.luis.ciberloja.model;
 
 public class ProductoCriteria {
-	private String id;
-	private String nombre;
-	private String descripcion;
-	private Double precioMin;
-	private Double precioMax;
-	private Integer stockMin;
-	private Integer stockMax;
-	private String nombreCategoria;
-	private String nombreMarca;
-	private String nombreUnidadMedida;
+    private String artigo;
+    private String descripcion;
+    private Double pvp3Min;
+    private Double pvp3Max;
+    private Double stockMin;
+    private Double stockMax;
+    private String familiaNombre;
 
-	public ProductoCriteria() {
-	}
+    public ProductoCriteria() {
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getArtigo() {
+        return artigo;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setArtigo(String artigo) {
+        this.artigo = artigo;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public Double getPvp3Min() {
+        return pvp3Min;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setPvp3Min(Double pvp3Min) {
+        this.pvp3Min = pvp3Min;
+    }
 
-	public Double getPrecioMin() {
-		return precioMin;
-	}
+    public Double getPvp3Max() {
+        return pvp3Max;
+    }
 
-	public void setPrecioMin(Double precioMin) {
-		this.precioMin = precioMin;
-	}
+    public void setPvp3Max(Double pvp3Max) {
+        this.pvp3Max = pvp3Max;
+    }
 
-	public Double getPrecioMax() {
-		return precioMax;
-	}
+    public Double getStockMin() {
+        return stockMin;
+    }
 
-	public void setPrecioMax(Double precioMax) {
-		this.precioMax = precioMax;
-	}
+    public void setStockMin(Double stockMin) {
+        this.stockMin = stockMin;
+    }
 
-	public Integer getStockMin() {
-		return stockMin;
-	}
+    public Double getStockMax() {
+        return stockMax;
+    }
 
-	public void setStockMin(Integer stockMin) {
-		this.stockMin = stockMin;
-	}
+    public void setStockMax(Double stockMax) {
+        this.stockMax = stockMax;
+    }
 
-	public Integer getStockMax() {
-		return stockMax;
-	}
+    public String getFamiliaNombre() {
+        return familiaNombre;
+    }
 
-	public void setStockMax(Integer stockMax) {
-		this.stockMax = stockMax;
-	}
-
-	public String getNombreCategoria() {
-		return nombreCategoria;
-	}
-
-	public void setNombreCategoria(String nombreCategoria) {
-		this.nombreCategoria = nombreCategoria;
-	}
-
-	public String getNombreMarca() {
-		return nombreMarca;
-	}
-
-	public void setNombreMarca(String nombreMarca) {
-		this.nombreMarca = nombreMarca;
-	}
-
-	public String getNombreUnidadMedida() {
-		return nombreUnidadMedida;
-	}
-
-	public void setNombreUnidadMedida(String nombreUnidadMedida) {
-		this.nombreUnidadMedida = nombreUnidadMedida;
-	}
-
+    public void setFamiliaNombre(String familiaNombre) {
+        this.familiaNombre = familiaNombre;
+    }
 }

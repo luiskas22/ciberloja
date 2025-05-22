@@ -14,7 +14,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,27 +22,38 @@ import org.w3c.dom.NodeList;
 import com.luis.ciberloja.model.Familia;
 import com.luis.ciberloja.model.ProductoDTO;
 import com.luis.ciberloja.repository.FamiliaRepository;
-import com.luis.ciberloja.soap.GetArtigosCiberlojaSiteResponse;
+import com.luis.ciberloja.service.ArtigosCiberloja;
 import com.luis.ciberloja.soap.Website;
 import com.luis.ciberloja.soap.WebsiteSoap;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.soap.SOAPException;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.handler.MessageContext;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPConnection;
+import jakarta.xml.soap.SOAPConnectionFactory;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPPart;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 @Service
-public class ArtigosCiberlojaImpl {
+public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 
 	private static final Logger logger = LogManager.getLogger(ArtigosCiberlojaImpl.class);
 	private final String ENPOINT = "https://ns4.ciberloja.com:8081/website.asmx?WSDL";
 	private final String EMPRESA = "ciberloja";
 	private final String UTILIZADOR = "website";
 	private final String PASSWORD = "Website2025*";
-	private final FamiliaRepository familiaRepository;
 
 	@Autowired
-	public ArtigosCiberlojaImpl(FamiliaRepository familiaRepository) {
-		this.familiaRepository = familiaRepository;
-	}
+	private FamiliaRepository familiaRepository;
 
 	@PostConstruct
 	public void init() {
@@ -71,47 +81,11 @@ public class ArtigosCiberlojaImpl {
 
 			logger.info("Calling SOAP service GetArtigosCiberlojaSite at endpoint: {} for empresa: {}", ENPOINT,
 					EMPRESA);
-			URL url = new URL(ENPOINT);
-			Website website = new Website(url);
-			WebsiteSoap port = website.getWebsiteSoap();
 
-			GetArtigosCiberlojaSiteResponse.GetArtigosCiberlojaSiteResult result = port.getArtigosCiberlojaSite(EMPRESA,
-					UTILIZADOR, PASSWORD);
-			String xmlResponse = null;
-			if (result != null) {
-				logger.debug("Raw SOAP result: {}", result.toString());
-
-				Object diffgramAny = result.getDiffgramAny();
-				if (diffgramAny != null) {
-					xmlResponse = serializeNodeToString(diffgramAny);
-					logger.debug("DiffgramAny content: {}", xmlResponse);
-				} else {
-					List<Object> schemaAny = result.getSchemaAny();
-					if (schemaAny != null && !schemaAny.isEmpty()) {
-						for (Object obj : schemaAny) {
-							if (obj instanceof Element) {
-								Element element = (Element) obj;
-								if ("diffgram".equals(element.getLocalName())
-										&& "urn:schemas-microsoft-com:xml-diffgram-v1"
-												.equals(element.getNamespaceURI())) {
-									xmlResponse = serializeNodeToString(element);
-									logger.debug("SchemaAny diffgram content: {}", xmlResponse);
-									break;
-								}
-							}
-						}
-						if (xmlResponse == null) {
-							logger.debug("No diffgram found in schemaAny, trying first element");
-							xmlResponse = serializeNodeToString(schemaAny.get(0));
-							logger.debug("SchemaAny first element content: {}", xmlResponse);
-						}
-					} else {
-						logger.warn("Both getDiffgramAny and getSchemaAny are null or empty for empresa: {}", EMPRESA);
-					}
-				}
-			} else {
-				logger.warn("SOAP service returned null result for empresa: {}", EMPRESA);
-			}
+			// Usar SAAJ directamente en lugar de JAX-WS para evitar problemas de generación
+			// de clases
+			String xmlResponse = callSoapServiceDirectly();
+			logger.debug("SOAP response received: {}", xmlResponse);
 
 			return parseSoapResponse(xmlResponse);
 		} catch (SOAPException e) {
@@ -125,7 +99,52 @@ public class ArtigosCiberlojaImpl {
 		}
 	}
 
-	private String serializeNodeToString(Object node) throws Exception {
+	/**
+	 * Llama al servicio SOAP directamente usando SAAJ (SOAP with Attachments API
+	 * for Java) para evitar problemas con la generación de clases por JAX-WS
+	 */
+	public String callSoapServiceDirectly() throws Exception {
+		// Crear una conexión SOAP
+		SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
+		SOAPConnection soapConnection = soapConnectionFactory.createConnection();
+
+		// Crear un mensaje SOAP
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage soapMessage = messageFactory.createMessage();
+		SOAPPart soapPart = soapMessage.getSOAPPart();
+
+		// Configurar el sobre SOAP
+		SOAPEnvelope envelope = soapPart.getEnvelope();
+		envelope.addNamespaceDeclaration("soap", "http://schemas.xmlsoap.org/soap/envelope/");
+		envelope.addNamespaceDeclaration("web", "http://tempuri.org/");
+
+		// Configurar el cuerpo SOAP
+		SOAPBody soapBody = envelope.getBody();
+		SOAPElement soapBodyElem = soapBody.addChildElement("GetArtigosCiberlojaSite", "web");
+		SOAPElement empresa = soapBodyElem.addChildElement("empresa", "web");
+		empresa.addTextNode(EMPRESA);
+		SOAPElement utilizador = soapBodyElem.addChildElement("utilizador", "web");
+		utilizador.addTextNode(UTILIZADOR);
+		SOAPElement password = soapBodyElem.addChildElement("password", "web");
+		password.addTextNode(PASSWORD);
+
+		// Finalizar el mensaje
+		soapMessage.saveChanges();
+
+		// Realizar la llamada SOAP
+		SOAPMessage soapResponse = soapConnection.call(soapMessage, ENPOINT);
+		soapConnection.close();
+
+		// Convertir la respuesta a String
+		StringWriter sw = new StringWriter();
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.transform(new DOMSource(soapResponse.getSOAPPart()), new StreamResult(sw));
+
+		return sw.toString();
+	}
+
+	public String serializeNodeToString(Object node) throws Exception {
 		if (node == null) {
 			return null;
 		}
@@ -140,7 +159,7 @@ public class ArtigosCiberlojaImpl {
 		return writer.toString();
 	}
 
-	private List<ProductoDTO> parseSoapResponse(String xmlResponse) throws Exception {
+	public List<ProductoDTO> parseSoapResponse(String xmlResponse) throws Exception {
 		List<ProductoDTO> productos = new ArrayList<>();
 		if (xmlResponse == null || xmlResponse.trim().isEmpty()) {
 			logger.warn("SOAP service returned empty or null response for empresa: {}", EMPRESA);
@@ -156,19 +175,45 @@ public class ArtigosCiberlojaImpl {
 		factory.setXIncludeAware(false);
 		factory.setExpandEntityReferences(false);
 		var document = factory.newDocumentBuilder()
-				.parse(new java.io.ByteArrayInputStream(xmlResponse.getBytes("UTF-8")));
+				.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));
 
-		NodeList rows = document.getElementsByTagNameNS("urn:schemas-microsoft-com:xml-diffgram-v1",
-				"ArtigosCiberloja");
+		// Intenta buscar los nodos ArtigosCiberloja en diferentes estructuras posibles
+		// de respuesta
+		NodeList rows = document.getElementsByTagNameNS("*", "ArtigosCiberloja");
 		if (rows.getLength() == 0) {
 			rows = document.getElementsByTagName("ArtigosCiberloja");
-			logger.debug("Falling back to non-diffgram namespace for ArtigosCiberloja");
+			logger.debug("Falling back to non-namespace search for ArtigosCiberloja");
+		}
+
+		// Si aún no se encuentra, buscar en otros nodos comunes en respuestas SOAP
+		if (rows.getLength() == 0) {
+			// Buscar dentro del diffgram si existe
+			NodeList diffgrams = document.getElementsByTagNameNS("*", "diffgram");
+			if (diffgrams.getLength() > 0) {
+				Element diffgram = (Element) diffgrams.item(0);
+				rows = diffgram.getElementsByTagName("ArtigosCiberloja");
+				logger.debug("Found ArtigosCiberloja elements inside diffgram");
+			}
+		}
+
+		// Si todavía no encuentra nada, buscar dentro del elemento
+		// GetArtigosCiberlojaSiteResult
+		if (rows.getLength() == 0) {
+			NodeList results = document.getElementsByTagNameNS("*", "GetArtigosCiberlojaSiteResult");
+			if (results.getLength() > 0) {
+				Element result = (Element) results.item(0);
+				rows = result.getElementsByTagName("ArtigosCiberloja");
+				logger.debug("Found ArtigosCiberloja elements inside GetArtigosCiberlojaSiteResult");
+			}
 		}
 
 		if (rows.getLength() == 0) {
-			logger.warn("No ArtigosCiberloja elements found in SOAP response for empresa: {}", EMPRESA);
+			logger.warn("No ArtigosCiberloja elements found in SOAP response for empresa: {}. Raw response: {}",
+					EMPRESA, xmlResponse);
 			return productos;
 		}
+
+		logger.info("Found {} ArtigosCiberloja elements in response", rows.getLength());
 
 		for (int i = 0; i < rows.getLength(); i++) {
 			Element row = (Element) rows.item(i);
@@ -190,13 +235,20 @@ public class ArtigosCiberlojaImpl {
 				familiaId = "004";
 				logger.info("Asignando familia por defecto '004' al producto: {}", producto.getId());
 			}
-			Familia familia = familiaRepository.findById(familiaId).orElse(null);
-			if (familia == null) {
-				logger.warn("Familia with ID {} not found for product {}. Skipping product.", familiaId,
-						producto.getId());
-				continue;
+
+			// Si el repositorio está disponible, busca la familia
+			if (familiaRepository != null) {
+				Familia familia = familiaRepository.findById(familiaId).orElse(null);
+				if (familia == null) {
+					logger.warn("Familia with ID {} not found for product {}. Skipping product.", familiaId,
+							producto.getId());
+					continue;
+				}
+				producto.setFamilia(familia.getId());
+			} else {
+				logger.warn("FamiliaRepository is null, can't set Familia for product: {}", producto.getId());
 			}
-			producto.setFamilia(familia);
+
 			productos.add(producto);
 		}
 
@@ -204,8 +256,13 @@ public class ArtigosCiberlojaImpl {
 		return productos;
 	}
 
-	private String getElementValue(Element parent, String tagName) {
+	public String getElementValue(Element parent, String tagName) {
+		// Primero intenta con el namespace específico
 		NodeList nodeList = parent.getElementsByTagNameNS("*", tagName);
+		if (nodeList.getLength() == 0) {
+			// Si no funciona, intenta sin namespace
+			nodeList = parent.getElementsByTagName(tagName);
+		}
 		return nodeList.getLength() > 0 ? nodeList.item(0).getTextContent().trim() : "";
 	}
 }

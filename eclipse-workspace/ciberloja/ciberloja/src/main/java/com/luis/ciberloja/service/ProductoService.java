@@ -1,12 +1,13 @@
 package com.luis.ciberloja.service;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.model.ProductoCriteria;
 import com.luis.ciberloja.model.ProductoDTO;
 import com.luis.ciberloja.model.Results;
 
+@Service
 public interface ProductoService {
 	public ProductoDTO findById(String id) throws DataException;
 

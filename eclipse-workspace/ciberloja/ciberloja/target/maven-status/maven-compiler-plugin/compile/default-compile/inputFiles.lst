@@ -1,5 +1,5 @@
+C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\CiberlojaApplication.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\conf\ConfigurationParametersManager.java
-C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\conf\TestConnection.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\dao\CategoriaDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\dao\ClienteDAO.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\dao\DireccionDAO.java
@@ -63,6 +63,7 @@ C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciber
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\PinguelaException.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\repository\FamiliaRepository.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\repository\ProductoRepository.java
+C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\service\ArtigosCiberloja.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\service\ClienteService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\service\DireccionService.java
 C:\Users\Luis\eclipse-workspace\ciberloja\ciberloja\src\main\java\com\luis\ciberloja\service\EmpleadoService.java

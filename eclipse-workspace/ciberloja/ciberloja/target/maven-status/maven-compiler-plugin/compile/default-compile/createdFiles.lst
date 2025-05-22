@@ -9,6 +9,7 @@ com\luis\ciberloja\service\MailException.class
 com\luis\ciberloja\service\impl\FamiliasCiberlojaImpl.class
 com\luis\ciberloja\service\impl\FamiliaSyncScheduler.class
 com\luis\ciberloja\model\Categoria.class
+com\luis\ciberloja\service\ArtigosCiberloja.class
 com\luis\ciberloja\dao\impl\ProductoDAOImpl.class
 com\luis\ciberloja\dao\impl\DireccionDAOImpl.class
 com\luis\ciberloja\service\impl\LineaPedidoServiceImpl.class
@@ -87,6 +88,7 @@ com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.class
 com\luis\ciberloja\service\EstadoPedidoService.class
 com\luis\ciberloja\soap\WebsiteSoap.class
 com\luis\ciberloja\service\impl\FamiliaSyncServiceImpl.class
+com\luis\ciberloja\CiberlojaApplication.class
 com\luis\ciberloja\service\EmpleadoService.class
 com\luis\ciberloja\PinguelaException.class
 com\luis\ciberloja\soap\GetFamiliasResponse.class
@@ -110,7 +112,6 @@ com\luis\ciberloja\model\LineaPedido.class
 com\luis\ciberloja\model\DireccionDTO.class
 com\luis\ciberloja\dao\ProductoDAO.class
 com\luis\ciberloja\service\impl\ProductoSyncServiceImpl.class
-com\luis\ciberloja\conf\TestConnection.class
 com\luis\ciberloja\dao\UnidadMedidaDAO.class
 com\luis\ciberloja\soap\GetArtigosCiberlojaSite.class
 com\luis\ciberloja\dao\impl\ProvinciaDAOImpl.class
