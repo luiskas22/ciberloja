@@ -73,25 +73,6 @@ const ProductoService = {
         }
     },
 
-    async deleteProducto(productoId) {
-        try {
-            const data = await new Promise((resolve, reject) => {
-                console.log(`Enviando petición con ID: ${productoId}`);
-                defaultApi.deleteProducto(productoId, (error, data) => {
-                    if (error) {
-                        console.error("Error en la petición a la API:", error);
-                        reject(error);
-                    } else {
-                        console.log("Producto borrado:", data);
-                        resolve(data);
-                    }
-                });
-            });
-            return data;
-        } catch (error) {
-            throw new Error(`Error al eliminar el producto con ID ${productoId}: ${error.message}`);
-        }
-    },
 
     async createProducto(productoData) {
         try {
@@ -110,35 +91,6 @@ const ProductoService = {
             return data;
         } catch (error) {
             throw new Error(`Error al crear el producto: ${error.message}`);
-        }
-    },
-
-    async updateProducto(productoData) {
-        try {
-            console.log("Enviando petición de actualización con datos:", productoData);
-            if (!productoData || !productoData.id) {
-                throw new Error("El objeto productoData debe contener un ID válido");
-            }
-
-            const response = await fetch(`http://192.168.99.40:8080/ciberloja-rest-api/api/producto/update/${productoData.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(productoData),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error al actualizar el producto: ${response.status} - ${errorText}`);
-            }
-
-            const data = await response.json();
-            console.log("Producto actualizado:", data);
-            return data;
-        } catch (error) {
-            console.error("Error al actualizar el producto:", error);
-            throw new Error(`Error al actualizar el producto: ${error.message}`);
         }
     },
 

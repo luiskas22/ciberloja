@@ -3,6 +3,7 @@ import ProductoService from "../services/productoService.js";
 import FileService from "../services/fileService.js";
 import App from "../app.js";
 import Translations from '../resources/translations.js';
+import CartService from "../services/cartService.js";
 
 function debounce(func, delay) {
     let timeoutId;
@@ -100,6 +101,13 @@ const ProductoController = {
             this.fetchProductoInfo(productId);
         }
 
+        if (target.classList.contains("btn-add-to-cart")) {
+            const productId = target.getAttribute("data-id");
+            const nombre = target.getAttribute("data-nombre");
+            const precio = parseFloat(target.getAttribute("data-precio")) || 0;
+            this.handleAddToCart(productId, nombre, precio);
+        }
+
         if (target.id === "backToResultsBtn") {
             event.preventDefault();
             this.showPreviousResults();
@@ -121,6 +129,41 @@ const ProductoController = {
         }
     },
 
+    async handleAddToCart(productId, nombre, precio) {
+        console.log(`ProductoController.handleAddToCart(productId: ${productId}, nombre: ${nombre}, precio: ${precio})...`);
+
+        if (!App.cliente) {
+            console.log("Usuario no logueado, redirigiendo al login...");
+            window.location.hash = '#login';
+            return;
+        }
+
+        try {
+            // Construir el objeto product con el formato esperado por CartService
+            const product = {
+                id: productId,
+                nombre: nombre,
+                precio: precio
+                // Nota: stockDisponible no es necesario para añadir al carrito, pero podría ser útil para validaciones
+            };
+
+            // Obtener el clienteId de App.cliente
+            const clienteId = App.cliente.id;
+            if (!clienteId) {
+                throw new Error("ID de cliente no disponible. Por favor, inicia sesión nuevamente.");
+            }
+
+            // Añadir al carrito usando CartService.addToCart con el formato correcto
+            const quantity = 1; // Cantidad por defecto
+            await CartService.addToCart(clienteId, product, quantity);
+
+            alert(Translations[this.currentLang].alerts.productAddedToCart || "Producto añadido al carrito con éxito");
+        } catch (error) {
+            console.error("Error al añadir el producto al carrito:", error);
+            alert(Translations[this.currentLang].alerts.addToCartError || "Error al añadir el producto al carrito: " + error.message);
+        }
+    },
+
     setupSearchInputs() {
         console.log("ProductoController.setupSearchInputs()...");
         const inputs = [
@@ -130,7 +173,8 @@ const ProductoController = {
             "precioMaxCriteria",
             "stockMinCriteria",
             "stockMaxCriteria",
-            "familiaCriteria"
+            "familiaCriteria",
+            "stockAvailableCriteria"
         ];
         const debouncedSearch = debounce(() => this.handleSearch(), 300);
 
@@ -139,9 +183,11 @@ const ProductoController = {
             if (input) {
                 if (input.hasListener) {
                     input.removeEventListener("input", input.listener);
+                    input.removeEventListener("change", input.listener);
                 }
                 const listener = () => debouncedSearch();
-                input.addEventListener("input", listener);
+                const eventType = input.type === 'checkbox' ? 'change' : 'input';
+                input.addEventListener(eventType, listener);
                 input.hasListener = true;
                 input.listener = listener;
             }
@@ -203,26 +249,26 @@ const ProductoController = {
             precioMax: parseFloat(document.getElementById("precioMaxCriteria")?.value) || null,
             stockMin: parseInt(document.getElementById("stockMinCriteria")?.value) || null,
             stockMax: parseInt(document.getElementById("stockMaxCriteria")?.value) || null,
+            stockAvailable: document.getElementById("stockAvailableCriteria")?.checked || false
         };
 
-        // Check if filters changed
+        if (filters.stockAvailable) {
+            filters.stockMin = filters.stockMin !== null ? Math.max(filters.stockMin, 1) : 1;
+        }
+
         const filtersChanged = JSON.stringify(filters) !== JSON.stringify(this.lastFilters);
         if (filtersChanged) {
             console.log("Filtros cambiados, reiniciando página a 1");
             this.currentPage = 1;
             this.lastFilters = { ...filters };
-            this.previousResults = []; // Clear previous results
+            this.previousResults = [];
         }
 
-        // Log filters and pagination
-        console.log("Filtros:", filters);
-        console.log("Parámetros de paginación:", { page: this.currentPage, size: this.itemsPerPage });
-
-        // Client-side validation
         if (filters.precioMin && filters.precioMax && filters.precioMin > filters.precioMax) {
-            alert(Translations[this.currentLang].alerts.invalidPriceRange);
+            alert(Translations[this.currentLang].alerts.invalidPrecioRange);
             return;
         }
+
         if (filters.stockMin && filters.stockMax && filters.stockMin > filters.stockMax) {
             alert(Translations[this.currentLang].alerts.invalidStockRange);
             return;
@@ -244,12 +290,16 @@ const ProductoController = {
             });
 
             if (response && Array.isArray(response.page)) {
-                this.previousResults = response.page.slice(0, this.itemsPerPage);
-                this.totalItems = response.total || response.page.length;
+                let filteredResults = response.page;
+                if (filters.stockAvailable && filters.stockMin === null) {
+                    filteredResults = response.page.filter(p => p.stockDisponible > 0);
+                }
+
+                this.previousResults = filteredResults;
+                this.totalItems = response.total;
                 this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.itemsPerPage);
 
-                // Fetch images for each product
-                const imagePromises = this.previousResults.map(p => 
+                const imagePromises = this.previousResults.map(p =>
                     FileService.getImagesByProductoId(p.id).catch(() => [])
                 );
                 const imageResults = await Promise.all(imagePromises);
@@ -277,6 +327,7 @@ const ProductoController = {
         if (page >= 1 && page <= this.totalPages) {
             this.currentPage = page;
             this.handleSearch(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     },
 
@@ -402,23 +453,6 @@ const ProductoController = {
             this.showPreviousResults();
         }
     },
-
-    async handleDeleteProduct(productId) {
-        if (!App.isEmpleado()) {
-            alert(Translations[this.currentLang].alerts.employeeOnlyDelete);
-            return;
-        }
-        if (confirm(Translations[this.currentLang].alerts.confirmDelete)) {
-            try {
-                await ProductoService.deleteProducto(productId);
-                alert(Translations[this.currentLang].alerts.productDeleted);
-                await this.handleSearch(this.currentPage);
-            } catch (error) {
-                console.error("Error al eliminar el producto:", error);
-                alert(Translations[this.currentLang].alerts.deleteProductError);
-            }
-        }
-    }
 };
 
 export default ProductoController;
