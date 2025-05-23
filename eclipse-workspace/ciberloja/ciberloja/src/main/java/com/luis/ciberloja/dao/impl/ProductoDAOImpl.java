@@ -54,93 +54,101 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 	@Override
 	public Results<ProductoDTO> findBy(Connection con, ProductoCriteria criteria, int pos, int pageSize)
-			throws DataException {
+	        throws DataException {
 
-		Results<ProductoDTO> resultados = new Results<>();
-		List<String> condiciones = new ArrayList<>();
-		PreparedStatement pst = null;
-		ResultSet rs = null;
+	    Results<ProductoDTO> resultados = new Results<>();
+	    List<String> condiciones = new ArrayList<>();
+	    PreparedStatement pst = null;
+	    ResultSet rs = null;
 
-		try {
-			StringBuilder query = new StringBuilder(
-					"SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
-							+ "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
+	    try {
+	        StringBuilder query = new StringBuilder(
+	                "SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
+	                        + "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
 
-			// Añadir condiciones dinámicamente
-			if (criteria.getArtigo() != null) {
-				condiciones.add("p.ARTIGO = ?");
-			}
-			if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
-				condiciones.add("UPPER(p.DESCRICAO) LIKE ?");
-			}
-			if (criteria.getPvp3Min() != null) {
-				condiciones.add("p.PVP3 >= ?");
-			}
-			if (criteria.getPvp3Max() != null) {
-				condiciones.add("p.PVP3 <= ?");
-			}
-			if (criteria.getStockMin() != null) {
-				condiciones.add("p.STOCK >= ?");
-			}
-			if (criteria.getStockMax() != null) {
-				condiciones.add("p.STOCK <= ?");
-			}
-			if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
-				condiciones.add("UPPER(f.DESCRICAO) LIKE ?");
-			}
+	        // Añadir condiciones dinámicamente
+	        if (criteria.getArtigo() != null) {
+	            condiciones.add("p.ARTIGO = ?");
+	        }
+	        if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
+	            condiciones.add("UPPER(p.DESCRICAO) LIKE ?");
+	        }
+	        if (criteria.getPvp3Min() != null) {
+	            condiciones.add("p.PVP3 >= ?");
+	        }
+	        if (criteria.getPvp3Max() != null) {
+	            condiciones.add("p.PVP3 <= ?");
+	        }
+	        if (criteria.getStockMin() != null) {
+	            condiciones.add("p.STOCK >= ?");
+	        }
+	        if (criteria.getStockMax() != null) {
+	            condiciones.add("p.STOCK <= ?");
+	        }
+	        if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
+	            condiciones.add("UPPER(f.DESCRICAO) LIKE ?");
+	        }
 
-			// Agregar cláusula WHERE si hay condiciones
-			if (!condiciones.isEmpty()) {
-				query.append(" WHERE ").append(String.join(" AND ", condiciones));
-			}
+	        // Agregar cláusula WHERE si hay condiciones
+	        if (!condiciones.isEmpty()) {
+	            query.append(" WHERE ").append(String.join(" AND ", condiciones));
+	        }
 
-			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+	        // Agregar ORDER BY para consistencia en paginación
+	        query.append(" ORDER BY p.ARTIGO");
 
-			// Asignar valores a los parámetros
-			int i = 1;
-			if (criteria.getArtigo() != null) {
-				pst.setString(i++, criteria.getArtigo());
-			}
-			if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
-				pst.setString(i++, "%" + criteria.getDescripcion().trim().toUpperCase() + "%");
-			}
-			if (criteria.getPvp3Min() != null) {
-				pst.setDouble(i++, criteria.getPvp3Min());
-			}
-			if (criteria.getPvp3Max() != null) {
-				pst.setDouble(i++, criteria.getPvp3Max());
-			}
-			if (criteria.getStockMin() != null) {
-				pst.setDouble(i++, criteria.getStockMin());
-			}
-			if (criteria.getStockMax() != null) {
-				pst.setDouble(i++, criteria.getStockMax());
-			}
-			if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
-				pst.setString(i++, "%" + criteria.getFamiliaNombre().trim().toUpperCase() + "%");
-			}
+	        pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-			rs = pst.executeQuery();
+	        // Asignar valores a los parámetros
+	        int paramIndex = 1;
+	        if (criteria.getArtigo() != null) {
+	            pst.setString(paramIndex++, criteria.getArtigo());
+	        }
+	        if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
+	            pst.setString(paramIndex++, "%" + criteria.getDescripcion().trim().toUpperCase() + "%");
+	        }
+	        if (criteria.getPvp3Min() != null) {
+	            pst.setDouble(paramIndex++, criteria.getPvp3Min());
+	        }
+	        if (criteria.getPvp3Max() != null) {
+	            pst.setDouble(paramIndex++, criteria.getPvp3Max());
+	        }
+	        if (criteria.getStockMin() != null) {
+	            pst.setDouble(paramIndex++, criteria.getStockMin());
+	        }
+	        if (criteria.getStockMax() != null) {
+	            pst.setDouble(paramIndex++, criteria.getStockMax());
+	        }
+	        if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
+	            pst.setString(paramIndex++, "%" + criteria.getFamiliaNombre().trim().toUpperCase() + "%");
+	        }
 
-			// Paginación
-			int count = 0;
-			if ((pos >= 1) && rs.absolute(pos)) {
-				do {
-					resultados.getPage().add(loadNext(rs));
-					count++;
-				} while (count < pageSize && rs.next());
-			}
+	        rs = pst.executeQuery();
 
-			resultados.setTotal(JDBCUtils.getTotalRows(rs));
+	        // Calcular el total ANTES de mover el cursor
+	        int totalRows = JDBCUtils.getTotalRows(rs);
+	        resultados.setTotal(totalRows);
 
-		} catch (SQLException e) {
-			logger.error("ProductoCriteria: " + criteria, e);
-			throw new DataException(e);
-		} finally {
-			JDBCUtils.close(pst, rs);
-		}
+	        // Paginación mejorada
+	        if (totalRows > 0 && pos >= 1) {
+	            // Posicionar el cursor en la fila inicial (pos es 1-based)
+	            if (rs.absolute(pos)) {
+	                int count = 0;
+	                do {
+	                    resultados.getPage().add(loadNext(rs));
+	                    count++;
+	                } while (count < pageSize && rs.next());
+	            }
+	        }
 
-		return resultados;
+	    } catch (SQLException e) {
+	        logger.error("Error en ProductoCriteria: " + criteria, e);
+	        throw new DataException("Error ejecutando consulta de productos", e);
+	    } finally {
+	        JDBCUtils.close(pst, rs);
+	    }
+
+	    return resultados;
 	}
 
 	protected ProductoDTO loadNext(ResultSet rs) throws SQLException {
