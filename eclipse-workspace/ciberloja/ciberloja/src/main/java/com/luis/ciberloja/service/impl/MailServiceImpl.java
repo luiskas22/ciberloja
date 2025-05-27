@@ -57,7 +57,6 @@ public class MailServiceImpl implements MailService {
 		String subject = "Ciberloja: Redefinir sua senha"; // Translated subject
 
 		// MODIFICACIÓN: Redirigir a la página frontend de cambio de contraseña
-		// Ajusta esta URL para que coincida con la ubicación de tu formulario frontend
 		String frontendUrl = "http://192.168.99.40:8080/CiberlojaSPA/";
 		String resetUrl = frontendUrl + "#/reset-password?token=" + token + "&id=" + clientId;
 
@@ -68,11 +67,14 @@ public class MailServiceImpl implements MailService {
 				.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #0068C4; }")
 				.append(".header { text-align: center; margin-bottom: 20px; }")
 				.append(".button { display: inline-block; padding: 10px 20px; background-color: #0068C4; color: #FFFFFF; text-decoration: none; border-radius: 5px; }")
+				.append(".warning { color: #D9534F; font-weight: bold; }") // Estilo para el aviso
 				.append("</style>").append("</head>").append("<body>").append("<div class=\"container\">")
 				.append("<div class=\"header\">").append("<h2>Redefinir sua senha</h2>").append("</div>")
 				.append("<p>Recebemos uma solicitação para redefinir a senha da sua conta na Ciberloja.</p>")
 				.append("<p>Por favor, clique no botão abaixo para definir uma nova senha:</p>").append("<p><a href=\"")
 				.append(resetUrl).append("\" class=\"button\">Redefinir senha</a></p>")
+				// Aviso añadido
+				.append("<p class=\"warning\">Importante: Após clicar no link, será necessário clicar no botão 'Iniciar sessão' na página para acessar o formulário de alteração de senha.</p>")
 				.append("<p>Este link é válido por 24 horas. Se você não solicitou esta alteração, ignore este e-mail.</p>")
 				.append("<p>Obrigado por confiar na Ciberloja.</p>").append("<p>A equipe da Ciberloja</p>")
 				.append("</div>").append("</body>").append("</html>");
@@ -325,8 +327,9 @@ public class MailServiceImpl implements MailService {
 					.append("</tr>");
 		}
 
-		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong> IVA incluido</td>").append("<td>")
-				.append(String.format("%.2f €", pedido.getPrecio())).append("</td>").append("</tr>").append("</table>");
+		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong> IVA incluido</td>")
+				.append("<td>").append(String.format("%.2f €", pedido.getPrecio())).append("</td>").append("</tr>")
+				.append("</table>");
 
 		return sb.toString();
 	}

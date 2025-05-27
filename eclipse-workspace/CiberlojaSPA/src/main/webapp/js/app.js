@@ -43,8 +43,7 @@ const Router = {
           App.hideHomeContent();
           return;
         case 'reset-password':
-          // La detección de parámetros se hace en SesionController.init
-          SesionController.init(null, App.languageManager.currentLang);
+          SesionController.init('change_password', App.languageManager.currentLang);
           App.hideHomeContent();
           return;
       }
@@ -140,7 +139,12 @@ const App = {
 
     const hash = window.location.hash;
     console.log("Hash inicial:", hash);
-    if (hash === "#cart" && this.cliente && this.isCliente()) {
+
+    // Manejar rutas específicas al iniciar la aplicación
+    if (hash.startsWith('#/reset-password')) { // Cambiar de === a startsWith para incluir parámetros
+      SesionController.init('change_password', this.languageManager.currentLang);
+      this.hideHomeContent();
+    } else if (hash === "#cart" && this.cliente && this.isCliente()) {
       await CartController.init(this.languageManager.currentLang);
       this.hideHomeContent();
     } else if (hash === "#buscar-produtos") {
@@ -163,10 +167,16 @@ const App = {
       this.hideHomeContent();
     } else if (hash === "#contact") {
       this.showContactContent();
+    } else {
+      // Caso por defecto: mostrar la página principal
+      this.showHomeContent();
     }
 
     this.updateUIForSession();
     FooterController.init(this.languageManager.currentLang);
+
+    // Inicializar el router después de manejar la ruta inicial
+    Router.init();
   },
 
   async setupSessionState() {

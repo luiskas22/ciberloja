@@ -15,6 +15,7 @@ function debounce(func, delay) {
 
 const ProductoController = {
     previousResults: [],
+    allResults: [], // Almacenar todos los resultados sin filtrar por página
     currentPage: 1,
     itemsPerPage: 30,
     totalItems: 0,
@@ -73,16 +74,36 @@ const ProductoController = {
             });
             searchForm.hasListener = true;
         }
+
+        // Evento para la barra de búsqueda global
+        const globalSearch = document.getElementById("globalSearch");
+        if (globalSearch && !globalSearch.hasListener) {
+            globalSearch.addEventListener("input", debounce(() => this.handleSearch(), 300));
+            globalSearch.hasListener = true;
+        }
+
+        // Evento para limpiar la barra de búsqueda global
+        const clearGlobalSearch = document.getElementById("clearGlobalSearch");
+        if (clearGlobalSearch && !clearGlobalSearch.hasListener) {
+            clearGlobalSearch.addEventListener("click", () => {
+                globalSearch.value = "";
+                this.handleSearch();
+            });
+            clearGlobalSearch.hasListener = true;
+        }
     },
 
     clearSearchForm() {
         console.log("ProductoController.clearSearchForm()...");
         const form = document.getElementById("searchProductosForm");
+        const globalSearch = document.getElementById("globalSearch");
         if (form) {
             form.reset();
+            if (globalSearch) globalSearch.value = "";
             this.lastFilters = {};
             this.currentPage = 1;
             this.previousResults = [];
+            this.allResults = [];
             this.totalItems = 0;
             this.totalPages = 0;
             this.handleSearch();
@@ -94,17 +115,18 @@ const ProductoController = {
 
         if (target.classList.contains("product-link")) {
             const productId = target.getAttribute("data-id");
-            const inputs = document.querySelectorAll('#searchProductosForm input, #searchProductosForm select');
+            const inputs = document.querySelectorAll('#searchProductosForm input, #searchProductosForm select, #globalSearch');
             inputs.forEach(input => {
                 input.dataset.previousValue = input.value;
             });
             this.fetchProductoInfo(productId);
         }
 
-        if (target.classList.contains("btn-add-to-cart")) {
-            const productId = target.getAttribute("data-id");
-            const nombre = target.getAttribute("data-nombre");
-            const precio = parseFloat(target.getAttribute("data-precio")) || 0;
+        const addToCartButton = target.closest(".btn-add-to-cart");
+        if (addToCartButton) {
+            const productId = addToCartButton.getAttribute("data-id");
+            const nombre = addToCartButton.getAttribute("data-nombre");
+            const precio = parseFloat(addToCartButton.getAttribute("data-precio")) || 0;
             this.handleAddToCart(productId, nombre, precio);
         }
 
@@ -122,9 +144,11 @@ const ProductoController = {
             event.preventDefault();
             const pageElement = target.classList.contains("page-link") ? target : target.parentElement;
             const page = parseInt(pageElement.dataset.page);
-            console.log("Navegando a página:", page);
-            if (!isNaN(page)) {
+            console.log(`Clic en enlace de página: ${page}, Total páginas: ${this.totalPages}`);
+            if (!isNaN(page) && page > 0 && page <= this.totalPages) {
                 this.goToPage(page);
+            } else {
+                console.warn(`Página inválida: ${page}`);
             }
         }
     },
@@ -139,22 +163,18 @@ const ProductoController = {
         }
 
         try {
-            // Construir el objeto product con el formato esperado por CartService
             const product = {
                 id: productId,
                 nombre: nombre,
                 precio: precio
-                // Nota: stockDisponible no es necesario para añadir al carrito, pero podría ser útil para validaciones
             };
 
-            // Obtener el clienteId de App.cliente
             const clienteId = App.cliente.id;
             if (!clienteId) {
                 throw new Error("ID de cliente no disponible. Por favor, inicia sesión nuevamente.");
             }
 
-            // Añadir al carrito usando CartService.addToCart con el formato correcto
-            const quantity = 1; // Cantidad por defecto
+            const quantity = 1;
             await CartService.addToCart(clienteId, product, quantity);
 
             alert(Translations[this.currentLang].alerts.productAddedToCart || "Producto añadido al carrito con éxito");
@@ -164,36 +184,6 @@ const ProductoController = {
         }
     },
 
-    setupSearchInputs() {
-        console.log("ProductoController.setupSearchInputs()...");
-        const inputs = [
-            "idCriteria",
-            "nombreCriteria",
-            "precioMinCriteria",
-            "precioMaxCriteria",
-            "stockMinCriteria",
-            "stockMaxCriteria",
-            "familiaCriteria",
-            "stockAvailableCriteria"
-        ];
-        const debouncedSearch = debounce(() => this.handleSearch(), 300);
-
-        inputs.forEach(inputId => {
-            const input = document.getElementById(inputId);
-            if (input) {
-                if (input.hasListener) {
-                    input.removeEventListener("input", input.listener);
-                    input.removeEventListener("change", input.listener);
-                }
-                const listener = () => debouncedSearch();
-                const eventType = input.type === 'checkbox' ? 'change' : 'input';
-                input.addEventListener(eventType, listener);
-                input.hasListener = true;
-                input.listener = listener;
-            }
-        });
-    },
-
     showPreviousResults() {
         const container = document.getElementById("pro-inventario");
         if (!container) return;
@@ -201,13 +191,13 @@ const ProductoController = {
         if (!document.getElementById('searchResults')) {
             ProductoView.render("pro-inventario", "search", this.currentLang);
             const inputs = [
-                "idCriteria",
-                "nombreCriteria",
                 "precioMinCriteria",
                 "precioMaxCriteria",
                 "stockMinCriteria",
                 "stockMaxCriteria",
-                "familiaCriteria"
+                "familiaCriteria",
+                "stockAvailableCriteria",
+                "globalSearch"
             ];
             inputs.forEach(inputId => {
                 const input = document.getElementById(inputId);
@@ -218,8 +208,8 @@ const ProductoController = {
             this.setupEvents();
         }
 
-        if (this.previousResults && this.previousResults.length > 0) {
-            ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+        if (this.allResults && this.allResults.length > 0) {
+            this.renderCurrentPage();
         } else {
             this.handleSearch();
         }
@@ -238,31 +228,78 @@ const ProductoController = {
         this.setupEvents();
     },
 
-    async handleSearch(page = 1) {
-        console.log(`ProductoController.handleSearch(page: ${page})...`);
-        this.currentPage = page;
+    setupSearchInputs() {
+        console.log("ProductoController.setupSearchInputs()...");
+        const inputs = [
+            "precioMinCriteria",
+            "precioMaxCriteria",
+            "stockMinCriteria",
+            "stockMaxCriteria",
+            "familiaCriteria",
+            "stockAvailableCriteria",
+            "globalSearch"
+        ];
+        const debouncedSearch = debounce(() => this.handleSearch(), 300);
+
+        inputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                if (input.hasListener) {
+                    input.removeEventListener("input", input.listener);
+                    input.removeEventListener("change", input.listener);
+                }
+                const listener = () => debouncedSearch();
+                const eventType = input.tagName === 'SELECT' || input.type === 'checkbox' ? 'change' : 'input';
+                input.addEventListener(eventType, listener);
+                input.hasListener = true;
+                input.listener = listener;
+            }
+        });
+    },
+
+    async handleSearch(resetPage = true) {
+        console.log(`ProductoController.handleSearch(resetPage: ${resetPage})...`);
+
+        if (resetPage) {
+            this.currentPage = 1;
+        }
+
+        const familiaSelect = document.getElementById("familiaCriteria");
+        const selectedFamilias = familiaSelect ? Array.from(familiaSelect.selectedOptions).map(option => option.value) : [];
+        const globalSearch = document.getElementById("globalSearch")?.value || "";
 
         const filters = {
-            id: document.getElementById("idCriteria")?.value || "",
-            nombre: document.getElementById("nombreCriteria")?.value || "",
             precioMin: parseFloat(document.getElementById("precioMinCriteria")?.value) || null,
             precioMax: parseFloat(document.getElementById("precioMaxCriteria")?.value) || null,
             stockMin: parseInt(document.getElementById("stockMinCriteria")?.value) || null,
             stockMax: parseInt(document.getElementById("stockMaxCriteria")?.value) || null,
-            stockAvailable: document.getElementById("stockAvailableCriteria")?.checked || false
+            familia: selectedFamilias,
+            stockAvailable: document.getElementById("stockAvailableCriteria")?.checked || false,
+            globalSearch: globalSearch // Nuevo campo para la búsqueda global
+        };
+        console.log("Filtros de búsqueda:", filters);
+        const normalizedFilters = {
+            ...filters,
+            precioMin: filters.precioMin ?? null,
+            precioMax: filters.precioMax ?? null,
+            stockMin: filters.stockMin ?? null,
+            stockMax: filters.stockMax ?? null
+        };
+        const normalizedLastFilters = {
+            ...this.lastFilters,
+            precioMin: this.lastFilters.precioMin ?? null,
+            precioMax: this.lastFilters.precioMax ?? null,
+            stockMin: this.lastFilters.stockMin ?? null,
+            stockMax: this.lastFilters.stockMax ?? null
         };
 
-        if (filters.stockAvailable) {
-            filters.stockMin = filters.stockMin !== null ? Math.max(filters.stockMin, 1) : 1;
-        }
-
-        const filtersChanged = JSON.stringify(filters) !== JSON.stringify(this.lastFilters);
+        const filtersChanged = JSON.stringify(normalizedFilters) !== JSON.stringify(normalizedLastFilters);
         if (filtersChanged) {
             console.log("Filtros cambiados, reiniciando página a 1");
             this.currentPage = 1;
-            this.lastFilters = { ...filters };
-            this.previousResults = [];
         }
+
+        this.lastFilters = { ...filters };
 
         if (filters.precioMin && filters.precioMax && filters.precioMin > filters.precioMax) {
             alert(Translations[this.currentLang].alerts.invalidPrecioRange);
@@ -276,58 +313,92 @@ const ProductoController = {
 
         try {
             const response = await ProductoService.findByProductosCriteria(filters, {
-                page: this.currentPage,
-                size: this.itemsPerPage
+                page: 1,
+                size: 10000
             });
 
             console.log("Respuesta del servicio REST:", {
                 pageLength: response.page?.length,
                 total: response.total,
-                totalPages: response.totalPages,
-                firstItem: response.page?.[0]?.id,
-                lastItem: response.page?.[response.page.length - 1]?.id,
-                productIds: response.page?.map(p => p.id)
+                totalPages: response.totalPages
             });
 
             if (response && Array.isArray(response.page)) {
                 let filteredResults = response.page;
-                if (filters.stockAvailable && filters.stockMin === null) {
-                    filteredResults = response.page.filter(p => p.stockDisponible > 0);
+
+                if (!App.isEmpleado()) {
+                    filteredResults = filteredResults.filter(p => p.precio != null && p.precio > 0);
                 }
 
-                this.previousResults = filteredResults;
-                this.totalItems = response.total;
-                this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.itemsPerPage);
+                if (filters.stockAvailable && filters.stockMin === null) {
+                    filteredResults = filteredResults.filter(p => p.stockDisponible > 0);
+                }
 
-                const imagePromises = this.previousResults.map(p =>
+                // Filtrar por búsqueda global (ID o Nombre)
+                if (filters.globalSearch) {
+                    const searchTerm = filters.globalSearch.toLowerCase();
+                    filteredResults = filteredResults.filter(p =>
+                        p.id?.toString().toLowerCase().includes(searchTerm) ||
+                        p.nombre?.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                const imagePromises = filteredResults.map(p =>
                     FileService.getImagesByProductoId(p.id).catch(() => [])
                 );
                 const imageResults = await Promise.all(imagePromises);
-                this.previousResults.forEach((p, i) => p.images = imageResults[i]);
+                filteredResults.forEach((p, i) => p.images = imageResults[i]);
 
-                ProductoView.renderResults(this.previousResults, "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
+                this.allResults = filteredResults;
+                this.totalItems = filteredResults.length;
+                this.totalPages = Math.max(1, Math.ceil(this.totalItems / this.itemsPerPage));
+
+                this.renderCurrentPage();
             } else {
-                this.previousResults = [];
+                this.allResults = [];
                 this.totalItems = 0;
                 this.totalPages = 0;
                 ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
             }
         } catch (error) {
             console.error("Error al buscar productos:", error);
-            this.previousResults = [];
+            this.allResults = [];
             this.totalItems = 0;
             this.totalPages = 0;
             ProductoView.renderResults([], "pro-inventario", this.currentPage, this.itemsPerPage, this.totalItems, this.currentLang);
-            alert(Translations[this.currentLang].alerts.loadProductError + (error.message || ""));
         }
+    },
+
+    renderCurrentPage() {
+        console.log(`Renderizando página ${this.currentPage} de ${this.totalPages}`);
+        console.log(`Total resultados en allResults: ${this.allResults.length}`);
+        console.log(`Total items: ${this.totalItems}, Total pages: ${this.totalPages}`);
+
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = Math.min(startIndex + this.itemsPerPage, this.allResults.length);
+        console.log(`startIndex: ${startIndex}, endIndex: ${endIndex}`);
+
+        this.previousResults = this.allResults.slice(startIndex, endIndex);
+        console.log(`Productos en previousResults: ${this.previousResults.length}`, this.previousResults);
+
+        ProductoView.renderResults(
+            this.previousResults,
+            "pro-inventario",
+            this.currentPage,
+            this.itemsPerPage,
+            this.totalItems,
+            this.currentLang
+        );
     },
 
     goToPage(page) {
         console.log(`ProductoController.goToPage(${page}) - Total páginas: ${this.totalPages}`);
         if (page >= 1 && page <= this.totalPages) {
             this.currentPage = page;
-            this.handleSearch(page);
+            this.renderCurrentPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            console.warn(`Página ${page} fuera de rango. Páginas válidas: 1-${this.totalPages}`);
         }
     },
 
@@ -453,6 +524,25 @@ const ProductoController = {
             this.showPreviousResults();
         }
     },
+
+    async handleDeleteProduct(productId) {
+        if (!App.isEmpleado()) {
+            alert(Translations[this.currentLang].alerts.employeeOnlyDelete || "Solo los empleados pueden eliminar productos");
+            return;
+        }
+
+        const confirmDelete = confirm(Translations[this.currentLang].alerts.confirmDelete || "¿Está seguro de que desea eliminar este producto?");
+        if (!confirmDelete) return;
+
+        try {
+            await ProductoService.deleteProducto(productId);
+            alert(Translations[this.currentLang].alerts.productDeleted || "Producto eliminado con éxito");
+            this.showPreviousResults();
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error);
+            alert(Translations[this.currentLang].alerts.deleteProductError + (error.message || ""));
+        }
+    }
 };
 
 export default ProductoController;

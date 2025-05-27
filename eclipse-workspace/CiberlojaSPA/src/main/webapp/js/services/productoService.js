@@ -34,7 +34,7 @@ const ProductoService = {
                 precioMax: criteria.precioMax || '',
                 stockMin: criteria.stockMin || '',
                 stockMax: criteria.stockMax || '',
-                nombreCategoria: criteria.familia || '',
+                familia: criteria.familia || '',
                 page: pagination.page || 1,
                 size: pagination.size || 30
             });

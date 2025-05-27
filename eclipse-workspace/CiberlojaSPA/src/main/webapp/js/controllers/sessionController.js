@@ -9,16 +9,23 @@ const SesionController = {
         console.log(`SesionController.init(${action}, ${lang})...`);
         this.currentLang = lang;
 
-        // Primero verificamos si hay parámetros de restablecimiento de contraseña en el hash
-        if (window.location.hash.includes('reset-password')) {
-            // Extraer parámetros del hash (#/reset-password?token=xxx&id=123)
-            const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+        // Priorizar la detección de reset-password en el hash
+        if (window.location.hash.startsWith('#/reset-password')) {
+            const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
             const token = hashParams.get('token');
             const clientId = hashParams.get('id');
 
             if (token && clientId) {
-                console.log(`Detected reset-password in hash with token=${token} and id=${clientId}`);
+                console.log(`Detected reset-password with token=${token} and id=${clientId}`);
                 this.loadChangePasswordForm(token, clientId);
+                return;
+            } else {
+                console.warn('Reset password URL missing token or id');
+                SessionView.renderForgotPasswordError(
+                    Translations[this.currentLang].alerts.missing_token_or_id || "Token ou ID de cliente inválido ou ausente.",
+                    this.currentLang
+                );
+                this.loadForgotPasswordForm();
                 return;
             }
         }
@@ -35,13 +42,26 @@ const SesionController = {
                 return;
             } else {
                 console.warn('Reset password URL missing token or id');
-                this.loadForgotPasswordForm(); // Fallback to forgot password form
+                SessionView.renderForgotPasswordError(
+                    Translations[this.currentLang].alerts.missing_token_or_id || "Token ou ID de cliente inválido ou ausente.",
+                    this.currentLang
+                );
+                this.loadForgotPasswordForm();
                 return;
             }
         }
 
-        // Si llegamos aquí, procesamos las acciones normales
+        // Procesar acciones normales solo si no es reset-password
         switch (action) {
+            case "change_password":
+                // Si llegamos aquí con change_password pero sin hash, mostrar error
+                console.warn('Change password action without valid reset-password URL');
+                SessionView.renderForgotPasswordError(
+                    Translations[this.currentLang].alerts.missing_token_or_id || "Token ou ID de cliente inválido ou ausente.",
+                    this.currentLang
+                );
+                this.loadForgotPasswordForm();
+                break;
             case "login":
                 this.loadLoginForm();
                 break;
@@ -51,23 +71,45 @@ const SesionController = {
             case "forgot_password":
                 this.loadForgotPasswordForm();
                 break;
-            case "change_password":
-                // Si llegamos por action directamente, no tendremos token ni clientId
-                this.loadChangePasswordForm();
-                break;
             default:
-                // Si no hay acción específica, intentamos determinar qué mostrar basado en el estado de la sesión
                 const cliente = JSON.parse(sessionStorage.getItem("cliente") || "null");
                 const empleado = JSON.parse(sessionStorage.getItem("empleado") || "null");
 
                 if (cliente || empleado) {
-                    // Si hay un usuario logueado, mostrar página principal
                     App.showHomeContent();
                 } else {
-                    // Si no hay usuario logueado, mostrar login
                     this.loadLoginForm();
                 }
         }
+    },
+
+    loadChangePasswordForm(token, clientId) {
+        console.log("Carregando formulário de alteração de palavra-passe...");
+        if (!token || !clientId) {
+            console.error("Token or clientId missing, redirecting to forgot password form");
+            SessionView.renderForgotPasswordError(
+                Translations[this.currentLang].alerts.missing_token_or_id || "Token ou ID de cliente inválido ou ausente.",
+                this.currentLang
+            );
+            this.loadForgotPasswordForm();
+            return;
+        }
+
+        console.log(`Token: ${token}, ClientId: ${clientId}`);
+        SessionView.render("pro-inventario", "change_password", this.currentLang, { token, clientId });
+
+        setTimeout(() => {
+            this.setupEvents();
+            const form = document.getElementById("changePasswordForm");
+            if (form) {
+                console.log("Formulario cargado con datos:", {
+                    tokenInForm: form.dataset.token,
+                    clientIdInForm: form.dataset.clientId
+                });
+            } else {
+                console.error("El formulario de cambio de contraseña no se encontró en el DOM");
+            }
+        }, 100);
     },
 
     setupEvents() {
@@ -127,30 +169,6 @@ const SesionController = {
         console.log("Carregando formulário de recuperação de palavra-passe...");
         SessionView.render("pro-inventario", "forgot_password", this.currentLang);
         this.setupEvents();
-    },
-
-    loadChangePasswordForm(token, clientId) {
-        console.log("Carregando formulário de alteração de palavra-passe...");
-        console.log(`Token: ${token}, ClientId: ${clientId}`);
-
-        // Renderizar el formulario con los parámetros de token y clientId
-        SessionView.render("pro-inventario", "change_password", this.currentLang, { token, clientId });
-
-        // Configurar eventos después de que el DOM se haya actualizado
-        setTimeout(() => {
-            this.setupEvents();
-
-            // Verificar que los valores se han pasado correctamente al formulario
-            const form = document.getElementById("changePasswordForm");
-            if (form) {
-                console.log("Formulario cargado con datos:", {
-                    tokenInForm: form.dataset.token,
-                    clientIdInForm: form.dataset.clientId
-                });
-            } else {
-                console.error("El formulario de cambio de contraseña no se encontró en el DOM");
-            }
-        }, 100);
     },
 
     async handleLogin(event) {

@@ -90,7 +90,7 @@ const CartView = {
                                                     data-i18n="cart.update">${t.update || 'Atualizar'}</button>
                                         </div>
                                     </td>
-                                    <td>€${(item.product.precio * item.quantity).toFixed(2)}</td>
+                                    <td>€${(item.product.precio * item.quantity).toFixed(2)} </td>
                                     <td>
                                         <button class="remove-from-cart-btn btn btn-outline-danger btn-sm" 
                                                 data-product-id="${item.product.id}" 
@@ -103,7 +103,7 @@ const CartView = {
                     <tfoot>
                         <tr>
                             <td colspan="3"><strong data-i18n="cart.total">${t.total || 'Total'}</strong></td>
-                            <td colspan="2"><strong>€${cart.total.toFixed(2)}</strong></td>
+                            <td colspan="2"><strong>€${cart.total.toFixed(2)}</strong> <span class="iva">(IVA incluido)</span></td>
                         </tr>
                     </tfoot>
                 </table>

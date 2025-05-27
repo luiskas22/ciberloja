@@ -18,6 +18,7 @@ const PedidoController = {
     totalItems: 0,
     totalPages: 0,
     previousResults: [],
+    lastCriteria: null, // Add storage for last search criteria
     imageCache: new Map(), // Add image cache
 
     async getProductImages(productId) {
@@ -58,6 +59,8 @@ const PedidoController = {
         }
     },
 
+    // En pedidoController.js - Método handleDocumentClick
+
     handleDocumentClick(event) {
         const detalleTarget = event.target.closest(".btn-ver-detalle");
         if (detalleTarget) {
@@ -90,6 +93,22 @@ const PedidoController = {
             return;
         }
 
+        const backTarget = event.target.closest(".btn-back");
+        if (backTarget) {
+            event.preventDefault();
+            const backType = backTarget.dataset.backType;
+            console.log("Botón de volver detectado, tipo:", backType);
+
+            if (backType === 'search') {
+                // Para empleados: volver a la búsqueda
+                this.loadSearchForm();
+            } else {
+                // Para clientes: volver a la lista de pedidos
+                this.loadPedidos();
+            }
+            return;
+        }
+
         if (event.target.classList.contains("page-link") || event.target.parentElement.classList.contains("page-link")) {
             event.preventDefault();
             const pageElement = event.target.classList.contains("page-link") ? event.target : event.target.parentElement;
@@ -99,6 +118,20 @@ const PedidoController = {
                 this.goToPage(page);
             }
         }
+    },
+
+    // También agregar un método helper para verificar el rol
+    isEmpleado() {
+        if (window.App && window.App.isEmpleado) {
+            return window.App.isEmpleado();
+        } else {
+            const clienteData = sessionStorage.getItem("cliente");
+            if (clienteData) {
+                const cliente = JSON.parse(clienteData);
+                return cliente && cliente.rol_id === 2;
+            }
+        }
+        return false;
     },
 
     async handleChangeStatus(pedidoId) {
@@ -175,15 +208,52 @@ const PedidoController = {
         }
     },
 
-    loadSearchForm() {
+    loadSearchForm(preserveState = false) {
         console.log("Cargando formulario de búsqueda de pedidos...");
         PedidoView.renderSearchForm("pro-inventario");
         setTimeout(() => {
             this.setupEvents();
-            this.handleSearch();
+            if (preserveState && this.previousResults.length > 0) {
+                // Restore previous search criteria
+                const criteria = {
+                    id: document.getElementById("pedido-id"),
+                    fechaDesde: document.getElementById("fecha-desde"),
+                    fechaHasta: document.getElementById("fecha-hasta"),
+                    precioDesde: document.getElementById("precio-desde"),
+                    precioHasta: document.getElementById("precio-hasta"),
+                    clienteId: document.getElementById("cliente-id"),
+                    tipoEstadoPedidoId: document.getElementById("tipo-estado-pedido-id"),
+                    productoId: document.getElementById("producto-id"),
+                    descripcion: document.getElementById("descripcion")
+                };
+
+                // Example: Restore values if they exist in the last search criteria
+                if (this.lastCriteria) {
+                    if (criteria.id) criteria.id.value = this.lastCriteria.id || "";
+                    if (criteria.fechaDesde) criteria.fechaDesde.value = this.lastCriteria.fechaDesde || "";
+                    if (criteria.fechaHasta) criteria.fechaHasta.value = this.lastCriteria.fechaHasta || "";
+                    if (criteria.precioDesde) criteria.precioDesde.value = this.lastCriteria.precioDesde || "";
+                    if (criteria.precioHasta) criteria.precioHasta.value = this.lastCriteria.precioHasta || "";
+                    if (criteria.clienteId) criteria.clienteId.value = this.lastCriteria.clienteId || "";
+                    if (criteria.tipoEstadoPedidoId) criteria.tipoEstadoPedidoId.value = this.lastCriteria.tipoEstadoPedidoId || "";
+                    if (criteria.productoId) criteria.productoId.value = this.lastCriteria.productoId || "";
+                    if (criteria.descripcion) criteria.descripcion.value = this.lastCriteria.descripcion || "";
+                }
+
+                // Re-render previous results
+                PedidoView.renderSearchResults(
+                    "search-results",
+                    this.previousResults,
+                    this.currentPage,
+                    this.itemsPerPage,
+                    this.totalItems
+                );
+            } else {
+                // Reset form and trigger a fresh search
+                this.clearSearchForm();
+            }
         }, 100);
     },
-
     async handleSearch(page = 1) {
         console.log(`Procesando búsqueda de pedidos (página ${page})...`);
         this.currentPage = page;
@@ -202,6 +272,9 @@ const PedidoController = {
                 page: this.currentPage - 1,
                 size: this.itemsPerPage
             };
+
+            // Store criteria for restoration
+            this.lastCriteria = { ...criteria };
 
             const pedidoCriteria = {
                 id: criteria.id ? parseInt(criteria.id) : null,

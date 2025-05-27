@@ -39,7 +39,7 @@ const FileService = {
     async getImagesByProductoId(productoId) {
         try {
             const url = `http://192.168.99.40:8080/ciberloja-rest-api/api/file/producto/${productoId}`;
-            console.log(`Obteniendo imágenes para producto ${productoId} desde: ${url}`);
+            // console.log(`Obteniendo imágenes para producto ${productoId} desde: ${url}`);
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -55,7 +55,7 @@ const FileService = {
             }
 
             const data = await response.json();
-            console.log("Imágenes obtenidas:", data);
+            // console.log("Imágenes obtenidas:", data);
             return Array.isArray(data) ? data.map(url => ({ url })) : [];
         } catch (error) {
             console.warn(`Error al intentar obtener imágenes para el producto ${productoId}:`, error.message);
