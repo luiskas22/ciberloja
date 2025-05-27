@@ -57,7 +57,8 @@ public class ProductoServiceTest {
     private static void probarBusquedaPorCriterios() throws DataException {
         logger.info("Probando búsqueda por criterios");
         ProductoCriteria criterio = new ProductoCriteria();
-        Results<ProductoDTO> resultados = productoService.findBy(criterio, 5, 30);
+        criterio.setFamiliaNombre("computadores");
+        Results<ProductoDTO> resultados = productoService.findBy(criterio, 3, 30);
         imprimirResultados(resultados.getPage());
         logger.info("Total productos: {}", resultados.getTotal());
     }

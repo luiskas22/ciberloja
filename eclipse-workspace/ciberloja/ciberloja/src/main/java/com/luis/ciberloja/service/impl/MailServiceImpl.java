@@ -64,10 +64,10 @@ public class MailServiceImpl implements MailService {
 		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<meta charset=\"UTF-8\">")
 				.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">").append("<style>")
 				.append("body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #F5F6F5; color: #4A4A4A; padding: 20px; }")
-				.append("h2 { color: #2E8B57; }").append("p { color: #4A4A4A; }")
-				.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #2E8B57; }")
+				.append("h2 { color: #0068C4; }").append("p { color: #4A4A4A; }")
+				.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #0068C4; }")
 				.append(".header { text-align: center; margin-bottom: 20px; }")
-				.append(".button { display: inline-block; padding: 10px 20px; background-color: #2E8B57; color: #FFFFFF; text-decoration: none; border-radius: 5px; }")
+				.append(".button { display: inline-block; padding: 10px 20px; background-color: #0068C4; color: #FFFFFF; text-decoration: none; border-radius: 5px; }")
 				.append("</style>").append("</head>").append("<body>").append("<div class=\"container\">")
 				.append("<div class=\"header\">").append("<h2>Redefinir sua senha</h2>").append("</div>")
 				.append("<p>Recebemos uma solicitação para redefinir a senha da sua conta na Ciberloja.</p>")
@@ -177,8 +177,8 @@ public class MailServiceImpl implements MailService {
 					.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
 					.append("<style>")
 					.append("body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #F5F6F5; color: #4A4A4A; padding: 20px; }")
-					.append("h2 { color: #2E8B57; }").append("p { color: #4A4A4A; }")
-					.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #2E8B57; }")
+					.append("h2 { color: #0068C4; }").append("p { color: #4A4A4A; }")
+					.append(".container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 2px solid #0068C4; }")
 					.append(".header { text-align: center; margin-bottom: 20px; }")
 					.append(".logo { max-width: 100px; margin-bottom: 10px; }").append("</style>").append("</head>")
 					.append("<body>").append("<div class=\"container\">").append("<div class=\"header\">")
@@ -252,7 +252,7 @@ public class MailServiceImpl implements MailService {
 		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<style>")
 				.append("body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }")
 				.append(".container { max-width: 600px; margin: 0 auto; padding: 20px; }")
-				.append(".header { color: #2E8B57; text-align: center; }").append(".section { margin: 15px 0; }")
+				.append(".header { color: #0068C4; text-align: center; }").append(".section { margin: 15px 0; }")
 				.append(".product-table { width: 100%; border-collapse: collapse; margin: 15px 0; }")
 				.append(".product-table th { background: #f5f5f5; text-align: left; padding: 8px; }")
 				.append(".product-table td { padding: 8px; border-bottom: 1px solid #ddd; }")
@@ -325,7 +325,7 @@ public class MailServiceImpl implements MailService {
 					.append("</tr>");
 		}
 
-		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong></td>").append("<td>")
+		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong> IVA incluido</td>").append("<td>")
 				.append(String.format("%.2f €", pedido.getPrecio())).append("</td>").append("</tr>").append("</table>");
 
 		return sb.toString();

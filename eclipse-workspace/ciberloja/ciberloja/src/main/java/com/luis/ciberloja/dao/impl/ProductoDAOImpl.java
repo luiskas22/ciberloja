@@ -53,102 +53,104 @@ public class ProductoDAOImpl implements ProductoDAO {
 	}
 
 	@Override
-	public Results<ProductoDTO> findBy(Connection con, ProductoCriteria criteria, int pos, int pageSize)
-	        throws DataException {
+	public Results<ProductoDTO> findBy(Connection con, ProductoCriteria criteria, int pageNumber, int pageSize)
+			throws DataException {
 
-	    Results<ProductoDTO> resultados = new Results<>();
-	    List<String> condiciones = new ArrayList<>();
-	    PreparedStatement pst = null;
-	    ResultSet rs = null;
+		Results<ProductoDTO> resultados = new Results<>();
+		List<String> condiciones = new ArrayList<>();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
 
-	    try {
-	        StringBuilder query = new StringBuilder(
-	                "SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
-	                        + "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
+		try {
+			StringBuilder query = new StringBuilder(
+					"SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
+							+ "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
 
-	        // Añadir condiciones dinámicamente
-	        if (criteria.getArtigo() != null) {
-	            condiciones.add("p.ARTIGO = ?");
-	        }
-	        if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
-	            condiciones.add("UPPER(p.DESCRICAO) LIKE ?");
-	        }
-	        if (criteria.getPvp3Min() != null) {
-	            condiciones.add("p.PVP3 >= ?");
-	        }
-	        if (criteria.getPvp3Max() != null) {
-	            condiciones.add("p.PVP3 <= ?");
-	        }
-	        if (criteria.getStockMin() != null) {
-	            condiciones.add("p.STOCK >= ?");
-	        }
-	        if (criteria.getStockMax() != null) {
-	            condiciones.add("p.STOCK <= ?");
-	        }
-	        if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
-	            condiciones.add("UPPER(f.DESCRICAO) LIKE ?");
-	        }
+			// Añadir condiciones dinámicamente
+			if (criteria.getArtigo() != null) {
+				condiciones.add("p.ARTIGO = ?");
+			}
+			if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
+				condiciones.add("UPPER(p.DESCRICAO) LIKE ?");
+			}
+			if (criteria.getPvp3Min() != null) {
+				condiciones.add("p.PVP3 >= ?");
+			}
+			if (criteria.getPvp3Max() != null) {
+				condiciones.add("p.PVP3 <= ?");
+			}
+			if (criteria.getStockMin() != null) {
+				condiciones.add("p.STOCK >= ?");
+			}
+			if (criteria.getStockMax() != null) {
+				condiciones.add("p.STOCK <= ?");
+			}
+			if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
+				condiciones.add("UPPER(f.DESCRICAO) LIKE ?");
+			}
 
-	        // Agregar cláusula WHERE si hay condiciones
-	        if (!condiciones.isEmpty()) {
-	            query.append(" WHERE ").append(String.join(" AND ", condiciones));
-	        }
+			// Agregar cláusula WHERE si hay condiciones
+			if (!condiciones.isEmpty()) {
+				query.append(" WHERE ").append(String.join(" AND ", condiciones));
+			}
 
-	        // Agregar ORDER BY para consistencia en paginación
-	        query.append(" ORDER BY p.ARTIGO");
+			// Agregar ORDER BY para consistencia en paginación
+			query.append(" ORDER BY p.ARTIGO");
 
-	        pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-	        // Asignar valores a los parámetros
-	        int paramIndex = 1;
-	        if (criteria.getArtigo() != null) {
-	            pst.setString(paramIndex++, criteria.getArtigo());
-	        }
-	        if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
-	            pst.setString(paramIndex++, "%" + criteria.getDescripcion().trim().toUpperCase() + "%");
-	        }
-	        if (criteria.getPvp3Min() != null) {
-	            pst.setDouble(paramIndex++, criteria.getPvp3Min());
-	        }
-	        if (criteria.getPvp3Max() != null) {
-	            pst.setDouble(paramIndex++, criteria.getPvp3Max());
-	        }
-	        if (criteria.getStockMin() != null) {
-	            pst.setDouble(paramIndex++, criteria.getStockMin());
-	        }
-	        if (criteria.getStockMax() != null) {
-	            pst.setDouble(paramIndex++, criteria.getStockMax());
-	        }
-	        if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
-	            pst.setString(paramIndex++, "%" + criteria.getFamiliaNombre().trim().toUpperCase() + "%");
-	        }
+			// Asignar valores a los parámetros
+			int paramIndex = 1;
+			if (criteria.getArtigo() != null) {
+				pst.setString(paramIndex++, criteria.getArtigo());
+			}
+			if (criteria.getDescripcion() != null && !criteria.getDescripcion().trim().isEmpty()) {
+				pst.setString(paramIndex++, "%" + criteria.getDescripcion().trim().toUpperCase() + "%");
+			}
+			if (criteria.getPvp3Min() != null) {
+				pst.setDouble(paramIndex++, criteria.getPvp3Min());
+			}
+			if (criteria.getPvp3Max() != null) {
+				pst.setDouble(paramIndex++, criteria.getPvp3Max());
+			}
+			if (criteria.getStockMin() != null) {
+				pst.setDouble(paramIndex++, criteria.getStockMin());
+			}
+			if (criteria.getStockMax() != null) {
+				pst.setDouble(paramIndex++, criteria.getStockMax());
+			}
+			if (criteria.getFamiliaNombre() != null && !criteria.getFamiliaNombre().trim().isEmpty()) {
+				pst.setString(paramIndex++, "%" + criteria.getFamiliaNombre().trim().toUpperCase() + "%");
+			}
 
-	        rs = pst.executeQuery();
+			rs = pst.executeQuery();
 
-	        // Calcular el total ANTES de mover el cursor
-	        int totalRows = JDBCUtils.getTotalRows(rs);
-	        resultados.setTotal(totalRows);
+			// CORRECCIÓN: Calcular la posición inicial correctamente
+			// Si pageNumber = 1, startPos = 1
+			// Si pageNumber = 2, startPos = 31 (para pageSize = 30)
+			// Si pageNumber = 3, startPos = 61, etc.
+			int startPos = ((pageNumber - 1) * pageSize) + 1;
 
-	        // Paginación mejorada
-	        if (totalRows > 0 && pos >= 1) {
-	            // Posicionar el cursor en la fila inicial (pos es 1-based)
-	            if (rs.absolute(pos)) {
-	                int count = 0;
-	                do {
-	                    resultados.getPage().add(loadNext(rs));
-	                    count++;
-	                } while (count < pageSize && rs.next());
-	            }
-	        }
+			int count = 0;
+			// Vamos a la posición inicial de carga
+			if (startPos >= 1 && rs.absolute(startPos)) {
+				// Carga la página de datos
+				do {
+					resultados.getPage().add(loadNext(rs));
+					count++;
+				} while (count < pageSize && rs.next());
+			}
 
-	    } catch (SQLException e) {
-	        logger.error("Error en ProductoCriteria: " + criteria, e);
-	        throw new DataException("Error ejecutando consulta de productos", e);
-	    } finally {
-	        JDBCUtils.close(pst, rs);
-	    }
+			// Configura el total de resultados encontrados
+			resultados.setTotal(JDBCUtils.getTotalRows(rs));
 
-	    return resultados;
+		} catch (SQLException e) {
+			logger.error("Producto criteria: " + criteria, e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(pst, rs);
+		}
+		return resultados;
 	}
 
 	protected ProductoDTO loadNext(ResultSet rs) throws SQLException {
