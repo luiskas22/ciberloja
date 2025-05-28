@@ -14,6 +14,7 @@ public class ProductoDTO {
 	private Double pvp3;
 	private Double stock;
 	private String familia;
+	private Boolean destaques;
 	@Transient
 	private String familiaNombre;
 
@@ -65,4 +66,13 @@ public class ProductoDTO {
 	public void setFamiliaNombre(String familiaNombre) {
 		this.familiaNombre = familiaNombre;
 	}
+
+	public Boolean getDestaques() {
+		return destaques;
+	}
+
+	public void setDestaques(Boolean destaqueSite) {
+		this.destaques = destaqueSite;
+	}
+
 }

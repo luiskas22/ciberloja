@@ -25,6 +25,7 @@ public interface WebsiteSoap {
 
     /**
      * Serviço que devolve os artigos para site
+     * 			
      * 
      * @param password
      * @param utilizador
@@ -46,6 +47,7 @@ public interface WebsiteSoap {
 
     /**
      * Serviço que devolve as famílias de artigos
+     * 			
      * 
      * @param password
      * @param utilizador

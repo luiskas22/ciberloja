@@ -288,6 +288,15 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 				logger.warn("FamiliaRepository is null, can't set Familia for product: {}", producto.getId());
 			}
 
+			String destaqueValue = getElementValue(row, "CDU_DestaqueSite");
+			if (destaqueValue == null || destaqueValue.trim().isEmpty()) {
+				logger.warn("CDU_DestaqueSite is null or empty for product ID: {}. Defaulting to false.",
+						producto.getId());
+				producto.setDestaques(false);
+			} else {
+				producto.setDestaques(Boolean.parseBoolean(destaqueValue));
+			}
+			
 			productos.add(producto);
 		}
 

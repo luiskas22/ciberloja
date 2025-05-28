@@ -47,7 +47,6 @@ public class ProductoServiceImpl implements ProductoService {
 		return p;
 	}
 
-
 	@Override
 	public Results<ProductoDTO> findBy(ProductoCriteria criteria, int pos, int pageSize) throws DataException {
 		Connection con = null;
@@ -70,6 +69,25 @@ public class ProductoServiceImpl implements ProductoService {
 		return resultados;
 	}
 
+	@Override
+	public Results<ProductoDTO> findByDestaques(int pos, int pageSize) throws DataException {
+		Connection con = null;
+		boolean commit = false;
 
-	
+		Results<ProductoDTO> resultados = null;
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
+			resultados = productoDAO.findByDestaques(con, pos, pageSize);
+			commit = true;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new DataException(e);
+
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+		return resultados;
+	}
 }

@@ -31,7 +31,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 		ResultSet rs = null;
 
 		try {
-			String query = "SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
+			String query = "SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, p.DESTAQUES, f.DESCRICAO AS FAMILIA_DESCRIPCION "
 					+ "FROM PRODUCTO p JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA WHERE p.ARTIGO = ?";
 
 			pst = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -63,7 +63,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 		try {
 			StringBuilder query = new StringBuilder(
-					"SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, f.DESCRICAO AS FAMILIA_DESCRIPCION "
+					"SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, p.DESTAQUES, f.DESCRICAO AS FAMILIA_DESCRIPCION "
 							+ "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
 
 			// Añadir condiciones dinámicamente
@@ -94,7 +94,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 				query.append(" WHERE ").append(String.join(" AND ", condiciones));
 			}
 
-			// Agregar ORDER BY para consistencia en paginación
+			// Agregar ORDER BY para priorizar productos con DESTAQUES = TRUE
 			query.append(" ORDER BY p.ARTIGO");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -125,10 +125,7 @@ public class ProductoDAOImpl implements ProductoDAO {
 
 			rs = pst.executeQuery();
 
-			// CORRECCIÓN: Calcular la posición inicial correctamente
-			// Si pageNumber = 1, startPos = 1
-			// Si pageNumber = 2, startPos = 31 (para pageSize = 30)
-			// Si pageNumber = 3, startPos = 61, etc.
+			// Calcular la posición inicial correctamente
 			int startPos = ((pageNumber - 1) * pageSize) + 1;
 
 			int count = 0;
@@ -153,6 +150,52 @@ public class ProductoDAOImpl implements ProductoDAO {
 		return resultados;
 	}
 
+	@Override
+	public Results<ProductoDTO> findByDestaques(Connection con, int pos, int pageSize) throws DataException {
+		Results<ProductoDTO> resultados = new Results<>();
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			StringBuilder query = new StringBuilder(
+					"SELECT p.ARTIGO, p.DESCRICAO, p.PVP3, p.STOCK, p.FAMILIA, p.DESTAQUES, f.DESCRICAO AS FAMILIA_DESCRIPCION "
+							+ "FROM PRODUCTO p LEFT JOIN FAMILIA f ON p.FAMILIA = f.FAMILIA");
+
+			// Agregar condición fija para productos destacados
+			query.append(" WHERE p.DESTAQUES = TRUE");
+
+			// Agregar ORDER BY para ordenar dentro de los productos destacados
+			query.append(" ORDER BY p.DESCRICAO ASC");
+
+			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+			rs = pst.executeQuery();
+
+			// Calcular la posición inicial correctamente
+			int startPos = ((pos - 1) * pageSize) + 1;
+
+			int count = 0;
+			// Vamos a la posición inicial de carga
+			if (startPos >= 1 && rs.absolute(startPos)) {
+				// Carga la página de datos
+				do {
+					resultados.getPage().add(loadNext(rs));
+					count++;
+				} while (count < pageSize && rs.next());
+			}
+
+			// Configura el total de resultados encontrados
+			resultados.setTotal(JDBCUtils.getTotalRows(rs));
+
+		} catch (SQLException e) {
+			logger.error("Error fetching highlighted products", e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(pst, rs);
+		}
+		return resultados;
+	}
+
 	protected ProductoDTO loadNext(ResultSet rs) throws SQLException {
 		ProductoDTO p = new ProductoDTO();
 		int i = 1;
@@ -162,8 +205,10 @@ public class ProductoDAOImpl implements ProductoDAO {
 		p.setPrecio(rs.getDouble(i++));
 		p.setStockDisponible(rs.getDouble(i++));
 		p.setFamilia(rs.getString(i++));
+		p.setDestaques(rs.getBoolean(i++));
 		p.setFamiliaNombre(rs.getString(i++));
 
 		return p;
 	}
+
 }
