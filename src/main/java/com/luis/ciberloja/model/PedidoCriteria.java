@@ -13,7 +13,8 @@ public class PedidoCriteria extends AbstractCriteria {
 	private Integer tipoEstadoPedidoId;
 	private String productoId;
 	private String descripcionProducto;
-
+	private Integer tipoEntregaId;
+	
 	public PedidoCriteria() {
 
 	}
@@ -88,6 +89,14 @@ public class PedidoCriteria extends AbstractCriteria {
 
 	public void setDescripcionProducto(String descripcionProducto) {
 		this.descripcionProducto = descripcionProducto;
+	}
+
+	public Integer getTipoEntregaId() {
+		return tipoEntregaId;
+	}
+
+	public void setTipoEntregaId(Integer tipoEntregaId) {
+		this.tipoEntregaId = tipoEntregaId;
 	}
 
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Pedido extends AbstractValueObject{
-	
+public class Pedido extends AbstractValueObject {
+
 	private Long id;
 	private Date fechaRealizacion;
 	private Double precio;
@@ -13,8 +13,10 @@ public class Pedido extends AbstractValueObject{
 	private String nickname;
 	private Integer tipoEstadoPedidoId;
 	private String tipoEstadoPedidoNombre;
+	private Integer tipoEntregaPedidoId;
+	private String tipoEntregaPedido;
 	private List<LineaPedido> lineas;
-		
+
 	public Pedido() {
 		lineas = new ArrayList<LineaPedido>();
 	}
@@ -81,6 +83,22 @@ public class Pedido extends AbstractValueObject{
 
 	public void setTipoEstadoPedidoNombre(String tipoEstadoPedidoNombre) {
 		this.tipoEstadoPedidoNombre = tipoEstadoPedidoNombre;
+	}
+
+	public Integer getTipoEntregaPedidoId() {
+		return tipoEntregaPedidoId;
+	}
+
+	public void setTipoEntregaPedidoId(Integer tipoEntregaPedidoId) {
+		this.tipoEntregaPedidoId = tipoEntregaPedidoId;
+	}
+
+	public String getTipoEntregaPedido() {
+		return tipoEntregaPedido;
+	}
+
+	public void setTipoEntregaPedido(String tipoEntregaPedido) {
+		this.tipoEntregaPedido = tipoEntregaPedido;
 	}
 
 }

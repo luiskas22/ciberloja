@@ -43,10 +43,10 @@ public class ArtigosCiberlojaImpl implements ArtigosCiberloja {
 
 	private static final Logger logger = LogManager.getLogger(ArtigosCiberlojaImpl.class);
 
-	private final String ENDPOINT;
-	private final String EMPRESA;
-	private final String UTILIZADOR;
-	private final String PASSWORD;
+	private static String ENDPOINT;
+	private static String EMPRESA;
+	private static String UTILIZADOR;
+	private static String PASSWORD;
 
 	@Autowired
 	private FamiliaRepository familiaRepository;

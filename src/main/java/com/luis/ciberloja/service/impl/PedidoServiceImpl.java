@@ -100,7 +100,6 @@ public class PedidoServiceImpl implements PedidoService {
 	            if (id != null) {
 	                commit = true;
 	                // Obter dados do cliente (exemplo fictício)
-	                ClienteService clienteService = new ClienteServiceImpl(); // Substituir por tua implementação
 	                ClienteDTO cliente = clienteService.findById(p.getClienteId());
 	                String emailCliente = cliente.getEmail(); // Assumindo que ClienteDTO tem getEmail()
 	                mailService.sendPedidoRealizado(emailCliente, cliente, p);

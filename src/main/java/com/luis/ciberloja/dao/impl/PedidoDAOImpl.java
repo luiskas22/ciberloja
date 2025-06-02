@@ -38,11 +38,14 @@ public class PedidoDAOImpl implements PedidoDAO {
 
 		try {
 			StringBuilder query = new StringBuilder(
-					" SELECT DISTINCT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE ")
-					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID")
-					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID")
-					.append(" LEFT JOIN LINEA_PEDIDO LP ON LP.PEDIDO_ID = P.ID") // Join with linea_pedido
-					.append(" LEFT JOIN PRODUCTO PR ON PR.ARTIGO = LP.PRODUCTO_ID"); // Join with producto
+					" SELECT DISTINCT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, "
+							+ " P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE, P.TIPO_ENTREGA_ID, TP.NOMBRE AS TIPO_ENTREGA_NOMBRE ")
+					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
+					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
+					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ") // Use LEFT JOIN for nullable
+																						// TIPO_ENTREGA_ID
+					.append(" LEFT JOIN LINEA_PEDIDO LP ON LP.PEDIDO_ID = P.ID ")
+					.append(" LEFT JOIN PRODUCTO PR ON PR.ARTIGO = LP.PRODUCTO_ID ");
 
 			if (p.getId() != null) {
 				condiciones.add(" P.ID = ? ");
@@ -65,17 +68,26 @@ public class PedidoDAOImpl implements PedidoDAO {
 				if (p.getTipoEstadoPedidoId() != null) {
 					condiciones.add(" P.TIPO_ESTADO_PEDIDO_ID = ? ");
 				}
+				if (p.getTipoEntregaId() != null) {
+					condiciones.add(" P.TIPO_ENTREGA_ID = ? "); // Filter by delivery type
+				}
 				if (p.getProductoId() != null) {
-					condiciones.add(" LP.PRODUCTO_ID = ? "); // Filter by product ID
+					condiciones.add(" LP.PRODUCTO_ID = ? ");
 				}
 				if (p.getDescripcionProducto() != null && !p.getDescripcionProducto().trim().isEmpty()) {
-					condiciones.add(" PR.DESCRIPCION LIKE ? "); // Filter by product description
+					condiciones.add(" PR.DESCRIPCION LIKE ? ");
 				}
 			}
 
 			if (!condiciones.isEmpty()) {
 				query.append(" WHERE ");
 				query.append(String.join(" AND ", condiciones));
+			}
+
+			query.append(" ORDER BY P.ID ASC "); // Add default sorting
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Executing query: {}", query.toString());
 			}
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -102,12 +114,14 @@ public class PedidoDAOImpl implements PedidoDAO {
 				if (p.getTipoEstadoPedidoId() != null) {
 					pst.setInt(i++, p.getTipoEstadoPedidoId());
 				}
+				if (p.getTipoEntregaId() != null) {
+					pst.setInt(i++, p.getTipoEntregaId()); // Set delivery type parameter
+				}
 				if (p.getProductoId() != null) {
-					pst.setString(i++, p.getProductoId()); // Set product ID parameter
+					pst.setString(i++, p.getProductoId());
 				}
 				if (p.getDescripcionProducto() != null && !p.getDescripcionProducto().trim().isEmpty()) {
-					pst.setString(i++, "%" + p.getDescripcionProducto().trim() + "%"); // Set description parameter with
-																						// wildcards
+					pst.setString(i++, "%" + p.getDescripcionProducto().trim() + "%");
 				}
 			}
 
@@ -123,8 +137,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 			resultados.setTotal(JDBCUtils.getTotalRows(rs));
 
 		} catch (SQLException e) {
-			logger.error("PedidoCriteria: " + p, e);
-			throw new DataException(e);
+			throw new DataException("Error in findByCriteria", e);
 		} finally {
 			JDBCUtils.close(pst, rs);
 		}
@@ -138,10 +151,11 @@ public class PedidoDAOImpl implements PedidoDAO {
 
 		try {
 			StringBuilder query = new StringBuilder(
-					" SELECT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE ")
+					" SELECT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, "
+							+ " P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE, P.TIPO_ENTREGA_ID, TP.NOMBRE AS TIPO_ENTREGA_NOMBRE ")
 					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
 					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
-					.append(" WHERE P.ID = ? ");
+					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ").append(" WHERE P.ID = ? ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -171,8 +185,8 @@ public class PedidoDAOImpl implements PedidoDAO {
 		try {
 
 			ps = con.prepareStatement(
-					" INSERT INTO PEDIDO(FECHA_REALIZACION, PRECIO, CLIENTE_ID, TIPO_ESTADO_PEDIDO_ID) "
-							+ " VALUES(?,?,?,?)",
+					" INSERT INTO PEDIDO(FECHA_REALIZACION, PRECIO, CLIENTE_ID, TIPO_ESTADO_PEDIDO_ID, TIPO_ENTREGA_ID) "
+							+ " VALUES(?,?,?,?,?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			int i = 1;
@@ -180,6 +194,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 			ps.setDouble(i++, p.getPrecio());
 			ps.setLong(i++, p.getClienteId());
 			ps.setInt(i++, p.getTipoEstadoPedidoId());
+			ps.setInt(i++, p.getTipoEntregaPedidoId());
 
 			int insertedRows = ps.executeUpdate();
 
@@ -212,13 +227,15 @@ public class PedidoDAOImpl implements PedidoDAO {
 
 		try {
 
-			pst = con.prepareStatement(" UPDATE PEDIDO SET " + " FECHA_REALIZACION = ?, " + " PRECIO = ?, "
-					+ " CLIENTE_ID = ?, " + " TIPO_ESTADO_PEDIDO_ID = ? " + " WHERE ID = ?");
+			pst = con.prepareStatement(" UPDATE PEDIDO SET "
+					+ " FECHA_REALIZACION = ?, PRECIO = ?, CLIENTE_ID = ?, TIPO_ESTADO_PEDIDO_ID = ?, TIPO_ENTREGA_ID = ? "
+					+ " WHERE ID = ?");
 			int i = 1;
 			pst.setDate(i++, new java.sql.Date(p.getFechaRealizacion().getTime()));
 			pst.setDouble(i++, p.getPrecio());
 			pst.setLong(i++, p.getClienteId());
 			pst.setInt(i++, p.getTipoEstadoPedidoId());
+			pst.setInt(i++, p.getTipoEntregaPedidoId());
 			pst.setLong(i++, p.getId());
 
 			int updatedRows = pst.executeUpdate();
@@ -279,10 +296,12 @@ public class PedidoDAOImpl implements PedidoDAO {
 
 		try {
 			StringBuilder query = new StringBuilder(
-					" SELECT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE "
-							+ " FROM PEDIDO P " + " INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID "
-							+ " INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID "
-							+ " WHERE P.CLIENTE_ID = ? ");
+					" SELECT P.ID, P.FECHA_REALIZACION, P.PRECIO, P.CLIENTE_ID, C.NICKNAME, "
+							+ " P.TIPO_ESTADO_PEDIDO_ID, EP.NOMBRE, P.TIPO_ENTREGA_ID, TP.NOMBRE AS TIPO_ENTREGA_NOMBRE ")
+					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
+					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
+					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ")
+					.append(" WHERE P.CLIENTE_ID = ? ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			pst.setLong(1, clienteId);
@@ -312,7 +331,6 @@ public class PedidoDAOImpl implements PedidoDAO {
 	}
 
 	protected Pedido loadNext(Connection con, ResultSet rs) throws SQLException, DataException {
-
 		int i = 1;
 		Pedido p = new Pedido();
 
@@ -323,11 +341,12 @@ public class PedidoDAOImpl implements PedidoDAO {
 		p.setNickname(rs.getString(i++));
 		p.setTipoEstadoPedidoId(rs.getInt(i++));
 		p.setTipoEstadoPedidoNombre(rs.getString(i++));
+		p.setTipoEntregaPedidoId(rs.getInt(i++));
+		p.setTipoEntregaPedido(rs.getString(i++));
 
 		List<LineaPedido> lineas = lineaPedidoDAO.findByPedido(con, p.getId());
 		p.setLineas(lineas);
 
 		return p;
 	}
-
 }

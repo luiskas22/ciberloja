@@ -1,30 +1,30 @@
-//package com.luis.ciberloja.service;
-//
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.List;
-//
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-//
-//import com.luis.ciberloja.model.LineaPedido;
-//import com.luis.ciberloja.model.Pedido;
-//import com.luis.ciberloja.model.PedidoCriteria;
-//import com.luis.ciberloja.model.ProductoDTO;
-//import com.luis.ciberloja.model.Results;
-//import com.luis.ciberloja.service.impl.PedidoServiceImpl;
-//import com.luis.ciberloja.service.impl.ProductoServiceImpl;
-//
-//public class PedidoServiceTest {
-//
-//	private static Logger logger = LogManager.getLogger(PedidoServiceTest.class);
-//	private PedidoService pedidoService = null;
-//	private ProductoService productoService = null;
-//
-//	public PedidoServiceTest() {
-//		pedidoService = new PedidoServiceImpl();
-//		productoService = new ProductoServiceImpl();
-//	}
+package com.luis.ciberloja.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.luis.ciberloja.model.LineaPedido;
+import com.luis.ciberloja.model.Pedido;
+import com.luis.ciberloja.model.PedidoCriteria;
+import com.luis.ciberloja.model.ProductoDTO;
+import com.luis.ciberloja.model.Results;
+import com.luis.ciberloja.service.impl.PedidoServiceImpl;
+import com.luis.ciberloja.service.impl.ProductoServiceImpl;
+
+public class PedidoServiceTest {
+
+	private static Logger logger = LogManager.getLogger(PedidoServiceTest.class);
+	private PedidoService pedidoService = null;
+	private ProductoService productoService = null;
+
+	public PedidoServiceTest() {
+		pedidoService = new PedidoServiceImpl();
+		productoService = new ProductoServiceImpl();
+	}
 //
 //	public void testFindById() throws Exception {
 //		logger.info("Testing FindById...");
@@ -180,67 +180,67 @@
 //
 //	}
 //
-//	public void testCreate() throws Exception {
-//		// Crear el pedido
-//		Pedido p = new Pedido();
-//
-//		// Crear líneas de pedido
-//		LineaPedido lp1 = new LineaPedido();
-//		LineaPedido lp2 = new LineaPedido();
-//		LineaPedido lp3 = new LineaPedido();
-//
-//		// Obtener los productos
-//		ProductoDTO pro8 = productoService.findById(8L);
-//		ProductoDTO pro9 = productoService.findById(9L);
-//		ProductoDTO pro10 = productoService.findById(10L);
-//
-//		// Verificar que los productos existan
-//		if (pro8 == null || pro9 == null || pro10 == null) {
-//			logger.error("Uno o más productos no encontrados: 11=" + pro8 + ", 15=" + pro9 + ", 17=" + pro10);
-//			return;
-//		}
-//
-//		// Configurar el pedido
-//		p.setFechaRealizacion(new Date()); // Fecha actual
-//		p.setClienteId(1L); // Cliente con id = 1 (Luis)
-//		p.setTipoEstadoPedidoId(2); // Estado "En proceso" (id = 2)
-//
-//		// Configurar la línea de pedido para producto 11
-//		lp1.setProductoId(pro8.getId()); // Producto id = 11
-//		lp1.setNombreProducto(pro8.getNombre()); // Nombre del producto
-//		lp1.setPrecio(pro8.getPrecio()); // Precio del producto
-//		lp1.setUnidades(4); // 2 unidades
-//
-//		// Configurar la línea de pedido para producto 15
-//		lp2.setProductoId(pro9.getId()); // Producto id = 15
-//		lp2.setNombreProducto(pro9.getNombre()); // Nombre del producto
-//		lp2.setPrecio(pro9.getPrecio()); // Precio del producto
-//		lp2.setUnidades(1); // 1 unidad
-//
-//		// Configurar la línea de pedido para producto 17
-//		lp3.setProductoId(pro10.getId()); // Producto id = 17
-//		lp3.setNombreProducto(pro10.getNombre()); // Nombre del producto
-//		lp3.setPrecio(pro10.getPrecio()); // Precio del producto
-//		lp3.setUnidades(2); // 3 unidades
-//
-//		// Añadir las líneas al pedido
-//		p.getLineas().add(lp1);
-//		p.getLineas().add(lp2);
-//		p.getLineas().add(lp3);
-//
-//		// Calcular el precio total del pedido
-//		p.setPrecio(pedidoService.calcularPrecio(p));
-//
-//		// Guardar el pedido
-//		Long id = pedidoService.create(p);
-//
-//		// Verificar el resultado
-//		if (id == null) {
-//			logger.info("El pedido no se ha creado correctamente");
-//		} else {
-//			logger.info("El pedido se ha creado correctamente con id: " + id);
-//		}
-//	}
+	public void testCreate() throws Exception {
+		// Crear el pedido
+		Pedido p = new Pedido();
+
+		// Crear líneas de pedido
+		LineaPedido lp1 = new LineaPedido();
+		LineaPedido lp2 = new LineaPedido();
+		LineaPedido lp3 = new LineaPedido();
+
+		// Obtener los productos
+		ProductoDTO pro8 = productoService.findById("00100100MB-76-1000");
+		ProductoDTO pro9 = productoService.findById("00200332");
+		ProductoDTO pro10 = productoService.findById("00201658");
+
+		// Verificar que los productos existan
+		if (pro8 == null || pro9 == null || pro10 == null) {
+			logger.error("Uno o más productos no encontrados: 11=" + pro8 + ", 15=" + pro9 + ", 17=" + pro10);
+			return;
+		}
+
+		// Configurar el pedido
+		p.setFechaRealizacion(new Date()); // Fecha actual
+		p.setClienteId(1L); // Cliente con id = 1 (Luis)
+		p.setTipoEstadoPedidoId(2); // Estado "En proceso" (id = 2)
+
+		// Configurar la línea de pedido para producto 11
+		lp1.setProductoId(pro8.getId()); // Producto id = 11
+		lp1.setNombreProducto(pro8.getNombre()); // Nombre del producto
+		lp1.setPrecio(pro8.getPrecio()); // Precio del producto
+		lp1.setUnidades(4); // 2 unidades
+
+		// Configurar la línea de pedido para producto 15
+		lp2.setProductoId(pro9.getId()); // Producto id = 15
+		lp2.setNombreProducto(pro9.getNombre()); // Nombre del producto
+		lp2.setPrecio(pro9.getPrecio()); // Precio del producto
+		lp2.setUnidades(1); // 1 unidad
+
+		// Configurar la línea de pedido para producto 17
+		lp3.setProductoId(pro10.getId()); // Producto id = 17
+		lp3.setNombreProducto(pro10.getNombre()); // Nombre del producto
+		lp3.setPrecio(pro10.getPrecio()); // Precio del producto
+		lp3.setUnidades(2); // 3 unidades
+
+		// Añadir las líneas al pedido
+		p.getLineas().add(lp1);
+		p.getLineas().add(lp2);
+		p.getLineas().add(lp3);
+
+		// Calcular el precio total del pedido
+		p.setPrecio(pedidoService.calcularPrecio(p));
+		p.setTipoEntregaPedidoId(1);
+		// Guardar el pedido
+		Long id = pedidoService.create(p);
+
+		// Verificar el resultado
+		if (id == null) {
+			logger.info("El pedido no se ha creado correctamente");
+		} else {
+			logger.info("El pedido se ha creado correctamente con id: " + id);
+		}
+	}
 //
 //	public void testUpdate() throws Exception {
 //		logger.info("Testing update...");
@@ -295,23 +295,23 @@
 //		}
 //	}
 //
-//	public static void main(String[] args) throws Exception {
-//		PedidoServiceTest test = new PedidoServiceTest();
-////		test.testFindById();
-//		// test.testFindByCriteriaId();
-//		// test.testFindByCriteriaFechaDesde();
-//		// test.testFindByCriteriaFechaHasta();
-//		// test.testFindByCriteriaPrecioDesde();
-//		// test.testFindByCriteriaPrecioHasta();
-//		// test.testFindByCriteriaClienteId();
-//		// test.testFindByCriteriaTipoEstadoPedidoId();
-//		// test.testFindByCriteriaMultipleParameters();
-////		 test.testFindByEmptyCriteria();
-////		test.testCreate();
+	public static void main(String[] args) throws Exception {
+		PedidoServiceTest test = new PedidoServiceTest();
+//		test.testFindById();
+		// test.testFindByCriteriaId();
+		// test.testFindByCriteriaFechaDesde();
+		// test.testFindByCriteriaFechaHasta();
+		// test.testFindByCriteriaPrecioDesde();
+		// test.testFindByCriteriaPrecioHasta();
+		// test.testFindByCriteriaClienteId();
+		// test.testFindByCriteriaTipoEstadoPedidoId();
+		// test.testFindByCriteriaMultipleParameters();
+//		 test.testFindByEmptyCriteria();
+		test.testCreate();
 //		 test.testUpdate();
-//		// test.testDelete();
-////		test.testFindPedidosByClienteId();
-//
-//	}
-//
-//}
+		// test.testDelete();
+//		test.testFindPedidosByClienteId();
+
+	}
+
+}

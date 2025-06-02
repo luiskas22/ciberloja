@@ -42,7 +42,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendPasswordResetEmail(String to, String token, Long clientId) throws MailException {
+	public void sendPasswordResetEmail(String to, String token, Long clienteId) throws MailException {
 		if (to == null || to.trim().isEmpty()) {
 			throw new MailException("Recipient email cannot be null or empty");
 		}
@@ -57,8 +57,8 @@ public class MailServiceImpl implements MailService {
 		String subject = "Ciberloja: Redefinir sua senha"; // Translated subject
 
 		// MODIFICACIÓN: Redirigir a la página frontend de cambio de contraseña
-		String frontendUrl = "http://192.168.99.40:8080/CiberlojaSPA/";
-		String resetUrl = frontendUrl + "#/reset-password?token=" + token + "&id=" + clientId;
+		String frontendUrl = "http://192.168.99.100:8080/Ciberloja/";
+		String resetUrl = frontendUrl + "#/reset-password?token=" + token + "&id=" + clienteId;
 
 		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<meta charset=\"UTF-8\">")
 				.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">").append("<style>")
@@ -273,8 +273,12 @@ public class MailServiceImpl implements MailService {
 				.append("<div class=\"section\">").append("<h3>Endereço de entrega</h3>").append("<p>")
 				.append(obtenerDireccionEntrega(cliente)).append("</p>").append("</div>")
 
+				.append("<div class=\"section\">").append("<h3>Tipo de Entrega</h3>").append("<p>")
+				.append(pedido.getTipoEntregaPedidoId() == 1 ? "Recolha en Loja" : "Entregue no cliente")
+				.append("</p>").append("</div>")
+
 				.append("<div class=\"section\">").append("<h3>Estado atual</h3>").append("<p>")
-				.append(pedido.getTipoEstadoPedidoNombre()).append("</p>").append("</div>")
+				.append("Pendente").append("</p>").append("</div>")
 
 				.append("<div class=\"section\">")
 				.append("<p>Pode entrar em contacto connosco a qualquer momento respondendo a este e-mail.</p>")
@@ -327,7 +331,7 @@ public class MailServiceImpl implements MailService {
 					.append("</tr>");
 		}
 
-		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong> IVA incluido</td>")
+		sb.append("<tr class=\"total\">").append("<td colspan=\"3\"><strong>Total</strong> (IVA incluido)</td>")
 				.append("<td>").append(String.format("%.2f €", pedido.getPrecio())).append("</td>").append("</tr>")
 				.append("</table>");
 
