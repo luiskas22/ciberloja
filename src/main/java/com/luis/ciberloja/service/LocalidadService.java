@@ -3,16 +3,16 @@ package com.luis.ciberloja.service;
 import java.util.List;
 
 import com.luis.ciberloja.DataException;
-import com.luis.ciberloja.model.Localidad;
+import com.luis.ciberloja.model.Freguesia;
 
 public interface LocalidadService {
 
-	public List<Localidad> findAll() 
+	public List<Freguesia> findAll() 
 			throws DataException;
 	
-	public Localidad findById(int id)
+	public Freguesia findById(int id)
 			throws DataException;
 	
-	public Localidad findByCodigoPostal (int codigoPostal)
+	public Freguesia findByCodigoPostal (int codigoPostal)
 			throws DataException;
 }

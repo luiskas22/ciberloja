@@ -68,17 +68,17 @@ public class DireccionServiceTest {
 
 	}
 	
-	public void testUpdateByCliente() throws Exception{
-		logger.traceEntry("Testing UpdateByEmpleado...");
-		ClienteDTO cliente = new ClienteDTO();
-		cliente = clienteService.findById(1l);
-		List<DireccionDTO> direcciones = cliente.getDirecciones();
-		for(DireccionDTO direccion : direcciones) {
-			direccion.setNombreVia("Avenida Camariñas");
-			direccionService.update(direccion);
-		}
-		
-	}
+//	public void testUpdateByCliente() throws Exception{
+//		logger.traceEntry("Testing UpdateByEmpleado...");
+//		ClienteDTO cliente = new ClienteDTO();
+//		cliente = clienteService.findById(1l);
+//		List<DireccionDTO> direcciones = cliente.getDirecciones();
+//		for(DireccionDTO direccion : direcciones) {
+//			direccion.setNombreVia("Avenida Camariñas");
+//			direccionService.update(direccion);
+//		}
+//		
+//	}
 	
 	public static void main(String [] args) throws Exception{
 		

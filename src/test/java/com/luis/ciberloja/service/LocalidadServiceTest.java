@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.luis.ciberloja.model.Localidad;
+import com.luis.ciberloja.model.Freguesia;
 import com.luis.ciberloja.service.impl.LocalidadServiceImpl;
 
 public class LocalidadServiceTest {
@@ -19,12 +19,12 @@ public class LocalidadServiceTest {
 
 	public void testFindAll() throws Exception{
 		logger.traceEntry("Testing FindAll...");
-		List<Localidad> resultados = localidadService.findAll();
+		List<Freguesia> resultados = localidadService.findAll();
 
 		if(resultados.isEmpty()) {
 			logger.info("No se han encontrado resultados");
 		}else {
-			for(Localidad l : resultados) {
+			for(Freguesia l : resultados) {
 				logger.info(resultados);
 			}
 		}
@@ -32,7 +32,7 @@ public class LocalidadServiceTest {
 
 	public void testFindByCodigoPostal() throws Exception{
 		logger.traceEntry("Testing findByCodigoPostal...");
-		Localidad l = localidadService.findByCodigoPostal(27510);
+		Freguesia l = localidadService.findByCodigoPostal(27510);
 		if(l != null) {
 			logger.info(l);
 		}else {
@@ -44,7 +44,7 @@ public class LocalidadServiceTest {
 
 	public void testFindById() throws Exception{
 		logger.traceEntry("Testing findByLocalidadId...");
-		Localidad l = localidadService.findById(4);
+		Freguesia l = localidadService.findById(4);
 		if(l != null) {
 			logger.info(l);
 		}else {

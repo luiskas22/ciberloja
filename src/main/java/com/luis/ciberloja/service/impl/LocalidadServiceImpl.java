@@ -11,7 +11,7 @@ import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.LocalidadDAO;
 import com.luis.ciberloja.dao.impl.LocalidadDAOImpl;
 import com.luis.ciberloja.dao.util.JDBCUtils;
-import com.luis.ciberloja.model.Localidad;
+import com.luis.ciberloja.model.Freguesia;
 import com.luis.ciberloja.service.LocalidadService;
 
 public class LocalidadServiceImpl implements LocalidadService{
@@ -23,10 +23,10 @@ public class LocalidadServiceImpl implements LocalidadService{
 		localidadDAO = new LocalidadDAOImpl();
 	}
 	
-	public List<Localidad> findAll() throws DataException{
+	public List<Freguesia> findAll() throws DataException{
 		
 		Connection con = null;
-		List<Localidad> localidades = null;
+		List<Freguesia> localidades = null;
 		boolean commit = false;
 		try {
 			con = JDBCUtils.getConnection();
@@ -44,10 +44,10 @@ public class LocalidadServiceImpl implements LocalidadService{
 	}
 
 	
-	public Localidad findById(int id) throws DataException{
+	public Freguesia findById(int id) throws DataException{
 		
 		Connection con = null;
-		Localidad l = null;
+		Freguesia l = null;
 		boolean commit = false;
 		try {
 			con = JDBCUtils.getConnection();
@@ -65,10 +65,10 @@ public class LocalidadServiceImpl implements LocalidadService{
 	}
 
 	
-	public Localidad findByCodigoPostal(int codigoPostal) throws DataException {
+	public Freguesia findByCodigoPostal(int codigoPostal) throws DataException {
 		
 		Connection con = null;
-		Localidad l = null;
+		Freguesia l = null;
 		boolean commit = false;
 		
 		try {

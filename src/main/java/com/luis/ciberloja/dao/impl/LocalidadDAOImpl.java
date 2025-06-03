@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.LocalidadDAO;
 import com.luis.ciberloja.dao.util.JDBCUtils;
-import com.luis.ciberloja.model.Localidad;
+import com.luis.ciberloja.model.Freguesia;
 
 public class LocalidadDAOImpl implements LocalidadDAO {
 	
@@ -23,11 +23,11 @@ public class LocalidadDAOImpl implements LocalidadDAO {
 		
 	}
 	
-	public Localidad findById(Connection con, int id) throws DataException{
+	public Freguesia findById(Connection con, int id) throws DataException{
 		
 		ResultSet rs = null;
 		PreparedStatement pst = null;
-		Localidad l = null;
+		Freguesia l = null;
 		
 		try {
 			StringBuilder query = new StringBuilder ("SELECT ID, NOMBRE, CODIGO_POSTAL, PROVINCIA_ID ")
@@ -53,11 +53,11 @@ public class LocalidadDAOImpl implements LocalidadDAO {
 		return l;
 	}
 	
-	public Localidad findByCodigoPostal (Connection con, int codigoPostal) throws DataException{
+	public Freguesia findByCodigoPostal (Connection con, int codigoPostal) throws DataException{
 		
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		Localidad l = null;
+		Freguesia l = null;
 		
 		try {
 			StringBuilder query = new StringBuilder(" SELECT ID, NOMBRE, CODIGO_POSTAL, PROVINCIA_ID ")
@@ -85,9 +85,9 @@ public class LocalidadDAOImpl implements LocalidadDAO {
 	}
 	
 	
-	public List<Localidad> findAll(Connection con) throws DataException {
+	public List<Freguesia> findAll(Connection con) throws DataException {
 		
-		List<Localidad> resultados = new ArrayList<Localidad>();
+		List<Freguesia> resultados = new ArrayList<Freguesia>();
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		
@@ -113,11 +113,11 @@ public class LocalidadDAOImpl implements LocalidadDAO {
 		return resultados;
 	}
 	
-	protected Localidad loadNext (ResultSet rs) throws SQLException{
+	protected Freguesia loadNext (ResultSet rs) throws SQLException{
 		
 		int i = 1;
 		
-		Localidad l = new Localidad();
+		Freguesia l = new Freguesia();
 		
 		l.setId(rs.getInt(i++));
 		l.setNombre(rs.getString(i++));

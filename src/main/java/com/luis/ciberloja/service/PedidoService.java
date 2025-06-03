@@ -19,7 +19,7 @@ public interface PedidoService {
 			throws DataException, MailException;
 	
 	public boolean update(Pedido p)
-			throws DataException;
+			throws DataException, Exception;
 	
 	public boolean delete(Long id)
 			throws DataException;

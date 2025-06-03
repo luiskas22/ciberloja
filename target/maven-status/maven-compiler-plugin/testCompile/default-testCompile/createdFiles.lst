@@ -7,4 +7,5 @@ com\luis\ciberloja\service\EmpleadoServiceTest.class
 com\luis\ciberloja\service\LocalidadServiceTest.class
 com\luis\ciberloja\service\DireccionServiceTest.class
 com\luis\ciberloja\service\LineaPedidoServiceTest.class
+com\luis\ciberloja\service\PedidoServiceTest.class
 com\luis\ciberloja\service\ProvinciaServiceTest.class

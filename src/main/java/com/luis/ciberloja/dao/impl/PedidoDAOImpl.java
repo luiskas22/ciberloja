@@ -301,7 +301,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
 					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
 					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ")
-					.append(" WHERE P.CLIENTE_ID = ? ");
+					.append(" WHERE P.CLIENTE_ID = ? ").append(" ORDER BY P.ID ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			pst.setLong(1, clienteId);

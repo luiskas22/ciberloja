@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.util.List;
 
 import com.luis.ciberloja.DataException;
-import com.luis.ciberloja.model.Provincia;
+import com.luis.ciberloja.model.Distrito;
 
 
 public interface ProvinciaDAO {
 
-	public Provincia findById(Connection con, int id) throws DataException;
-	public List<Provincia>findAll (Connection con) throws DataException;
+	public Distrito findById(Connection con, int id) throws DataException;
+	public List<Distrito>findAll (Connection con) throws DataException;
 }

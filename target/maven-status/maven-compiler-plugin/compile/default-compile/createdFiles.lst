@@ -86,6 +86,7 @@ com\luis\ciberloja\model\EmpleadoDTO.class
 com\luis\ciberloja\dao\impl\RolDAOImpl.class
 com\luis\ciberloja\dao\impl\TipoEmpleadoDAOImpl.class
 com\luis\ciberloja\service\EstadoPedidoService.class
+com\luis\ciberloja\service\impl\MailServiceImpl$5.class
 com\luis\ciberloja\soap\WebsiteSoap.class
 com\luis\ciberloja\service\impl\FamiliaSyncServiceImpl.class
 com\luis\ciberloja\CiberlojaApplication.class

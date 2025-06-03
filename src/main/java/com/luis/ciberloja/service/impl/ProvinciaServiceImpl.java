@@ -11,7 +11,7 @@ import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.ProvinciaDAO;
 import com.luis.ciberloja.dao.impl.ProvinciaDAOImpl;
 import com.luis.ciberloja.dao.util.JDBCUtils;
-import com.luis.ciberloja.model.Provincia;
+import com.luis.ciberloja.model.Distrito;
 import com.luis.ciberloja.service.ProvinciaService;
 
 public class ProvinciaServiceImpl implements ProvinciaService{
@@ -23,10 +23,10 @@ public class ProvinciaServiceImpl implements ProvinciaService{
 		provinciaDAO = new ProvinciaDAOImpl();
 	}
 	
-	public Provincia findById(int id) throws DataException{
+	public Distrito findById(int id) throws DataException{
 		
 		Connection con = null;
-		Provincia p = null;
+		Distrito p = null;
 		boolean commit = false;
 		
 		try {
@@ -45,10 +45,10 @@ public class ProvinciaServiceImpl implements ProvinciaService{
 	}
 
 	
-	public List<Provincia> findAll() throws DataException {
+	public List<Distrito> findAll() throws DataException {
 		
 		Connection con = null;
-		List<Provincia> resultados = null;
+		List<Distrito> resultados = null;
 		boolean commit = false;
 		
 		try {

@@ -218,10 +218,10 @@ public class DireccionDAOImpl implements DireccionDAO {
 		return true;
 	}
 
-	public List<DireccionDTO> findByClienteId(Connection con, Long clienteId) throws DataException {
+	public DireccionDTO findByClienteId(Connection con, Long clienteId) throws DataException {
+		DireccionDTO d = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		List<DireccionDTO> direcciones = new ArrayList<>();
 
 		try {
 			StringBuilder query = new StringBuilder(
@@ -238,8 +238,7 @@ public class DireccionDAOImpl implements DireccionDAO {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
-				DireccionDTO d = loadNext(rs);
-				direcciones.add(d);
+				d = loadNext(rs);
 			}
 
 		} catch (SQLException e) {
@@ -248,7 +247,7 @@ public class DireccionDAOImpl implements DireccionDAO {
 		} finally {
 			JDBCUtils.close(pst, rs);
 		}
-		return direcciones;
+		return d;
 	}
 
 	protected DireccionDTO loadNext(ResultSet rs) throws SQLException {

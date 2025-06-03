@@ -13,17 +13,17 @@ import org.apache.logging.log4j.Logger;
 import com.luis.ciberloja.DataException;
 import com.luis.ciberloja.dao.ProvinciaDAO;
 import com.luis.ciberloja.dao.util.JDBCUtils;
-import com.luis.ciberloja.model.Provincia;
+import com.luis.ciberloja.model.Distrito;
 
 public class ProvinciaDAOImpl implements ProvinciaDAO{
 
 	private static Logger logger = LogManager.getLogger(ProvinciaDAOImpl.class);
 
-	public Provincia findById(Connection con, int id) throws DataException{
+	public Distrito findById(Connection con, int id) throws DataException{
 
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		Provincia p = null;
+		Distrito p = null;
 
 		try {
 			StringBuilder query = new StringBuilder(" SELECT ID ,NOMBRE, PAIS_ID ")
@@ -52,9 +52,9 @@ public class ProvinciaDAOImpl implements ProvinciaDAO{
 
 
 
-	public List<Provincia> findAll(Connection con) throws DataException{
+	public List<Distrito> findAll(Connection con) throws DataException{
 
-		List<Provincia>resultados = new ArrayList<Provincia>();;
+		List<Distrito>resultados = new ArrayList<Distrito>();;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 
@@ -81,10 +81,10 @@ public class ProvinciaDAOImpl implements ProvinciaDAO{
 		return resultados;
 	}
 	
-	protected Provincia loadNext (ResultSet rs ) throws SQLException {
+	protected Distrito loadNext (ResultSet rs ) throws SQLException {
 
 		int i = 1;
-		Provincia p = new Provincia();
+		Distrito p = new Distrito();
 
 		p.setId(rs.getInt(i++));
 		p.setNombre(rs.getString(i++));

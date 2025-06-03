@@ -25,13 +25,13 @@ public class PedidoServiceImpl implements PedidoService {
 
 	private static Logger logger = LogManager.getLogger(PedidoServiceImpl.class);
 	private PedidoDAO pedidoDAO = null;
-	private ClienteService clienteService=null;
+	private ClienteService clienteService = null;
 	private MailService mailService = null; // Instância do MailService
 
 	public PedidoServiceImpl() {
 		pedidoDAO = new PedidoDAOImpl();
 		mailService = new MailServiceImpl(); // Inicialização do MailService
-		clienteService=new ClienteServiceImpl();
+		clienteService = new ClienteServiceImpl();
 	}
 
 	public Pedido findBy(Long id) throws DataException {
@@ -75,47 +75,47 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	public Long create(Pedido p) throws DataException, MailException {
-	    Connection con = null;
-	    Long id = null;
-	    boolean commit = false;
+		Connection con = null;
+		Long id = null;
+		boolean commit = false;
 
-	    try {
-	        con = JDBCUtils.getConnection();
-	        con.setAutoCommit(false);
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
 
-	        PedidoCriteria criteria = new PedidoCriteria();
-	        criteria.setTipoEstadoPedidoId(6); // Tipo de estado "carrinho"
-	        criteria.setClienteId(p.getClienteId());
+			PedidoCriteria criteria = new PedidoCriteria();
+			criteria.setTipoEstadoPedidoId(6); // Tipo de estado "carrinho"
+			criteria.setClienteId(p.getClienteId());
 
-	        List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
+			List<Pedido> pedidos = findByCriteria(criteria, 1, Integer.MAX_VALUE).getPage();
 
-	        Pedido carrito = null;
-	        if (!pedidos.isEmpty()) {
-	            carrito = pedidos.get(0);
-	        }
+			Pedido carrito = null;
+			if (!pedidos.isEmpty()) {
+				carrito = pedidos.get(0);
+			}
 
-	        if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
-	            p.setPrecio(calcularPrecio(p));
-	            id = pedidoDAO.create(con, p);
-	            if (id != null) {
-	                commit = true;
-	                // Obter dados do cliente (exemplo fictício)
-	                ClienteDTO cliente = clienteService.findById(p.getClienteId());
-	                String emailCliente = cliente.getEmail(); // Assumindo que ClienteDTO tem getEmail()
-	                mailService.sendPedidoRealizado(emailCliente, cliente, p);
-	            }
-	        }
+			if (carrito == null || p.getTipoEstadoPedidoId() != 7) {
+				p.setPrecio(calcularPrecio(p));
+				id = pedidoDAO.create(con, p);
+				if (id != null) {
+					commit = true;
+					// Obter dados do cliente (exemplo fictício)
+					ClienteDTO cliente = clienteService.findById(p.getClienteId());
+					String emailCliente = cliente.getEmail(); // Assumindo que ClienteDTO tem getEmail()
+					mailService.sendPedidoRealizado(emailCliente, cliente, p);
+				}
+			}
 
-	    } catch (SQLException e) {
-	        logger.error(e.getMessage(), e);
-	        throw new DataException(e);
-	    } finally {
-	        JDBCUtils.close(con, commit);
-	    }
-	    return id;
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+		return id;
 	}
 
-	public boolean update(Pedido p) throws DataException {
+	public boolean update(Pedido p) throws Exception {
 
 		Connection con = null;
 		boolean tf = false;
@@ -126,6 +126,9 @@ public class PedidoServiceImpl implements PedidoService {
 			con.setAutoCommit(false);
 			p.setPrecio(calcularPrecio(p));
 			tf = pedidoDAO.update(con, p);
+			ClienteDTO cliente = clienteService.findById(p.getClienteId());
+			String emailCliente = cliente.getEmail();
+			mailService.sendEstadoPedido(emailCliente, cliente, p);
 			commit = true;
 
 		} catch (SQLException e) {
