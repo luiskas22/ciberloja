@@ -33,13 +33,13 @@ public class DireccionDAOImpl implements DireccionDAO {
 		try {
 			stmt = con.createStatement();
 
-			rs = stmt.executeQuery(
-					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, "
-							+ " L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, "
-							+ " PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS " + " FROM DIRECCION D "
-							+ " JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID "
-							+ " JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID " + " JOIN PAIS PA ON PA.ID = PR.PAIS_ID "
-							+ " WHERE D.ID = " + id);
+			rs = stmt.executeQuery(" SELECT " + " D.ID AS ID_DIRECCION, " + " D.NOMBRE_VIA, " + " D.DIR_VIA, "
+					+ " D.CLIENTE_ID, " + " D.EMPLEADO_ID, " + " D.FREGUESIA_ID, " + " F.NOMBRE AS NOMBRE_FREGUESIA, "
+					+ " C.ID AS ID_CONCELHO, " + " C.NOMBRE AS NOMBRE_CONCELHO, " + " DT.ID AS ID_DISTRITO, "
+					+ " DT.NOMBRE AS NOMBRE_DISTRITO, " + " PA.ID AS ID_PAIS, " + " PA.NOMBRE AS NOMBRE_PAIS "
+					+ " FROM DIRECCION D" + " JOIN FREGUESIA F ON F.ID = D.FREGUESIA_ID "
+					+ " JOIN CONCELHO C ON C.ID = F.CONCELHO_ID " + " JOIN DISTRITO DT ON DT.ID = C.DISTRITO_ID "
+					+ " JOIN PAIS PA ON PA.ID = DT.PAIS_ID " + "WHERE D.ID = " + id);
 
 			if (rs.next()) {
 				direccion = loadNext(rs);
@@ -63,10 +63,12 @@ public class DireccionDAOImpl implements DireccionDAO {
 		try {
 
 			StringBuilder query = new StringBuilder(
-					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
-					.append(" FROM DIRECCION D ").append(" INNER JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID ")
-					.append(" INNER JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID ")
-					.append(" INNER JOIN PAIS PA ON PA.ID = PR.PAIS_ID ").append(" WHERE D.EMPLEADO_ID = ? ");
+					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.FREGUESIA_ID, F.NOMBRE AS NOMBRE_FREGUESIA, "
+							+ " C.ID AS ID_CONCELHO, C.NOMBRE AS NOMBRE_CONCELHO, DT.ID AS ID_DISTRITO, DT.NOMBRE AS NOMBRE_DISTRITO ,PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
+					.append(" FROM DIRECCION D ").append(" INNER JOIN FREGUESIA F ON F.ID = D.FREGUESIA_ID ")
+					.append(" INNER JOIN CONCELHO C ON C.ID = F.CONCELHO_ID ")
+					.append(" INNER JOIN DISTRITO DT ON DT.ID = C.DISTRITO_ID ")
+					.append(" INNER JOIN PAIS PA ON PA.ID = DT.PAIS_ID ").append(" WHERE D.EMPLEADO_ID = ? ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -122,13 +124,13 @@ public class DireccionDAOImpl implements DireccionDAO {
 		try {
 
 			pst = con.prepareStatement(
-					" UPDATE DIRECCION SET NOMBRE_VIA = ?, DIR_VIA = ?, LOCALIDAD_ID = ?, CLIENTE_ID = ?, EMPLEADO_ID = ? "
+					" UPDATE DIRECCION SET NOMBRE_VIA = ?, DIR_VIA = ?, FREGUESIA_ID = ?, CLIENTE_ID = ?, EMPLEADO_ID = ? "
 							+ " WHERE ID = ?");
 
 			int i = 1;
 			pst.setString(i++, d.getNombreVia());
 			pst.setString(i++, d.getDirVia());
-			pst.setInt(i++, d.getLocalidadId());
+			pst.setInt(i++, d.getFreguesiaId());
 			JDBCUtils.setNullable(pst, i++, d.getClienteId());
 			JDBCUtils.setNullable(pst, i++, d.getEmpleadoId());
 			pst.setLong(i++, d.getId());
@@ -156,14 +158,14 @@ public class DireccionDAOImpl implements DireccionDAO {
 		try {
 
 			pst = con.prepareStatement(
-					" INSERT INTO DIRECCION (NOMBRE_VIA, DIR_VIA, LOCALIDAD_ID, CLIENTE_ID, EMPLEADO_ID)"
+					" INSERT INTO DIRECCION (NOMBRE_VIA, DIR_VIA, FREGUESIA_ID, CLIENTE_ID, EMPLEADO_ID)"
 							+ " VALUES(?,?,?,?,?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			int i = 1;
 			JDBCUtils.setNullable(pst, i++, d.getNombreVia());
 			JDBCUtils.setNullable(pst, i++, d.getDirVia());
-			JDBCUtils.setNullable(pst, i++, d.getLocalidadId());
+			JDBCUtils.setNullable(pst, i++, d.getFreguesiaId());
 			JDBCUtils.setNullable(pst, i++, d.getClienteId());
 			JDBCUtils.setNullable(pst, i++, d.getEmpleadoId());
 
@@ -218,17 +220,19 @@ public class DireccionDAOImpl implements DireccionDAO {
 		return true;
 	}
 
-	public DireccionDTO findByClienteId(Connection con, Long clienteId) throws DataException {
-		DireccionDTO d = null;
+	public List<DireccionDTO> findByClienteId(Connection con, Long clienteId) throws DataException {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
+		List<DireccionDTO> direcciones = new ArrayList<>();
 
 		try {
 			StringBuilder query = new StringBuilder(
-					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.LOCALIDAD_ID, L.NOMBRE AS NOMBRE_LOCALIDAD, PR.ID AS ID_PROVINCIA, PR.NOMBRE AS NOMBRE_PROVINCIA, PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
-					.append(" FROM DIRECCION D ").append(" INNER JOIN LOCALIDAD L ON L.ID = D.LOCALIDAD_ID ")
-					.append(" INNER JOIN PROVINCIA PR ON PR.ID = L.PROVINCIA_ID ")
-					.append(" INNER JOIN PAIS PA ON PA.ID = PR.PAIS_ID ").append(" WHERE D.CLIENTE_ID = ? ");
+					" SELECT D.ID AS ID_DIRECCION, D.NOMBRE_VIA, D.DIR_VIA, D.CLIENTE_ID, D.EMPLEADO_ID, D.FREGUESIA_ID, F.NOMBRE AS NOMBRE_FREGUESIA, "
+							+ " C.ID AS ID_CONCELHO, C.NOMBRE AS NOMBRE_CONCELHO, DT.ID AS ID_DISTRITO, DT.NOMBRE AS NOMBRE_DISTRITO ,PA.ID AS ID_PAIS, PA.NOMBRE AS NOMBRE_PAIS ")
+					.append(" FROM DIRECCION D ").append(" INNER JOIN FREGUESIA F ON F.ID = D.FREGUESIA_ID ")
+					.append(" INNER JOIN CONCELHO C ON C.ID = F.CONCELHO_ID ")
+					.append(" INNER JOIN DISTRITO DT ON DT.ID = C.DISTRITO_ID ")
+					.append(" INNER JOIN PAIS PA ON PA.ID = DT.PAIS_ID ").append(" WHERE D.CLIENTE_ID = ? ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -238,7 +242,8 @@ public class DireccionDAOImpl implements DireccionDAO {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
-				d = loadNext(rs);
+				DireccionDTO d = loadNext(rs);
+				direcciones.add(d);
 			}
 
 		} catch (SQLException e) {
@@ -247,7 +252,7 @@ public class DireccionDAOImpl implements DireccionDAO {
 		} finally {
 			JDBCUtils.close(pst, rs);
 		}
-		return d;
+		return direcciones;
 	}
 
 	protected DireccionDTO loadNext(ResultSet rs) throws SQLException {
@@ -261,10 +266,12 @@ public class DireccionDAOImpl implements DireccionDAO {
 		d.setDirVia(rs.getString(i++));
 		d.setClienteId(JDBCUtils.getNullableLong(rs, i++));
 		d.setEmpleadoId(JDBCUtils.getNullableLong(rs, i++));
-		d.setLocalidadId(rs.getInt(i++));
-		d.setLocalidadNombre(rs.getString(i++));
-		d.setProvinciaId(rs.getInt(i++));
-		d.setProvinciaNombre(rs.getString(i++));
+		d.setFreguesiaId(rs.getInt(i++));
+		d.setFreguesiaNombre(rs.getString(i++));
+		d.setConcelhoId(rs.getInt(i++));
+		d.setConcelhoNombre(rs.getString(i++));
+		d.setDistritoId(rs.getInt(i++));
+		d.setDistritoNombre(rs.getString(i++));
 		d.setPaisId(rs.getInt(i++));
 		d.setPaisNombre(rs.getString(i++));
 

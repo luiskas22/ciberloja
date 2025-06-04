@@ -14,7 +14,7 @@ public class ClienteDTO extends AbstractValueObject {
 	private String telefono;
 	private String password;
 	private Long rol_id;
-	private DireccionDTO direccion;
+	private List<DireccionDTO> direcciones;
 
 	public ClienteDTO() {
 
@@ -100,12 +100,12 @@ public class ClienteDTO extends AbstractValueObject {
 		this.rol_id = rol_id;
 	}
 
-	public DireccionDTO getDireccion() {
-		return direccion;
+	public List<DireccionDTO> getDirecciones() {
+		return direcciones;
 	}
 
-	public void setDireccion(DireccionDTO direccion) {
-		this.direccion = direccion;
+	public void setDirecciones(List<DireccionDTO> list) {
+		this.direcciones = list;
 	}
 
 }

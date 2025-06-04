@@ -3,3 +3,4 @@ src/main/resources/bindings.xml
 src/main/resources/log4j2.properties
 src/main/resources/website.wsdl
 src/main/resources/ciberloja-cfg.properties
+/target/

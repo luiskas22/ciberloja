@@ -1,22 +1,23 @@
 package com.luis.ciberloja.model;
 
-public class DireccionDTO extends AbstractValueObject{
-	
+public class DireccionDTO extends AbstractValueObject {
+
 	private Long id;
 	private String nombreVia;
 	private String dirVia;
 	private Long clienteId;
 	private Long empleadoId;
-	private Integer localidadId;
-	private String localidadNombre;
-	private Integer provinciaId;
-	private String provinciaNombre;
+	private Integer freguesiaId;
+	private String freguesiaNombre;
+	private Integer concelhoId;
+	private String concelhoNombre;
+	private Integer distritoId;
+	private String distritoNombre;
 	private Integer paisId;
 	private String paisNombre;
-	
-	
-	public DireccionDTO (){
-	
+
+	public DireccionDTO() {
+
 	}
 
 	public Long getId() {
@@ -42,14 +43,6 @@ public class DireccionDTO extends AbstractValueObject{
 	public void setDirVia(String dirVia) {
 		this.dirVia = dirVia;
 	}
-	
-	public Integer getLocalidadId() {
-		return localidadId;
-	}
-
-	public void setLocalidadId(Integer localidadId) {
-		this.localidadId = localidadId;
-	}
 
 	public Long getClienteId() {
 		return clienteId;
@@ -67,28 +60,52 @@ public class DireccionDTO extends AbstractValueObject{
 		this.empleadoId = empleadoId;
 	}
 
-	public String getLocalidadNombre() {
-		return localidadNombre;
+	public Integer getFreguesiaId() {
+		return freguesiaId;
 	}
 
-	public void setLocalidadNombre(String localidadNombre) {
-		this.localidadNombre = localidadNombre;
+	public void setFreguesiaId(Integer freguesiaId) {
+		this.freguesiaId = freguesiaId;
 	}
 
-	public Integer getProvinciaId() {
-		return provinciaId;
+	public String getFreguesiaNombre() {
+		return freguesiaNombre;
 	}
 
-	public void setProvinciaId(Integer provinciaId) {
-		this.provinciaId = provinciaId;
+	public void setFreguesiaNombre(String freguesiaNombre) {
+		this.freguesiaNombre = freguesiaNombre;
 	}
 
-	public String getProvinciaNombre() {
-		return provinciaNombre;
+	public Integer getConcelhoId() {
+		return concelhoId;
 	}
 
-	public void setProvinciaNombre(String provinciaNombre) {
-		this.provinciaNombre = provinciaNombre;
+	public void setConcelhoId(Integer concelhoId) {
+		this.concelhoId = concelhoId;
+	}
+
+	public String getConcelhoNombre() {
+		return concelhoNombre;
+	}
+
+	public void setConcelhoNombre(String concelhoNombre) {
+		this.concelhoNombre = concelhoNombre;
+	}
+
+	public Integer getDistritoId() {
+		return distritoId;
+	}
+
+	public void setDistritoId(Integer distritoId) {
+		this.distritoId = distritoId;
+	}
+
+	public String getDistritoNombre() {
+		return distritoNombre;
+	}
+
+	public void setDistritoNombre(String distritoNombre) {
+		this.distritoNombre = distritoNombre;
 	}
 
 	public Integer getPaisId() {
@@ -107,8 +124,4 @@ public class DireccionDTO extends AbstractValueObject{
 		this.paisNombre = paisNombre;
 	}
 
-	
-
-	
-	
 }

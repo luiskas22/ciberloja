@@ -280,7 +280,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 		c.setTelefono(rs.getString(i++));
 		c.setPassword(rs.getString(i++));
 		c.setRol_id(JDBCUtils.getNullableLong(rs, i++)); // Maneja valores nulos
-		c.setDireccion(direccionDAO.findByClienteId(con, c.getId()));
+		c.setDirecciones(direccionDAO.findByClienteId(con, c.getId()));
 
 		return c;
 	}

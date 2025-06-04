@@ -6,15 +6,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.luis.ciberloja.model.Distrito;
-import com.luis.ciberloja.service.impl.ProvinciaServiceImpl;
+import com.luis.ciberloja.service.impl.DistritoServiceImpl;
 
 public class ProvinciaServiceTest {
 	
 	private static Logger logger = LogManager.getLogger(ProvinciaServiceTest.class);
-	private ProvinciaService provinciaService = null;
+	private DistritoService provinciaService = null;
 	
 	public ProvinciaServiceTest() {
-		provinciaService = new ProvinciaServiceImpl();
+		provinciaService = new DistritoServiceImpl();
 	}
 	
 	public void testFindAll() throws Exception{

@@ -20,5 +20,5 @@ public interface DireccionDAO {
 
 	public Long create(Connection con, DireccionDTO d) throws DataException;
 
-	public DireccionDTO findByClienteId(Connection con, Long clienteId) throws DataException;
+	public List<DireccionDTO> findByClienteId(Connection con, Long clienteId) throws DataException;
 }
