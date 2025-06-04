@@ -285,4 +285,6 @@ public class ClienteDAOImpl implements ClienteDAO {
 		return c;
 	}
 
+	
+
 }

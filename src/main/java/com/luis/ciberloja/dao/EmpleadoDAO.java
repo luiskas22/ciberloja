@@ -3,6 +3,7 @@ package com.luis.ciberloja.dao;
 import java.sql.Connection;
 
 import com.luis.ciberloja.DataException;
+import com.luis.ciberloja.model.DireccionDTO;
 import com.luis.ciberloja.model.EmpleadoDTO;
 import com.luis.ciberloja.model.Results;
 
@@ -25,4 +26,6 @@ public interface EmpleadoDAO {
 		
 		public boolean delete(Connection con,Long id)
 			throws DataException;
+		
+		
 }

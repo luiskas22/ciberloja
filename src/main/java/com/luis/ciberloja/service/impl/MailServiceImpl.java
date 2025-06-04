@@ -1,9 +1,18 @@
 package com.luis.ciberloja.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.luis.ciberloja.conf.ConfigurationParametersManager;
+import com.luis.ciberloja.model.ClienteDTO;
+import com.luis.ciberloja.model.DireccionDTO;
+import com.luis.ciberloja.model.LineaPedido;
+import com.luis.ciberloja.model.Pedido;
+import com.luis.ciberloja.service.MailException;
+import com.luis.ciberloja.service.MailService;
 
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -17,18 +26,6 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
-import jakarta.mail.util.ByteArrayDataSource;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.luis.ciberloja.conf.ConfigurationParametersManager;
-import com.luis.ciberloja.model.ClienteDTO;
-import com.luis.ciberloja.model.DireccionDTO;
-import com.luis.ciberloja.model.LineaPedido;
-import com.luis.ciberloja.model.Pedido;
-import com.luis.ciberloja.service.MailException;
-import com.luis.ciberloja.service.MailService;
 
 public class MailServiceImpl implements MailService {
 
@@ -234,8 +231,8 @@ public class MailServiceImpl implements MailService {
 	public void sendPedidoRealizado(String to, ClienteDTO cliente, Pedido pedido) throws MailException {
 		String subject = "Confirmação do seu pedido #" + pedido.getId();
 
-		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<style>")
-				.append("body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }")
+		StringBuilder body = new StringBuilder().append("<html>").append("<head>").append("<meta charset=\"UTF-8\">")
+				.append("<style>").append("body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }")
 				.append(".container { max-width: 600px; margin: 0 auto; padding: 20px; }")
 				.append(".header { color: #0068C4; text-align: center; }").append(".section { margin: 15px 0; }")
 				.append(".product-table { width: 100%; border-collapse: collapse; margin: 15px 0; }")
@@ -250,7 +247,7 @@ public class MailServiceImpl implements MailService {
 				.append(":</p>").append("</div>").append("<div class=\"section\">")
 				.append("<h3>Detalhes do pedido</h3>").append(obtenerDetallesProductos(pedido)).append("</div>")
 				.append("<div class=\"section\">").append("<h3>Endereço de entrega</h3>").append("<p>")
-				.append(obtenerDireccionEntrega(cliente)).append("</p>").append("</div>")
+				.append(obtenerDireccionEntrega(cliente, pedido)).append("</p>").append("</div>")
 				.append("<div class=\"section\">").append("<h3>Tipo de Entrega</h3>").append("<p>")
 				.append(pedido.getTipoEntregaPedidoId() == 1 ? "Recolha en Loja" : "Entregue no cliente").append("</p>")
 				.append("</div>").append("<div class=\"section\">").append("<h3>Estado atual</h3>").append("<p>")
@@ -362,7 +359,7 @@ public class MailServiceImpl implements MailService {
 					.append("</span></p>").append("</div>").append("<div class=\"section\">")
 					.append("<h3>Detalhes do pedido</h3>").append(obtenerDetallesProductos(pedido)).append("</div>")
 					.append("<div class=\"section\">").append("<h3>Endereço de entrega</h3>").append("<p>")
-					.append(obtenerDireccionEntrega(cliente)).append("</p>").append("</div>")
+					.append(obtenerDireccionEntrega(cliente, pedido)).append("</p>").append("</div>")
 					.append("<div class=\"section\">").append("<h3>Tipo de Entrega</h3>").append("<p>")
 					.append(pedido.getTipoEntregaPedidoId() == 1 ? "Recolha en Loja" : "Entregue no cliente")
 					.append("</p>").append("</div>").append("<div class=\"section\">")
@@ -435,22 +432,45 @@ public class MailServiceImpl implements MailService {
 		return sb.toString();
 	}
 
-	private String obtenerDireccionEntrega(ClienteDTO cliente) {
-		if (cliente.getDirecciones() == null || cliente.getDirecciones().isEmpty()) {
+	private String obtenerDireccionEntrega(ClienteDTO cliente, Pedido pedido) {
+		// For store pickup, return "Recolha na loja"
+		if (pedido.getTipoEntregaPedidoId() == 1) {
 			return "Recolha na loja";
 		}
 
-		DireccionDTO direccion = cliente.getDirecciones().get(0);
+		// For home delivery, find the address matching direccionId
+		if (pedido.getDireccionId() == null) {
+			logger.warn("No direccionId provided for home delivery pedido ID: {}", pedido.getId());
+			return "Endereço de entrega não especificado";
+		}
 
+		if (cliente.getDirecciones() == null || cliente.getDirecciones().isEmpty()) {
+			logger.warn("No addresses found for cliente ID: {} for pedido ID: {}", cliente.getId(), pedido.getId());
+			return "Nenhum endereço disponível";
+		}
+
+		// Find the address matching the pedido's direccionId
+		DireccionDTO direccion = cliente.getDirecciones().stream()
+				.filter(d -> d.getId() != null && d.getId().equals(pedido.getDireccionId())).findFirst().orElse(null);
+
+		if (direccion == null) {
+			logger.warn("Address with ID {} not found for cliente ID: {} for pedido ID: {}", pedido.getDireccionId(),
+					cliente.getId(), pedido.getId());
+			return "Endereço de entrega não encontrado";
+		}
+
+		// Build the formatted address
 		StringBuilder sb = new StringBuilder();
-		sb.append(cliente.getNombre()).append(" ").append(cliente.getApellido1());
-
+		sb.append(cliente.getNombre() != null ? cliente.getNombre() : "").append(" ")
+				.append(cliente.getApellido1() != null ? cliente.getApellido1() : "");
 		if (cliente.getApellido2() != null && !cliente.getApellido2().isEmpty()) {
 			sb.append(" ").append(cliente.getApellido2());
 		}
-
-		sb.append("<br>").append(direccion.getDirVia()).append("<br>").append(direccion.getFreguesiaNombre())
-				.append(", ").append(direccion.getConcelhoNombre()).append(", ").append(direccion.getDistritoNombre());
+		sb.append("<br>").append(direccion.getNombreVia() != null ? direccion.getNombreVia() : "").append(" ")
+				.append(direccion.getDirVia() != null ? direccion.getDirVia() : "").append("<br>")
+				.append(direccion.getFreguesiaNombre() != null ? direccion.getFreguesiaNombre() : "").append(", ")
+				.append(direccion.getConcelhoNombre() != null ? direccion.getConcelhoNombre() : "").append(", ")
+				.append(direccion.getDistritoNombre() != null ? direccion.getDistritoNombre() : "");
 
 		return sb.toString();
 	}

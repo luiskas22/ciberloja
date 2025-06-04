@@ -22,7 +22,6 @@ com\luis\ciberloja\model\SyncRequestDTO.class
 com\luis\ciberloja\service\impl\PedidoServiceImpl.class
 com\luis\ciberloja\service\impl\MailServiceImpl$1.class
 com\luis\ciberloja\service\TipoEmpleadoService.class
-com\luis\ciberloja\model\Direccion.class
 com\luis\ciberloja\service\impl\ClienteServiceImpl.class
 com\luis\ciberloja\model\PasswordResetTokenDTO.class
 com\luis\ciberloja\service\impl\EstadoPedidoServiceImpl.class

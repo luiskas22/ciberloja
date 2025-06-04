@@ -15,6 +15,7 @@ public class Pedido extends AbstractValueObject {
 	private String tipoEstadoPedidoNombre;
 	private Integer tipoEntregaPedidoId;
 	private String tipoEntregaPedido;
+	private Long direccionId;
 	private List<LineaPedido> lineas;
 
 	public Pedido() {
@@ -99,6 +100,14 @@ public class Pedido extends AbstractValueObject {
 
 	public void setTipoEntregaPedido(String tipoEntregaPedido) {
 		this.tipoEntregaPedido = tipoEntregaPedido;
+	}
+
+	public Long getDireccionId() {
+		return direccionId;
+	}
+
+	public void setDireccionId(Long direccionId) {
+		this.direccionId = direccionId;
 	}
 
 }

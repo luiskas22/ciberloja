@@ -2,6 +2,8 @@ package com.luis.ciberloja.service.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,5 +109,26 @@ public class DireccionServiceImpl implements DireccionService {
 			JDBCUtils.close(con, commit);
 		}
 		return d;
+	}
+
+	@Override
+	public List<DireccionDTO> findByClienteId(Long clienteId) throws DataException {
+		List<DireccionDTO> direcciones = new ArrayList<DireccionDTO>();
+		Connection con = null;
+		boolean commit = false;
+
+		try {
+			con = JDBCUtils.getConnection();
+			con.setAutoCommit(false);
+			direcciones = direccionDAO.findByClienteId(con, clienteId);
+			commit = true;
+			
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataException(e);
+		} finally {
+			JDBCUtils.close(con, commit);
+		}
+		return direcciones;
 	}
 }

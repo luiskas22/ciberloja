@@ -1,5 +1,6 @@
 package com.luis.ciberloja.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteDTO extends AbstractValueObject {
@@ -17,7 +18,7 @@ public class ClienteDTO extends AbstractValueObject {
 	private List<DireccionDTO> direcciones;
 
 	public ClienteDTO() {
-
+		direcciones= new ArrayList<DireccionDTO>();
 	}
 
 	public Long getId() {
