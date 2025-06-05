@@ -43,7 +43,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
 					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
 					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ") // Use LEFT JOIN for nullable
-					.append(" INNER JOIN DIRECCION D ON D.ID = P.DIRECCION_ID ") // TIPO_ENTREGA_ID
+					.append(" LEFT JOIN DIRECCION D ON D.ID = P.DIRECCION_ID ") // TIPO_ENTREGA_ID
 					.append(" LEFT JOIN LINEA_PEDIDO LP ON LP.PEDIDO_ID = P.ID ")
 					.append(" LEFT JOIN PRODUCTO PR ON PR.ARTIGO = LP.PRODUCTO_ID ");
 
@@ -244,7 +244,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 			pst.setLong(i++, p.getClienteId());
 			pst.setInt(i++, p.getTipoEstadoPedidoId());
 			pst.setInt(i++, p.getTipoEntregaPedidoId());
-			pst.setLong(i++, p.getDireccionId());
+	        pst.setObject(i++, p.getDireccionId()); // Use setObject to handle nulls
 			pst.setLong(i++, p.getId());
 
 			int updatedRows = pst.executeUpdate();
@@ -310,7 +310,7 @@ public class PedidoDAOImpl implements PedidoDAO {
 					.append(" FROM PEDIDO P ").append(" INNER JOIN CLIENTE C ON C.ID = P.CLIENTE_ID ")
 					.append(" INNER JOIN ESTADO_PEDIDO EP ON EP.ID = P.TIPO_ESTADO_PEDIDO_ID ")
 					.append(" LEFT JOIN TIPO_ENTREGA TP ON TP.ID = P.TIPO_ENTREGA_ID ")
-					.append(" INNER JOIN DIRECCION D ON D.ID = P.DIRECCION_ID ").append(" WHERE P.CLIENTE_ID = ? ")
+					.append(" LEFT JOIN DIRECCION D ON D.ID = P.DIRECCION_ID ").append(" WHERE P.CLIENTE_ID = ? ")
 					.append(" ORDER BY P.ID ");
 
 			pst = con.prepareStatement(query.toString(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

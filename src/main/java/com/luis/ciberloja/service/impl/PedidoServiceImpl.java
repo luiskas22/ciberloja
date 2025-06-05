@@ -128,6 +128,13 @@ public class PedidoServiceImpl implements PedidoService {
 			tf = pedidoDAO.update(con, p);
 			ClienteDTO cliente = clienteService.findById(p.getClienteId());
 			String emailCliente = cliente.getEmail();
+			// Log pedido details
+	        logger.info("Updating pedido ID: {}, clienteId: {}, lineas: {}", p.getId(), p.getClienteId(), p.getLineas());
+	        for (LineaPedido linea : p.getLineas()) {
+	            logger.info("Linea: productoId={}, nombreProducto={}, unidades={}, precio={}",
+	                    linea.getProductoId(), linea.getNombreProducto(), linea.getUnidades(), linea.getPrecio());
+	        }
+			
 			mailService.sendEstadoPedido(emailCliente, cliente, p);
 			commit = true;
 

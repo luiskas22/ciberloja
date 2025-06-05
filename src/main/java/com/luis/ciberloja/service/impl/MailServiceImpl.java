@@ -175,7 +175,6 @@ public class MailServiceImpl implements MailService {
 					.append(".header { text-align: center; margin-bottom: 20px; }")
 					.append(".logo { max-width: 100px; margin-bottom: 10px; }").append("</style>").append("</head>")
 					.append("<body>").append("<div class=\"container\">").append("<div class=\"header\">")
-					.append("<img src=\"cid:logo\" alt=\"Ciberloja Logo\" class=\"logo\">")
 					.append("<h2>Bem-vindo à Ciberloja! 💻</h2>").append("</div>").append("<p>Olá ")
 					.append(cliente.getNombre() != null ? cliente.getNombre() : "").append("!</p>")
 					.append("<p>Bem-vindo à Ciberloja, a tua loja online de informática de confiança. Estamos entusiasmados por te ter como parte da nossa comunidade de apaixonados por tecnologia.</p>")
@@ -277,7 +276,7 @@ public class MailServiceImpl implements MailService {
 			message.setSubject(subject);
 
 			MimeBodyPart messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setContent(body.toString(), "text/html; charset=utf-8");
+			messageBodyPart.setText(body.toString(), "utf-8", "html");
 
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(messageBodyPart);
@@ -396,7 +395,7 @@ public class MailServiceImpl implements MailService {
 			message.setSubject(subject);
 
 			MimeBodyPart messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setContent(body.toString(), "text/html; charset=utf-8");
+			messageBodyPart.setText(body.toString(), "utf-8", "html");
 
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(messageBodyPart);
